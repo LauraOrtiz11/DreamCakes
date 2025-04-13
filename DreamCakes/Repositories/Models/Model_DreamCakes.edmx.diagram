@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3d874d12fe86450dbcebe6c8e1b92bd2" Name="Diagram1">
+        <EntityTypeShape EntityType="DreamCakesModel.CATEGORIA" Width="1.5" PointX="0.75" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.DETALLE_PEDIDO" Width="1.5" PointX="8.25" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.ESTADO" Width="1.5" PointX="0.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.IMAGEN" Width="1.5" PointX="5.25" PointY="15.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.METODO_PAGO" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.PAGO" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.PEDIDO" Width="1.5" PointX="6" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.PRODUCTO" Width="1.5" PointX="3" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.PROMOCION" Width="1.5" PointX="6" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.ROL" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.USUARIO" Width="1.5" PointX="3" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DreamCakesModel.VALORACION" Width="1.5" PointX="5.25" PointY="3.5" IsExpanded="true" />
+        <AssociationConnector Association="DreamCakesModel.FK_PRODUCTO_CATEGORIA" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_DETALLE_PEDIDO" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_DETALLE_PRODUCTO" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_DETALLE_PROMOCION" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_PAGO_ESTADO" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_PEDIDO_ESTADO" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_USUARIO_ESTADO" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_IMAGEN_PRODUCTO" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_PAGO_METODO" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_PAGO_PEDIDO" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_PEDIDO_CLIENTE" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_PEDIDO_ENTREGA" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_VALORACION_PRODUCTO" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_USUARIO_ROL" ManuallyRouted="false" />
+        <AssociationConnector Association="DreamCakesModel.FK_VALORACION_CLIENTE" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
