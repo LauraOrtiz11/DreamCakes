@@ -1,24 +1,356 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿﻿ /* ---------------------------- */
+/* Fuente y Variables Globales */
+/* ---------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+    background-color: #D9D9D9 !important;
+    box-shadow: 0 0 0px 1000px #D9D9D9 inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px #D9D9D9 inset !important;
+    -webkit-text-fill-color: #000 !important; /* Color del texto */
+    border: none;
 }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+main {
+    margin: 0;
+    padding: 0;
+}
+.form-control:focus {
+    outline: none;
+    box-shadow: none;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
+:root {
+    --vino: #9B2020;
+    --vino-claro: #B23232;
+    --fondo-gradiente: linear-gradient(to bottom, #F8F9FA, #9D63B8, #483470);
+    --gris: #F8F9FA;
+    --gris-oscuro: #D9D9D9;
+    --morado: #483470;
+    --morado-claro: #5a2d82;
+    --texto: #333333;
+    --borde-redondo: 20rem;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+body, html {
+    font-family: 'Poppins', sans-serif;
+    color: var(--texto);
+    margin: 0;
+    padding: 0;
 }
+
+/* ------------------------------------- */
+/* BOTONES PERSONALIZADOS             */
+/* ------------------------------------- */
+.btn-vino {
+    background-color: var(--vino);
+    color: white;
+    border: none;
+    padding: 0.1rem 1rem;
+    border-radius: 8px;
+    font-weight: 100;
+    transition: background-color 0.3s ease;
+    transition: all 0.3s;
+}
+
+    .btn-vino:hover {
+        background-color: var(--vino-claro);
+        color: var(--gris);
+        text-decoration: none;
+    }
+
+.btn-morado {
+    background-color: var(--morado);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 1rem;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-morado:hover {
+        background-color: var(--morado-claro);
+        color: var(--gris);
+        text-decoration: none;
+    }
+
+/* ---------------------------- */
+/* Navbar        */
+/* ---------------------------- */
+
+.navbar-custom {
+    background-color: var(--gris);
+    padding: 1rem 2rem;
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    margin-left: 2rem;
+    margin-right: 6rem;
+}
+
+.navbar-brand {
+    margin-left: 100px;
+    font-weight: 300;
+    font-size: 1.5rem;
+    color: var(--text);
+    text-decoration: none;
+    margin-right: 2rem;
+}
+
+.navbar-menu {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    margin: 0 1rem;
+}
+
+.nav-link {
+    color: var(--texto);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    border-radius: 18px;
+    transition: background-color 0.4s ease;
+}
+
+    .nav-link:hover {
+        background-color: var(--gris-oscuro);
+        color: var(--texto)
+    }
+
+/* Registrarse a la derecha */
+.navbar-actions .nav-link {
+    margin-right: -100px;
+    color: var(--gris-claro);
+    font-weight: 200;
+}
+
+/* ------------------------------------- */
+/* MODAL DE REGISTRO / LOGIN          */
+/* ------------------------------------- */
+
+.floating-label {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.floating-input {
+    height: 42px;
+    font-size: 14px;
+    border: none;
+    border-radius: 20px;
+    background-color: transparent;
+    width: 100%;
+    font-size: 16px;
+    transition: all 0.3s;
+    background-color: var(--gris-oscuro);
+}
+
+    .floating-input:focus {
+        outline: none;
+        border-bottom: 2px solid #a37;
+        box-shadow: inset;
+    }
+
+.floating-text {
+    position: absolute;
+    border-radius: 10px;
+    left: 20px;
+    top: 15px;
+    color: #777;
+    font-size: 14px;
+    pointer-events: none;
+    transition: all 0.3s;
+}
+
+.floating-input:focus + .floating-text,
+.floating-input:not(:placeholder-shown) + .floating-text {
+    top: -10px;
+    left: 5px;
+    font-size: 12px;
+    color: var(--vino);
+    background-color: white;
+    padding: 0 5px;
+}
+
+
+.modal-dialog {
+    max-width: 390px;
+    margin: 1.75rem auto;
+}
+
+.modal-content {
+    border-radius: 30px;
+    padding: 15px 20px;
+}
+
+.modal-header {
+    border-bottom: none;
+    padding: 0 0 20px 0;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    width: 100%;
+}
+
+
+.modal-footer {
+    border-top: none;
+    padding: 15px 25px 25px;
+    justify-content: center;
+}
+
+
+/* ------------------------------------- */
+/* FORMULARIOS                        */
+/* ------------------------------------- */
+
+
+.text-danger {
+    font-size: 0.9rem;
+    color: #e74c3c;
+}
+
+
+/* ------------------------------------- */
+/* RESPONSIVE                         */
+/* ------------------------------------- */
+@media (max-width: 768px) {
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .control-label,
+    .form-control {
+        width: 100% !important;
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+    }
+}
+/* ---------------------------- */
+/* Footer                       */
+/* ---------------------------- */
+footer {
+    text-align: center;
+    background-color: var(--morado);
+    color: var(--gris);
+    padding: 1rem;
+    font-size: 0.9rem;
+}
+
+
+/* ---------------------------- */
+/* Sección: Página de Inicio    */
+/* ---------------------------- */
+
+.inicio-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+    background: var(--fondo-gradiente);
+}
+
+.inicio-contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    max-width: 1200px;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .inicio-contenido {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.inicio-text {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+    .inicio-text h1 {
+        font-weight: 700;
+        color: var(--morado);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .inicio-text p {
+        color: var(--gris-oscuro);
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+
+
+.inicio-img {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+    .inicio-img img {
+        width: 750px;
+        max-width: 100%;
+        border-radius: 1rem;
+        object-fit: contain;
+    }
+
+.close {
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+    .close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+.link-login {
+    text-decoration: none;
+    color: var(--vino);
+    font-weight: 500;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+    .link-login:hover {
+        color: var(--vino);
+        text-shadow: 0 0 5px rgba(128, 0, 128, 0.4); /* efecto sutil de resplandor */
+        cursor: pointer;
+        text-decoration: none;
+    }

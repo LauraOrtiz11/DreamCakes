@@ -144,8 +144,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
+    <Compile Include="Dtos\PromotionDto.cs" />
     <Compile Include="Dtos\RegisterDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -202,6 +204,7 @@
     <Compile Include="Repositories\Models\VALORACION.cs">
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\PromotionRepository.cs" />
     <Compile Include="Repositories\RegisterRepository.cs" />
     <Compile Include="Services\RegisterService.cs" />
     <Compile Include="Utilities\EncryptUtility.cs" />
@@ -211,6 +214,17 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Icons\Buy.svg" />
+    <Content Include="Content\Icons\Catalog.svg" />
+    <Content Include="Content\Icons\CategoryM.svg" />
+    <Content Include="Content\Icons\Home.svg" />
+    <Content Include="Content\Icons\Inventory.svg" />
+    <Content Include="Content\Icons\Profile.svg" />
+    <Content Include="Content\Icons\Promotion.svg" />
+    <Content Include="Content\Images\image 1.png" />
+    <Content Include="Content\Images\Postre 1.jpg" />
+    <Content Include="Content\Images\Postre 2.jpg" />
+    <Content Include="Content\Images\Postre 3.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -263,6 +277,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
