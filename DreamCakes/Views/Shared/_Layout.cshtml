@@ -49,11 +49,32 @@
     </footer>
 
     <!-- MODAL REGISTRO -->
-    @Html.Partial("~/Views/Register/Index.cshtml")
+    @Html.Partial("~/Views/Register/RegisterIndex.cshtml")
+
+    <!-- MODAL LOGIN -->
+    @Html.Partial("~/Views/Login/LoginIndex.cshtml")
+
 
     <!-- Scripts de Bootstrap y jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para intercambiar entre login y registro -->
+    <script>
+        $(document).ready(function () {
+            $('#goToLoginFromRegister').click(function (e) {
+                e.preventDefault();
+                $('#registerModal').modal('hide');
+                $('#loginModal').modal('show');
+            });
+
+            $('#goToRegisterFromLogin').click(function (e) {
+                e.preventDefault();
+                $('#loginModal').modal('hide');
+                $('#registerModal').modal('show');
+            });
+        });
+    </script>
 
     @RenderSection("scripts", required: false)
 </body>

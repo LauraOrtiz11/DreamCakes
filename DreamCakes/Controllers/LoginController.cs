@@ -1,47 +1,37 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using DreamCakes.Repositories.Models;
-using DreamCakes.Utilities;
+﻿using System.Web.Mvc;
+using DreamCakes.Services;
+using DreamCakes.Dtos;
 
 namespace DreamCakes.Controllers
 {
     public class LoginController : Controller
     {
-        private DreamCakesEntities db = new DreamCakesEntities();
+        private readonly LoginService loginService;
 
-        public ActionResult Login()
+        public LoginController()
         {
-            return View();
+            loginService = new LoginService();
         }
 
         [HttpPost]
-        public ActionResult Login(string email, string contrasena)
+        public ActionResult Index(LoginDto loginDto)
         {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(contrasena))
+            var result = loginService.Login(loginDto);
+            TempData["LoginMessage"] = result.Message;
+
+            if (result.Response == 1)
             {
-                ViewBag.Error = "Por favor ingrese el email y la contraseña.";
-                return View();
+                Session["UserEmail"] = loginDto.Email;
+                return RedirectToAction("Index", "Home"); // Inicio exitoso
             }
 
-            var usuario = db.USUARIOs.FirstOrDefault(u => u.Email == email);
-            if (usuario != null && BCrypt.Net.BCrypt.Verify(contrasena, usuario.Contrasena))
-            {
-                // Login exitoso
-                Session["UsuarioID"] = usuario.ID_Usuario;
-                Session["Nombre"] = usuario.Nombres;
-                Session["Rol"] = usuario.ID_Rol;
-
-                return RedirectToAction("Index", "Home");
-            }
-
-            ViewBag.Error = "Email o contraseña incorrectos.";
-            return View();
+            // Aquí corregimos la redirección a la vista correcta
+            return RedirectToAction("LoginIndex", "Login");
         }
 
-        public ActionResult Logout()
+        public ActionResult LoginIndex()
         {
-            Session.Clear();
-            return RedirectToAction("Login");
+            return View();
         }
     }
 }
