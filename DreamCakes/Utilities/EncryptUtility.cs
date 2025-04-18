@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace DreamCakes.Utilities
 {
@@ -10,6 +7,11 @@ namespace DreamCakes.Utilities
         public static string HashPassword(string contrasena)
         {
             return BCrypt.Net.BCrypt.HashPassword(contrasena);
+        }
+
+        public static bool VerifyPassword(string inputPassword, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(inputPassword, hashedPassword);
         }
 
     }
