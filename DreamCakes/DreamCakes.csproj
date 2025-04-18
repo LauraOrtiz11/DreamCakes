@@ -217,6 +217,8 @@
     <Content Include="Content\Icons\Buy.svg" />
     <Content Include="Content\Icons\Catalog.svg" />
     <Content Include="Content\Icons\CategoryM.svg" />
+    <Content Include="Content\Icons\Delete.svg" />
+    <Content Include="Content\Icons\Edit.svg" />
     <Content Include="Content\Icons\Home.svg" />
     <Content Include="Content\Icons\Inventory.svg" />
     <Content Include="Content\Icons\Profile.svg" />
@@ -274,10 +276,10 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Register\Index.cshtml" />
+    <Content Include="Views\Admin\Promotion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
