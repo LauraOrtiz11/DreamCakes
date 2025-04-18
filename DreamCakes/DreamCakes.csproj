@@ -144,9 +144,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
+    <Compile Include="Dtos\PromotionDto.cs" />
     <Compile Include="Dtos\LoginDto.cs" />
     <Compile Include="Dtos\RegisterDto.cs" />
     <Compile Include="Global.asax.cs">
@@ -205,6 +207,7 @@
     <Compile Include="Repositories\Models\VALORACION.cs">
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\PromotionRepository.cs" />
     <Compile Include="Repositories\RegisterRepository.cs" />
     <Compile Include="Services\LoginService.cs" />
     <Compile Include="Services\RegisterService.cs" />
@@ -215,6 +218,19 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Icons\Buy.svg" />
+    <Content Include="Content\Icons\Catalog.svg" />
+    <Content Include="Content\Icons\CategoryM.svg" />
+    <Content Include="Content\Icons\Delete.svg" />
+    <Content Include="Content\Icons\Edit.svg" />
+    <Content Include="Content\Icons\Home.svg" />
+    <Content Include="Content\Icons\Inventory.svg" />
+    <Content Include="Content\Icons\Profile.svg" />
+    <Content Include="Content\Icons\Promotion.svg" />
+    <Content Include="Content\Images\image 1.png" />
+    <Content Include="Content\Images\Postre 1.jpg" />
+    <Content Include="Content\Images\Postre 2.jpg" />
+    <Content Include="Content\Images\Postre 3.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -264,6 +280,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Register\RegisterIndex.cshtml" />
+    <Content Include="Views\Admin\Promotion.cshtml" />
     <Content Include="Views\Login\LoginIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
