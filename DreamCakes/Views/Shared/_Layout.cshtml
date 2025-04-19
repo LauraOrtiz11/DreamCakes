@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewBag.Title - Dream Cakes</title>
 
@@ -10,8 +10,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" />
 
+
+
 </head>
-<body ">
+<body>
 
     <!-- NAVBAR -->
     <header>
@@ -30,22 +32,25 @@
                     </li>
 
                 </ul>
-                @Html.Partial("~/Views/Register/RegisterIndex.cshtml")
-                <div class="navbar-actions">
-                    <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
-                </div>
-                @Html.Partial("~/Views/Login/LoginIndex.cshtml")
-                 <div class="navbar-actions">
-                    <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
-                </div>    
-                <<a href="@Url.Action("Promotion", "Admin")">Ir a Promociones</a>
 
+                
+                    @Html.Partial("~/Views/Register/RegisterIndex.cshtml")
+                    <div class="navbar-actions ">
+                        <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
+                    </div>
+                    @Html.Partial("~/Views/Login/LoginIndex.cshtml")
+                    <div class="navbar-actions">
+                        <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
+                    </div>
+                    
+
+         
 
             </div>
         </nav>
     </header>
-    
-  
+
+   
 
     <!-- CONTENIDO PRINCIPAL -->
     <main role="main">
@@ -56,10 +61,6 @@
     <footer>
         &copy; @DateTime.Now.Year - Todos lo derechos reservados Dream Cakes.
     </footer>
-
-
-    
-
 
     <!-- Scripts de Bootstrap y jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -72,12 +73,18 @@
             $('#goToLoginFromRegister').click(function (e) {
                 e.preventDefault();
                 $('#registerModal').modal('hide');
+                setTimeout(function () {
+                    $(targetModal).modal('show');
+                }, 300);
                 $('#loginModal').modal('show');
             });
 
             $('#goToRegisterFromLogin').click(function (e) {
                 e.preventDefault();
                 $('#loginModal').modal('hide');
+                setTimeout(function () {
+                    $(targetModal).modal('show');
+                }, 300);
                 $('#registerModal').modal('show');
             });
         });
