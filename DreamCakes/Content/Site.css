@@ -108,6 +108,21 @@ input:-webkit-autofill:active {
     transition: background-color 0.3s ease;
     transition: all 0.3s;
 }
+.btn-gray {
+    background-color: var(--dark-gray);
+    color:var(--text);
+    border: 1px solid;
+    padding: 0.1rem 1rem;
+    border-radius: 8px;
+    font-weight: 100;
+    transition: background-color 0.3s ease;
+    transition: all 0.3s;
+}
+.btn-gray:hover {
+    background-color: var(--gray);
+    color: var(--text);
+    text-decoration: none;
+}
 
 .btn-wine:hover {
     background-color: var(--light-wine);
@@ -189,6 +204,7 @@ input:-webkit-autofill:active {
 }
 
 .nav-link {
+    
     color: var(--text);
     font-weight: 500;
     text-decoration: none;
@@ -201,12 +217,14 @@ input:-webkit-autofill:active {
     background-color: var(--dark-gray);
     color: var(--text)
 }
+.navbar-actions {
+    gap: 2px;
+    display: inline-block;
 
-.navbar-actions .nav-link {
-    margin-right: -100px;
-    color: var(--light-gray);
-    font-weight: 200;
+    margin-left: 8px;
+
 }
+
 
 /* ---------------------------- */
 /* Modal Styles */
@@ -265,6 +283,7 @@ input:-webkit-autofill:active {
     cursor: pointer;
     text-decoration: none;
 }
+
 
 /* ---------------------------- */
 /* Home Page */

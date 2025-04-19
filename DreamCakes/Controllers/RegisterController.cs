@@ -17,7 +17,7 @@ namespace DreamCakes.Controllers
             registerService = new RegisterService();
         }
         [HttpPost]
-        public ActionResult Index(RegisterDto userDto)
+        public ActionResult RegisterIndex(RegisterDto userDto)
         {
             var response = registerService.CreateUser(userDto);
             TempData["RegisterMessage"] = response.Message;

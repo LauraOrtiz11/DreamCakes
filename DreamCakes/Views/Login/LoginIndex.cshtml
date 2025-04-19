@@ -1,6 +1,5 @@
 ﻿@model DreamCakes.Dtos.LoginDto
 
-
 <!-- Modal Login -->
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -23,28 +22,28 @@
                 {
                     @Html.AntiForgeryToken()
 
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Email)
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                    <div class="form-group floating-label">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control floating-input", placeholder = " " })
+                        @Html.LabelFor(m => m.Email, htmlAttributes: new { @class = "floating-text" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                     </div>
 
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Contrasena)
-                        @Html.PasswordFor(m => m.Contrasena, new { @class = "form-control" })
+                    <div class="form-group floating-label">
+                        @Html.PasswordFor(m => m.Contrasena, new { @class = "form-control floating-input", placeholder = " " })
+                        @Html.LabelFor(m => m.Contrasena, htmlAttributes: new { @class = "floating-text" })
+                        @Html.ValidationMessageFor(m => m.Contrasena, "", new { @class = "text-danger" })
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    <!-- LINK A REGISTRO -->
+                    <div class="text-center">
+                        ¿No tienes cuenta?
+                        <a href="#" class="login-link" id="goToRegisterFromLogin" data-toggle="modal" data-target="#registerModal" data-dismiss="modal">Registrarse</a>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn-gray">Iniciar Sesión</button>
+                    </div>
                 }
-            </div>
-
-            <!-- LINK A REGISTRO -->
-            <div class="text-center">
-                ¿No tienes cuenta?
-                <a href="#" class="nav-link" id="goToRegisterFromLogin">Registrarse</a>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
 
         </div>
