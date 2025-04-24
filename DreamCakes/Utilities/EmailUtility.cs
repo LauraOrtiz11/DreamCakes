@@ -1,11 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// DreamCakes/Utilities/EmailUtility.cs
+using DreamCakes.Repositories.Models;
 using System.Linq;
-using System.Web;
 
 namespace DreamCakes.Utilities
 {
-    public class EmailUtility
+    public static class EmailUtility
     {
+        public static bool EmailExists(string email)
+        {
+            using (var context = new DreamCakesEntities())
+            {
+                return context.USUARIOs.Any(u => u.Email == email);
+            }
+        }
     }
 }

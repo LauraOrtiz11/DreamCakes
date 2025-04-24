@@ -1,37 +1,41 @@
-﻿using System.Web.Mvc;
-using DreamCakes.Services;
+﻿using System;
+using System.Web.Mvc;
 using DreamCakes.Dtos;
+using DreamCakes.Services;
 
 namespace DreamCakes.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly LoginService loginService;
-
-        public LoginController()
-        {
-            loginService = new LoginService();
-        }
+        private readonly LoginService loginService = new LoginService();
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(LoginDto loginDto)
         {
-            var result = loginService.Login(loginDto);
-            TempData["LoginMessage"] = result.Message;
-
-            if (result.Response == 1)
+            try
             {
-                Session["UserEmail"] = loginDto.Email;
-                return RedirectToAction("Index", "Home"); // Inicio exitoso
+               
+                var result = loginService.Login(loginDto);
+
+                if (result.Response == 1)
+                {
+                    Session["UserEmail"] = loginDto.Email;
+                    TempData["LoginMessage"] = result.Message;
+                    return RedirectToAction("Index", "Home");
+                }
+
+                TempData["ErrorMessage"] = result.Message;
+                TempData["ShowModal"] = "login";
+                return RedirectToAction("Index", "Home");
             }
-
-            // Aquí corregimos la redirección a la vista correcta
-            return RedirectToAction("LoginIndex", "Login");
-        }
-
-        public ActionResult LoginIndex()
-        {
-            return View();
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError($"Error en login: {ex.Message}");
+                TempData["ErrorMessage"] = "Error al iniciar sesión. Intente nuevamente.";
+                TempData["ShowModal"] = "login";
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }

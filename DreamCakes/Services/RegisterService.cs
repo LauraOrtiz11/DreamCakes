@@ -14,12 +14,22 @@ namespace DreamCakes.Services
             registerRepository = new RegisterRepository();
         }
 
+
+       
+
         public RegisterDto CreateUser(RegisterDto user)
         {
             RegisterDto response = new RegisterDto();
 
             try
             {
+                if (EmailUtility.EmailExists(user.Email))
+                {
+                    response.Message = "El correo ya está registrado";
+                    return response;
+                }
+                
+
                 // Encriptar contraseña
                 string passwordHash = EncryptUtility.HashPassword(user.Contrasena);
                 user.Contrasena = passwordHash;
@@ -49,5 +59,12 @@ namespace DreamCakes.Services
 
             return response;
         }
+
+
+        public bool EmailExists(string email)
+        {
+            return EmailUtility.EmailExists(email);
+        }
     }
+
 }

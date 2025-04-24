@@ -33,24 +33,24 @@
 
                 </ul>
 
-                
-                    @Html.Partial("~/Views/Register/RegisterIndex.cshtml")
-                    <div class="navbar-actions ">
-                        <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
-                    </div>
-                    @Html.Partial("~/Views/Login/LoginIndex.cshtml")
-                    <div class="navbar-actions">
-                        <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
-                    </div>
-                    
 
-         
+                @Html.Partial("~/Views/Register/RegisterIndex.cshtml")
+                <div class="navbar-actions ">
+                    <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
+                </div>
+                @Html.Partial("~/Views/Login/LoginIndex.cshtml")
+                <div class="navbar-actions">
+                    <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
+                </div>
+
+
+
 
             </div>
         </nav>
     </header>
 
-   
+
 
     <!-- CONTENIDO PRINCIPAL -->
     <main role="main">
@@ -67,59 +67,58 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-    <!-- Script para intercambiar entre login y registro -->
+    <!-- En tu _Layout.cshtml -->
+    <script src="~/Scripts/ModalManager.js"></script>
     <script>
-        $(document).ready(function () {
-            // Función para limpiar el modal de registro
-            function cleanRegisterModal() {
-                $('#registerForm')[0].reset();
-                $('#registerModal .text-danger').hide();
-                $('#registerModal #generalError').hide();
+    // Script inline para manejar TempData (ya que no podemos acceder desde JS externo)
+    $(document).ready(function () {
+        @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
+        {
+            if (TempData["ShowModal"] != null)
+            {
+                if (TempData["ShowModal"].ToString() == "login")
+                {
+                    <text>
+                    setTimeout(function() { $('#loginModal').modal('show'); }, 300);
+                    </text>
+                }
+                else if (TempData["ShowModal"].ToString() == "register")
+                {
+                    <text>
+                    setTimeout(function() { $('#registerModal').modal('show'); }, 300);
+                    </text>
+                }
             }
-
-            // Función para limpiar el modal de login
-            function cleanLoginModal() {
-                $('#loginForm')[0].reset();
-                $('#loginModal .text-danger').hide();
-                $('#loginModal #generalError').hide();
-            }
-
-            // Eventos para el modal de registro
-            $('#registerModal .close').click(function () {
-                cleanRegisterModal();
-            });
-
-            $('#registerModal').on('hidden.bs.modal', function () {
-                cleanRegisterModal();
-            });
-
-            // Eventos para el modal de login
-            $('#loginModal .close').click(function () {
-                cleanLoginModal();
-            });
-
-            $('#loginModal').on('hidden.bs.modal', function () {
-                cleanLoginModal();
-            });
-
-            // Eventos para cambiar entre modales
-            $('#goToLoginFromRegister').click(function (e) {
-                e.preventDefault();
-                $('#registerModal').modal('hide');
-                setTimeout(function () {
-                    $('#loginModal').modal('show');
-                }, 300);
-            });
-
-            $('#goToRegisterFromLogin').click(function (e) {
-                e.preventDefault();
-                $('#loginModal').modal('hide');
-                setTimeout(function () {
-                    $('#registerModal').modal('show');
-                }, 300);
-            });
-        });
+        }
+    });
     </script>
+
+    <script>
+    // Manejo de modales en el Layout
+    $(document).ready(function() {
+        // Función para limpiar modales
+        function cleanModals() {
+            $('.modal form')[0].reset();
+            $('.text-danger, .alert').hide();
+
+            // Limpiar mensajes del servidor
+            $.post('@Url.Action("ClearTempMessages", "Cleanup")');
+        }
+
+        // Configurar eventos
+        $('.modal').on('hidden.bs.modal', cleanModals);
+        $('.modal .close').click(cleanModals);
+
+        // Mostrar modal inicial si hay mensajes
+        @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
+        {
+            <text>
+            $('#@TempData["ShowModal"]Modal').modal('show');
+            </text>
+        }
+    });
+    </script>
+
 
 
     @RenderSection("scripts", required: false)
