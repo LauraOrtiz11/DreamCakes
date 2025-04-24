@@ -70,22 +70,53 @@
     <!-- Script para intercambiar entre login y registro -->
     <script>
         $(document).ready(function () {
+            // Función para limpiar el modal de registro
+            function cleanRegisterModal() {
+                $('#registerForm')[0].reset();
+                $('#registerModal .text-danger').hide();
+                $('#registerModal #generalError').hide();
+            }
+
+            // Función para limpiar el modal de login
+            function cleanLoginModal() {
+                $('#loginForm')[0].reset();
+                $('#loginModal .text-danger').hide();
+                $('#loginModal #generalError').hide();
+            }
+
+            // Eventos para el modal de registro
+            $('#registerModal .close').click(function () {
+                cleanRegisterModal();
+            });
+
+            $('#registerModal').on('hidden.bs.modal', function () {
+                cleanRegisterModal();
+            });
+
+            // Eventos para el modal de login
+            $('#loginModal .close').click(function () {
+                cleanLoginModal();
+            });
+
+            $('#loginModal').on('hidden.bs.modal', function () {
+                cleanLoginModal();
+            });
+
+            // Eventos para cambiar entre modales
             $('#goToLoginFromRegister').click(function (e) {
                 e.preventDefault();
                 $('#registerModal').modal('hide');
                 setTimeout(function () {
-                    $(targetModal).modal('show');
+                    $('#loginModal').modal('show');
                 }, 300);
-                $('#loginModal').modal('show');
             });
 
             $('#goToRegisterFromLogin').click(function (e) {
                 e.preventDefault();
                 $('#loginModal').modal('hide');
                 setTimeout(function () {
-                    $(targetModal).modal('show');
+                    $('#registerModal').modal('show');
                 }, 300);
-                $('#registerModal').modal('show');
             });
         });
     </script>
