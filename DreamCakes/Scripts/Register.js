@@ -79,8 +79,8 @@
 
         switch (fieldName) {
             case 'nombres':
-                if (value.length < 2) {
-                    errorMessage = 'El nombre debe tener al menos 2 caracteres.';
+                if (value.length < 5) {
+                    errorMessage = 'El nombre debe tener al menos 5 caracteres.';
                     isValid = false;
                 } else if (!patterns.soloTexto.test(value)) {
                     errorMessage = 'Solo se permiten letras y espacios.';
@@ -89,8 +89,8 @@
                 break;
 
             case 'apellidos':
-                if (value.length < 2) {
-                    errorMessage = 'Los apellidos deben tener al menos 2 caracteres.';
+                if (value.length < 5) {
+                    errorMessage = 'Los apellidos deben tener al menos 5 caracteres.';
                     isValid = false;
                 } else if (!patterns.soloTexto.test(value)) {
                     errorMessage = 'Solo se permiten letras y espacios.';
@@ -99,7 +99,10 @@
                 break;
 
             case 'telefono':
-                if (value && !patterns.telefono.test(value)) {
+                if (value.length < 10) {
+                    errorMessage = 'El Teléfono debe tener al menos 10 caracteres';
+                    isValid = false;
+                } else if (value && !patterns.telefono.test(value)) {
                     errorMessage = 'Ingrese un teléfono válido (ej: +51 123 456 789).';
                     isValid = false;
                 }
@@ -107,8 +110,8 @@
                 break;
 
             case 'direccion':
-                if (value.length < 5) {
-                    errorMessage = 'La dirección debe tener al menos 5 caracteres.';
+                if (value.length < 8) {
+                    errorMessage = 'La dirección debe tener al menos 8 caracteres.';
                     isValid = false;
                 }
                 break;

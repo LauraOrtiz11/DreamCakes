@@ -8,7 +8,7 @@
 
 
 
-            @using (Html.BeginForm("RegisterIndex", "Register", FormMethod.Post, new { @class = "form-horizontal", id = "registerForm" }))
+            @using (Html.BeginForm("Register", "Auth", FormMethod.Post, new { @class = "form-horizontal", id = "registerForm" }))
             {
                 @Html.AntiForgeryToken()
 

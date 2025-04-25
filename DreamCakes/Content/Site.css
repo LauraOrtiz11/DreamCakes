@@ -459,3 +459,29 @@ footer {
         display: none;
     }
 }
+
+.error-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.error-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    color: #dc3545;
+}
+
+.error-details {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.btn-primary {
+    margin-top: 1.5rem;
+    padding: 0.5rem 1.5rem;
+}
