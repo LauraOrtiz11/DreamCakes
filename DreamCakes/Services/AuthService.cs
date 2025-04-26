@@ -7,14 +7,15 @@ namespace DreamCakes.Services
 {
     public class AuthService
     {
-        private readonly AuthRepository _authRepository = new AuthRepository();
+        private readonly AuthRepository authRepository = new AuthRepository();
 
         public LoginDto Authenticate(LoginDto loginDto)
         {
             try
             {
-                var user = _authRepository.GetUserByEmail(loginDto.Email);
+                var user = authRepository.GetUserByEmail(loginDto.Email);
 
+                // Validar que existe el usuario 
                 if (user == null)
                 {
                     loginDto.Response = 0;
@@ -22,13 +23,14 @@ namespace DreamCakes.Services
                     return loginDto;
                 }
 
+                // Validar contraseña 
                 if (!EncryptUtility.Verify(loginDto.Contrasena, user.Contrasena))
                 {
                     loginDto.Response = 0;
                     loginDto.Message = AuthErrorsUtility.INVALID_CREDENTIALS;
                     return loginDto;
                 }
-
+                 // Validar si esta activo o no el usuario 
                 if (user.ID_Estado != 1) // 1 = Activo
                 {
                     loginDto.Response = 0;
@@ -36,10 +38,13 @@ namespace DreamCakes.Services
                     return loginDto;
                 }
 
-                // Autenticación exitosa
+                
                 loginDto.Response = 1;
-                loginDto.Message = AuthErrorsUtility.LOGIN_SUCCESS;
-                loginDto.RoleId = user.ID_Rol;
+                loginDto.Message = "Autenticación exitosa";
+                loginDto.ID_Usuario = user.ID_Usuario;
+                loginDto.ID_Rol = user.ID_Rol;
+                loginDto.ID_Estado = user.ID_Estado;
+
                 return loginDto;
             }
             catch (Exception ex)
@@ -54,24 +59,27 @@ namespace DreamCakes.Services
         {
             try
             {
-                if (_authRepository.EmailExists(registerDto.Email))
+                //Verificar si ya existe una cuenta con el mismo correo 
+                if (authRepository.EmailExists(registerDto.Email))
                 {
                     registerDto.Response = 0;
                     registerDto.Message = AuthErrorsUtility.EMAIL_EXISTS;
                     return registerDto;
                 }
 
+                //Encriptar la contraseña
                 registerDto.Contrasena = EncryptUtility.Hash(registerDto.Contrasena);
                 registerDto.ID_Estado = 1; // Activo por defecto
                 registerDto.ID_Rol = 2; // Cliente por defecto
 
-                var result = _authRepository.CreateUser(registerDto);
+                // Creación del Usuario 
+                var result = authRepository.CreateUser(registerDto);
                 return result;
             }
             catch (Exception ex)
             {
                 registerDto.Response = 0;
-                registerDto.Message = $"{AuthErrorsUtility.REGISTER_ERROR}: {ex.Message}";
+                registerDto.Message = $"{AuthErrorsUtility.GENERAL_REGISTER_ERROR}: {ex.Message}";
                 return registerDto;
             }
         }

@@ -7,20 +7,13 @@ using DreamCakes.Utilities;
 
 namespace DreamCakes.Controllers
 {
-        // GET: Client
-        
         [RoleAuthorizeUtility(2)] 
         public class ClientController : Controller
         {
-            public ActionResult Dashboard()
+            public ActionResult Catalog()
             {
                 return View();
             }
-
-        public ActionResult Catalog()
-        {
-            return View();
         }
-    }
     
 }

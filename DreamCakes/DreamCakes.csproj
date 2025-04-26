@@ -211,7 +211,7 @@
     <Compile Include="Repositories\PromotionRepository.cs" />
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Utilities\AuthErrorsUtility.cs" />
-    <Compile Include="Utilities\CookiesUtility.cs" />
+    <Compile Include="Utilities\CookieUtility.cs" />
     <Compile Include="Utilities\EncryptUtility.cs" />
     <Compile Include="Utilities\RoleAuthorizeUtility.cs" />
     <Compile Include="Utilities\SessionManagerUtility.cs" />
@@ -289,7 +289,6 @@
     <Content Include="Views\Error\Unauthorized.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\General.cshtml" />
-    <Content Include="Views\Client\Dashboard.cshtml" />
     <Content Include="Views\Client\Catalog.cshtml" />
   </ItemGroup>
   <ItemGroup>

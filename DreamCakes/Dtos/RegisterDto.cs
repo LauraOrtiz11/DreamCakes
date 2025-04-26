@@ -7,7 +7,7 @@ namespace DreamCakes.Dtos
 {
     public class RegisterDto
     {
-        public int? ID_Usuario { get; set; }
+        public int ID_Usuario { get; set; }
         public string Nombres { get; set; } = string.Empty;
         public string Apellidos { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;

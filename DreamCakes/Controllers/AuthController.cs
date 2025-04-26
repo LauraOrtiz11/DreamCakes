@@ -3,7 +3,7 @@ using DreamCakes.Services;
 using DreamCakes.Utilities;
 using System;
 using System.Web.Mvc;
-using System.Web.Security;  
+using System.Web.Security;
 
 namespace DreamCakes.Controllers
 {
@@ -28,22 +28,21 @@ namespace DreamCakes.Controllers
 
                 if (result.Response != 1)
                 {
-                    TempData["ErrorMessage"] = result.Message ?? AuthErrorsUtility.GENERAL_AUTH_ERROR;
+                    TempData["ErrorMessage"] = result.Message;
                     TempData["ShowModal"] = "login";
                     return RedirectToAction("Index", "Home");
                 }
 
-                // Manejo de sesión y cookies
-                CookieUtility.CreateAuthCookie(Response, result.Email, result.RoleId.ToString());
+                // Configurar autenticación con Cookies
+                CookieUtility.CreateAuthCookie(Response, result.Email, result.ID_Rol);
                 SessionManagerUtility.SetUserSession(Session, result);
 
-                return RedirectToRole(result.RoleId.Value);
+                // Redirección según el rol a la vista principal de cada uno
+                return RedirectToRole(result.ID_Rol);
             }
             catch (Exception ex)
             {
-                // Log del error (implementar según tu sistema de logging)
-                System.Diagnostics.Trace.TraceError($"Error en Login: {ex.ToString()}");
-
+                System.Diagnostics.Trace.TraceError($"Error en Login: {ex}");
                 TempData["ErrorMessage"] = AuthErrorsUtility.GENERAL_SERVER_ERROR;
                 TempData["ShowModal"] = "login";
                 return RedirectToAction("Index", "Home");
@@ -78,9 +77,7 @@ namespace DreamCakes.Controllers
             }
             catch (Exception ex)
             {
-                // Log del error
-                System.Diagnostics.Trace.TraceError($"Error en Register: {ex.ToString()}");
-
+                System.Diagnostics.Trace.TraceError($"Error en Register: {ex}");
                 TempData["ErrorMessage"] = AuthErrorsUtility.GENERAL_SERVER_ERROR;
                 TempData["ShowModal"] = "register";
                 return RedirectToAction("General", "Error");
@@ -97,10 +94,7 @@ namespace DreamCakes.Controllers
             }
             catch (Exception ex)
             {
-                // Log del error
-                System.Diagnostics.Trace.TraceError($"Error en Logout: {ex.ToString()}");
-
-                // Aunque falle el logout, redirigimos al home
+                System.Diagnostics.Trace.TraceError($"Error en Logout: {ex}");
                 return RedirectToAction("General", "Error");
             }
         }
@@ -111,17 +105,19 @@ namespace DreamCakes.Controllers
             {
                 switch (roleId)
                 {
-                    case 1: return RedirectToAction("Promotion", "Admin");
-                    case 3: return RedirectToAction("Dashboard", "Delivery");
-                    default: return RedirectToAction("Dashboard", "Client");
+                    case 1: 
+                        return RedirectToAction("Promotion", "Admin");
+                    case 2: 
+                        return RedirectToAction("Catalog", "Client");
+                    case 3: 
+                        return RedirectToAction("Dashboard", "Delivery");
+                    default:
+                        return RedirectToAction("Index", "Home");
                 }
             }
             catch (Exception ex)
             {
-                // Log del error
-                System.Diagnostics.Trace.TraceError($"Error en RedirectToRole: {ex.ToString()}");
-
-                // Redirigir a página genérica si falla la redirección específica
+                System.Diagnostics.Trace.TraceError($"Error en RedirectToRole: {ex}");
                 return RedirectToAction("General", "Error");
             }
         }

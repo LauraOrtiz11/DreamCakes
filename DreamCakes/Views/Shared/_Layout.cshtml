@@ -6,61 +6,90 @@
     <title>@ViewBag.Title - Dream Cakes</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
 <body>
-    <!-- NAVBAR DINÁMICO SEGÚN ROL -->
+    <!-- Navbar dinámico según rol  -->
     <header>
         <nav class="navbar-custom">
             <div class="navbar-container">
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")">Dream Cakes</a>
 
-                @if (User.Identity.IsAuthenticated)
+                @{
+                    var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
+                    var userRole = isAuthenticated ? Session["ID_Rol"] as int? : null;
+                }
+
+                <!-- Menú para usuarios autenticados -->
+                @if (isAuthenticated)
                 {
-                    <!-- Menú para usuarios autenticados -->
                     <ul class="navbar-menu">
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Index", "Home")">
-                                <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Inicio" />
+                                <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
                                 Inicio
                             </a>
                         </li>
 
-                        @if (User.IsInRole("1"))
+                        @if (userRole == 1)
                         {
                             <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Promotion", "Admin")">
-                                    <i class="fas fa-tag"></i> Promociones
+                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                                    Promociones
                                 </a>
                             </li>
+
                         }
-                        else if (User.IsInRole("2"))
+                        else if (userRole == 2)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Pedidos", "Client")">
-                                    Mis Pedidos
+                                <a class="nav-link" href="@Url.Action("Catalog", "Client")">
+                                    <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalog" />
+                                    Catalogo
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Buy", "Client")">
+                                    <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                                    Comprar
                                 </a>
                             </li>
                         }
-                        else if (User.IsInRole("3"))
+                        else if (userRole == 3)
                         {
                             <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Entregas", "Delivery")">
                                     Entregas
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Historial", "Delivery")">
+                                    Historial
+                                </a>
+                            </li>
                         }
                     </ul>
 
                     <div class="navbar-actions">
-                        <span class="text-white mr-3">@User.Identity.Name</span>
-                        <a href="@Url.Action("Logout", "Auth")" class="btn-gray">Cerrar Sesión</a>
+                        <a href="@Url.Action("Catalog", "Client")">
+                            <img src="@Url.Content("~/Content/icons/Profile.svg")" width="28" height="20" alt="Inicio" />
+                        </a>
                     </div>
+
+                    <div class="navbar-actions">
+                        <a href="@Url.Action("Logout", "Auth")" class="btn-gray">
+                            Cerrar Sesión
+                        </a>
+                    </div>
+
+
                 }
-                else
-                {
+                else { 
+
+                    <!-- Menú de Registro y Login -->
                     @Html.Partial("~/Views/Auth/Register.cshtml")
                     @Html.Partial("~/Views/Auth/Login.cshtml")
-                    <!-- Menú para invitados -->
                     <div class="navbar-actions">
                         <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
                         <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
@@ -70,12 +99,12 @@
         </nav>
     </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
+    <!-- Contenido Principal -->
     <main role="main">
         @RenderBody()
     </main>
 
-    <!-- FOOTER -->
+    <!-- Footer -->
     <footer>
         &copy; @DateTime.Now.Year - Todos los derechos reservados Dream Cakes.
     </footer>
@@ -84,9 +113,10 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Script para manejar modales -->
+
+   <!-- Tiempo que duran los TempData en caso de error o una respuesta positiva -->
     <script>
-    // Script inline para manejar TempData (ya que no podemos acceder desde JS externo)
+    
     $(document).ready(function () {
         @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
         {
@@ -110,14 +140,11 @@
     </script>
 
     <script>
-    // Manejo de modales en el Layout
     $(document).ready(function() {
-        // Función para limpiar modales
+        // Función para impiar modales
         function cleanModals() {
             $('.modal form')[0].reset();
             $('.text-danger, .alert').hide();
-
-            // Limpiar mensajes del servidor
             $.post('@Url.Action("ClearTempMessages", "Cleanup")');
         }
 
@@ -138,3 +165,4 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+ 

@@ -9,21 +9,29 @@ namespace DreamCakes.Repositories
 {
     public class AuthRepository : IDisposable
     {
-        private readonly DreamCakesEntities _context = new DreamCakesEntities();
+        private readonly DreamCakesEntities context = new DreamCakesEntities();
 
+
+        public AuthRepository()
+        {
+            context = new DreamCakesEntities();
+        }
+
+        //Obtiene un usuario por su email, incluyendo (ROL y ESTADO)
         public USUARIO GetUserByEmail(string email)
         {
-            return _context.USUARIOs
+            return context.USUARIOs
                 .Include(u => u.ROL)
                 .Include(u => u.ESTADO)
                 .FirstOrDefault(u => u.Email == email);
         }
 
+        //Crear nuevo usuario en base de datos 
         public RegisterDto CreateUser(RegisterDto registerDto)
         {
             try
             {
-                var newUser = new USUARIO
+                var User = new USUARIO
                 {
                     Nombres = registerDto.Nombres,
                     Apellidos = registerDto.Apellidos,
@@ -35,12 +43,12 @@ namespace DreamCakes.Repositories
                     ID_Rol = registerDto.ID_Rol
                 };
 
-                _context.USUARIOs.Add(newUser);
-                _context.SaveChanges();
+                context.USUARIOs.Add(User);
+                context.SaveChanges();
 
                 registerDto.Response = 1;
                 registerDto.Message = AuthErrorsUtility.REGISTER_SUCCESS;
-                registerDto.ID_Usuario = newUser.ID_Usuario;
+                registerDto.ID_Usuario = User.ID_Usuario;
                 return registerDto;
             }
             catch (Exception ex)
@@ -51,14 +59,16 @@ namespace DreamCakes.Repositories
             }
         }
 
+        // Verifica si un email ya está registrado en la base de datos
         public bool EmailExists(string email)
         {
-            return _context.USUARIOs.Any(u => u.Email == email);
+            return context.USUARIOs.Any(u => u.Email == email);
         }
 
+        // Libera los recursos del contexto de Entity Framework
         public void Dispose()
         {
-            _context.Dispose();
+            context.Dispose();
         }
     }
 }
