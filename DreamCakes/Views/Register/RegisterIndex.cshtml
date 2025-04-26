@@ -5,7 +5,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
 
-            @using (Html.BeginForm("Index", "Register", FormMethod.Post, new { @class = "form-horizontal" }))
+            @using (Html.BeginForm("RegisterIndex", "Register", FormMethod.Post, new { @class = "form-horizontal" }))
             {
                 @Html.AntiForgeryToken()
 

@@ -1,0 +1,27 @@
+﻿@model DreamCakes.Models.DTO.PromotionDTO
+
+@{
+    ViewBag.Title = "Eliminar Promoción";
+}
+
+<h2>¿Eliminar esta Promoción?</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>Nombre:</dt>
+        <dd>@Model.NombreProm</dd>
+
+        <dt>Descuento:</dt>
+        <dd>@Model.PorcentajeDescuento %</dd>
+
+        <dt>Estado:</dt>
+        <dd>@(Model.EstadoProm ? "Activa" : "Inactiva")</dd>
+    </dl>
+</div>
+
+@using (Html.BeginForm("DeleteConfirmed", "Promotions", new { id = Model.Id }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <input type="submit" value="Confirmar Eliminación" class="btn btn-danger" />
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
+}

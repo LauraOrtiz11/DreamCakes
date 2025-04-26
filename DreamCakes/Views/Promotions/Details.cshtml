@@ -1,0 +1,30 @@
+﻿@model DreamCakes.Models.DTO.PromotionDTO
+
+@{
+    ViewBag.Title = "Detalles de Promoción";
+}
+
+<h2>Detalles de Promoción</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>Nombre:</dt>
+        <dd>@Model.NombreProm</dd>
+
+        <dt>Descuento:</dt>
+        <dd>@Model.PorcentajeDescuento %</dd>
+
+        <dt>Fecha Inicio:</dt>
+        <dd>@Model.FechaInicio.ToShortDateString()</dd>
+
+        <dt>Fecha Fin:</dt>
+        <dd>@Model.FechaFin.ToShortDateString()</dd>
+
+        <dt>Estado:</dt>
+        <dd>@(Model.EstadoProm ? "Activa" : "Inactiva")</dd>
+    </dl>
+</div>
+
+<p>
+    @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-secondary" })
+</p>
