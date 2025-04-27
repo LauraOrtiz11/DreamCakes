@@ -71,21 +71,23 @@
                         }
                     </ul>
 
+                    
                     <div class="navbar-actions">
-                        <a href="@Url.Action("Catalog", "Client")">
-                            <img src="@Url.Content("~/Content/icons/Profile.svg")" width="28" height="20" alt="Inicio" />
+                        <a href="@Url.Action("Index", "Profile")">
+                            <img src="@Url.Content("~/Content/icons/Profile.svg")" width="28" height="20" alt="Mi Perfil" />
                         </a>
                     </div>
 
                     <div class="navbar-actions">
-                        <a href="@Url.Action("Logout", "Auth")" class="btn-gray">
+                        <a href="@Url.Action("Logout", "Auth")" class="btn-wine">
                             Cerrar Sesión
                         </a>
                     </div>
 
 
                 }
-                else { 
+                else
+                {
 
                     <!-- Menú de Registro y Login -->
                     @Html.Partial("~/Views/Auth/Register.cshtml")

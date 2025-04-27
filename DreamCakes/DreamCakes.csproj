@@ -149,6 +149,9 @@
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Dtos\ProductDto.cs" />
+    <Compile Include="Dtos\ProfileDto.cs" />
     <Compile Include="Dtos\PromotionDto.cs" />
     <Compile Include="Dtos\LoginDto.cs" />
     <Compile Include="Dtos\RegisterDto.cs" />
@@ -209,7 +212,9 @@
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
     <Compile Include="Repositories\PromotionRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\AuthService.cs" />
+    <Compile Include="Services\UserService.cs" />
     <Compile Include="Utilities\AuthErrorsUtility.cs" />
     <Compile Include="Utilities\CookieUtility.cs" />
     <Compile Include="Utilities\EncryptUtility.cs" />
@@ -290,6 +295,7 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\General.cshtml" />
     <Content Include="Views\Client\Catalog.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
