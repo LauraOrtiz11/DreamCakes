@@ -22,12 +22,12 @@ namespace DreamCakes.Services
             // Convierte las entidades Promocione a PromotionDTO.
             return promociones.Select(p => new PromotionDTO
             {
-                Id = p.ID_Promocion,
-                NombreProm = p.Nombre_Prom,
-                PorcentajeDescuento = p.Porc_Desc,
-                FechaInicio = p.Fecha_Ini,
-                FechaFin = p.Fecha_Fin,
-                EstadoProm = p.Estado
+                NameProm = p.Nombre_Prom,
+                DiscountPer = p.Porc_Desc,
+                StartDate = p.Fecha_Ini,
+                EndDate = p.Fecha_Fin,
+                StateProm = p.Estado,
+                DescriProm = p.Descrip_Prom
             }).ToList();
         }
 
@@ -43,29 +43,32 @@ namespace DreamCakes.Services
             // Convierte la entidad a DTO.
             return new PromotionDTO
             {
-                Id = promo.ID_Promocion,
-                NombreProm = promo.Nombre_Prom,
-                PorcentajeDescuento = promo.Porc_Desc,
-                FechaInicio = promo.Fecha_Ini,
-                FechaFin = promo.Fecha_Fin,
-                EstadoProm = promo.Estado
+                NameProm = promo.Nombre_Prom,
+                DiscountPer = promo.Porc_Desc,
+                StartDate = promo.Fecha_Ini,
+                EndDate = promo.Fecha_Fin,
+                StateProm = promo.Estado,
+                DescriProm = promo.Descrip_Prom
             };
         }
 
         // Método para agregar una nueva promoción.
         public void AddPromotion(PromotionDTO dto)
         {
-            var promo = new PROMOCION   
+            var promo = new PROMOCION
             {
-                Nombre_Prom = dto.NombreProm,
-                Porc_Desc = dto.PorcentajeDescuento,
-                Fecha_Ini = dto.FechaInicio,
-                Fecha_Fin = dto.FechaFin,
-                Estado = dto.EstadoProm
+                Nombre_Prom = dto.NameProm,
+                Porc_Desc = dto.DiscountPer,
+                Fecha_Ini = dto.StartDate,
+                Fecha_Fin = dto.EndDate,
+                Estado = dto.StateProm,
+                Descrip_Prom = dto.DescriProm
             };
 
+           
             repository.Add(promo);
         }
+
 
 
         // Método para actualizar una promoción existente.
@@ -73,12 +76,13 @@ namespace DreamCakes.Services
         {
             var promo = new PROMOCION
             {
-                ID_Promocion = dto.Id,
-                Nombre_Prom = dto.NombreProm,
-                Porc_Desc = dto.PorcentajeDescuento,
-                Fecha_Ini = dto.FechaInicio,
-                Fecha_Fin = dto.FechaFin,
-                Estado = dto.EstadoProm
+                ID_Promocion = dto.ID_Prom,
+                Nombre_Prom = dto.NameProm,
+                Porc_Desc = dto.DiscountPer,
+                Fecha_Ini = dto.StartDate,
+                Fecha_Fin = dto.EndDate,
+                Estado = dto.StateProm,
+                Descrip_Prom = dto.DescriProm
             };
 
             repository.Update(promo);

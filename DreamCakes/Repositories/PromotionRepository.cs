@@ -52,6 +52,7 @@ namespace DreamCakes.Repositories
             existingPromo.Fecha_Ini = promo.Fecha_Ini;
             existingPromo.Fecha_Fin = promo.Fecha_Fin;
             existingPromo.Estado = promo.Estado;
+            existingPromo.Descrip_Prom = promo.Descrip_Prom;
 
             // Guarda los cambios en la base de datos.
             db.SaveChanges();

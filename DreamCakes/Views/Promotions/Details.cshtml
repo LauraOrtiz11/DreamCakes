@@ -9,19 +9,22 @@
 <div>
     <dl class="dl-horizontal">
         <dt>Nombre:</dt>
-        <dd>@Model.NombreProm</dd>
+        <dd>@Model.NameProm</dd>
 
         <dt>Descuento:</dt>
-        <dd>@Model.PorcentajeDescuento %</dd>
+        <dd>@Model.DiscountPer %</dd>
 
         <dt>Fecha Inicio:</dt>
-        <dd>@Model.FechaInicio.ToShortDateString()</dd>
+        <dd>@Model.StartDate.ToShortDateString()</dd>
 
         <dt>Fecha Fin:</dt>
-        <dd>@Model.FechaFin.ToShortDateString()</dd>
+        <dd>@Model.EndDate.ToShortDateString()</dd>
 
         <dt>Estado:</dt>
-        <dd>@(Model.EstadoProm ? "Activa" : "Inactiva")</dd>
+        <dd>@(Model.StateProm ? "Activa" : "Inactiva")</dd>
+
+        <dt>Descripción: </dt>
+        <dd>@Model.DescriProm</dd>
     </dl>
 </div>
 

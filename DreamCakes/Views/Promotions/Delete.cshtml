@@ -9,17 +9,17 @@
 <div>
     <dl class="dl-horizontal">
         <dt>Nombre:</dt>
-        <dd>@Model.NombreProm</dd>
+        <dd>@Model.NameProm</dd>
 
         <dt>Descuento:</dt>
-        <dd>@Model.PorcentajeDescuento %</dd>
+        <dd>@Model.DiscountPer %</dd>
 
         <dt>Estado:</dt>
-        <dd>@(Model.EstadoProm ? "Activa" : "Inactiva")</dd>
+        <dd>@(Model.StateProm ? "Activa" : "Inactiva")</dd>
     </dl>
 </div>
 
-@using (Html.BeginForm("DeleteConfirmed", "Promotions", new { id = Model.Id }, FormMethod.Post))
+@using (Html.BeginForm("Delete", "Promotions", new { id = Model.ID_Prom }, FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     <input type="submit" value="Confirmar Eliminación" class="btn btn-danger" />

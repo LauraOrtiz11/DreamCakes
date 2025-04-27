@@ -29,19 +29,16 @@
                             <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Inicio" />
                             Inicio
                         </a>
+                        <a class="nav-link" href="@Url.Action("Index", "Promotions")">
+                            Promociones
+                        </a>
                     </li>
 
                 </ul>
 
                 
-                    @Html.Partial("~/Views/Register/RegisterIndex.cshtml")
-                    <div class="navbar-actions ">
-                        <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
-                    </div>
-                    @Html.Partial("~/Views/Login/LoginIndex.cshtml")
-                    <div class="navbar-actions">
-                        <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
-                    </div>
+                   
+                    
                     
 
          
