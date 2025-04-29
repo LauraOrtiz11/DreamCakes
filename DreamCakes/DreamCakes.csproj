@@ -146,10 +146,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
-    <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Dtos\CategoryDto.cs" />
+    <Compile Include="Dtos\ImageDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
     <Compile Include="Dtos\ProfileDto.cs" />
     <Compile Include="Dtos\PromotionDto.cs" />
@@ -160,6 +162,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AuthRepository.cs" />
+    <Compile Include="Repositories\CategoryRepository.cs" />
+    <Compile Include="Repositories\ImageRepository.cs" />
     <Compile Include="Repositories\Models\CATEGORIA.cs">
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
@@ -205,19 +209,27 @@
     <Compile Include="Repositories\Models\ROL.cs">
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Models\sysdiagram.cs">
+      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Models\USUARIO.cs">
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Models\VALORACION.cs">
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\PromotionRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\AuthService.cs" />
+    <Compile Include="Services\CategoryService.cs" />
+    <Compile Include="Services\ImageService.cs" />
+    <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Utilities\AuthErrorsUtility.cs" />
     <Compile Include="Utilities\CookieUtility.cs" />
     <Compile Include="Utilities\EncryptUtility.cs" />
+    <Compile Include="Utilities\FileHelper.cs" />
     <Compile Include="Utilities\RoleAuthorizeUtility.cs" />
     <Compile Include="Utilities\SessionManagerUtility.cs" />
   </ItemGroup>
@@ -239,6 +251,7 @@
     <Content Include="Content\Images\Postre 1.jpg" />
     <Content Include="Content\Images\Postre 2.jpg" />
     <Content Include="Content\Images\Postre 3.jpg" />
+    <Content Include="Content\ImgProducts\image 1.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -294,8 +307,12 @@
     <Content Include="Views\Error\Unauthorized.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\General.cshtml" />
-    <Content Include="Views\Client\Catalog.cshtml" />
     <Content Include="Views\Profile\Index.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Product\Details.cshtml" />
+    <Content Include="Views\Product\Create.cshtml" />
+    <Content Include="Views\Product\Edit.cshtml" />
+    <Content Include="Views\Product\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

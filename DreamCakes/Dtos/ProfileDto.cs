@@ -10,6 +10,6 @@
         public string Email { get; set; }
         public int ID_Rol { get; set; }
         public string NombreRol { get; set; }
-        public string ImagenPerfil { get; set; } // Ruta o URL de la imagen
+        public string ImagenPerfil { get; set; } 
     }
 }

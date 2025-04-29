@@ -4,12 +4,12 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DreamCakesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DreamCakesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CATEGORIA">
           <Key>
             <PropertyRef Name="ID_Categoria" />
           </Key>
-          <Property Name="ID_Categoria" Type="int" Nullable="false" />
+          <Property Name="ID_Categoria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nom_Categ" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Descrip_Categ" Type="text" Nullable="false" />
           <Property Name="Estado" Type="bit" Nullable="false" />
@@ -38,7 +38,7 @@
           <Key>
             <PropertyRef Name="ID_Imagen" />
           </Key>
-          <Property Name="ID_Imagen" Type="int" Nullable="false" />
+          <Property Name="ID_Imagen" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Producto" Type="int" Nullable="false" />
           <Property Name="Nombre_Img" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Imagen_URL" Type="varchar" MaxLength="252" Nullable="false" />
@@ -80,7 +80,7 @@
           <Key>
             <PropertyRef Name="ID_Producto" />
           </Key>
-          <Property Name="ID_Producto" Type="int" Nullable="false" />
+          <Property Name="ID_Producto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Categoria" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Descripcion" Type="text" Nullable="false" />
@@ -91,7 +91,7 @@
           <Key>
             <PropertyRef Name="ID_Promocion" />
           </Key>
-          <Property Name="ID_Promocion" Type="int" Nullable="false" />
+          <Property Name="ID_Promocion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre_Prom" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Descrip_Prom" Type="text" Nullable="false" />
           <Property Name="Porc_Desc" Type="decimal" Precision="5" Scale="2" Nullable="false" />
@@ -106,6 +106,16 @@
           <Property Name="ID_Rol" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Descripcion" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="USUARIO">
           <Key>
@@ -321,6 +331,7 @@
           <EntitySet Name="PRODUCTO" EntityType="Self.PRODUCTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PROMOCION" EntityType="Self.PROMOCION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ROL" EntityType="Self.ROL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USUARIO" EntityType="Self.USUARIO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="VALORACION" EntityType="Self.VALORACION" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_DETALLE_PEDIDO" Association="Self.FK_DETALLE_PEDIDO">
@@ -384,8 +395,7 @@
             <End Role="VALORACION" EntitySet="VALORACION" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DreamCakesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -797,7 +807,18 @@
             <End Role="USUARIO" EntitySet="USUARIOs" />
             <End Role="VALORACION" EntitySet="VALORACIONs" />
           </AssociationSet>
+          <EntitySet Name="sysdiagrams" EntityType="DreamCakesModel.sysdiagram" />
         </EntityContainer>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -938,6 +959,17 @@
                 <ScalarProperty Name="ID_Cliente" ColumnName="ID_Cliente" />
                 <ScalarProperty Name="ID_Producto" ColumnName="ID_Producto" />
                 <ScalarProperty Name="Puntuacion" ColumnName="Puntuacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="DreamCakesModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

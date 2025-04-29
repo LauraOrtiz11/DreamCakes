@@ -36,7 +36,7 @@
                             placeholder = " ",
                             id = "LoginEmail"
                         })
-                        @Html.LabelFor(m => m.Email, htmlAttributes: new { @class = "floating-text" })
+                        @Html.LabelFor(m => m.Email, "Correo", htmlAttributes: new { @class = "floating-text" })
                         <div id="loginEmailError" class="text-danger login-error" style="display: none;"></div>
                     </div>
 
@@ -47,7 +47,7 @@
                             placeholder = " ",
                             id = "LoginPassword"
                         })
-                        @Html.LabelFor(m => m.Contrasena, htmlAttributes: new { @class = "floating-text" })
+                        @Html.LabelFor(m => m.Contrasena, "Contraseña",  htmlAttributes: new { @class = "floating-text" })
                         <div id="loginPasswordError" class="text-danger login-error" style="display: none;"></div>
                     </div>
 

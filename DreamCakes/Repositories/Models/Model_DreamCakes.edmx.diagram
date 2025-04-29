@@ -32,6 +32,7 @@
         <AssociationConnector Association="DreamCakesModel.FK_VALORACION_PRODUCTO" ManuallyRouted="false" />
         <AssociationConnector Association="DreamCakesModel.FK_USUARIO_ROL" ManuallyRouted="false" />
         <AssociationConnector Association="DreamCakesModel.FK_VALORACION_CLIENTE" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DreamCakesModel.sysdiagram" Width="1.5" PointX="5.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
