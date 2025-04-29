@@ -1,0 +1,48 @@
+﻿@model DreamCakes.Models.DTO.PromotionDTO
+
+@{
+    ViewBag.Title = "Editar Promoción";
+}
+
+<h2>Editar Promoción</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ID_Prom)
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            Nombre de la promoción
+            @Html.TextBoxFor(m => m.NameProm, new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            Porcentaje de descuento
+            @Html.TextBoxFor(m => m.DiscountPer, new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            Fecha de inicio
+            @Html.TextBoxFor(m => m.StartDate, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            Fecha de fin
+            @Html.TextBoxFor(m => m.EndDate, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            Estado de la promoción
+            @Html.CheckBoxFor(m => m.StateProm)
+        </div>
+
+        <div class="form-group">
+            Descripción de la promoción
+            @Html.TextBoxFor(m => m.DescriProm)
+        </div>
+
+        <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+        @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-secondary" })
+    </div>
+}

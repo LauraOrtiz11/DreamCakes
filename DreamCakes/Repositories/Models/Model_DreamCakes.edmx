@@ -4,12 +4,12 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DreamCakesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DreamCakesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CATEGORIA">
           <Key>
             <PropertyRef Name="ID_Categoria" />
           </Key>
-          <Property Name="ID_Categoria" Type="int" Nullable="false" />
+          <Property Name="ID_Categoria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nom_Categ" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Descrip_Categ" Type="text" Nullable="false" />
           <Property Name="Estado" Type="bit" Nullable="false" />
@@ -18,7 +18,7 @@
           <Key>
             <PropertyRef Name="ID_DP" />
           </Key>
-          <Property Name="ID_DP" Type="int" Nullable="false" />
+          <Property Name="ID_DP" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Pedido" Type="int" Nullable="false" />
           <Property Name="ID_Producto" Type="int" Nullable="false" />
           <Property Name="ID_Promocion" Type="int" />
@@ -38,7 +38,7 @@
           <Key>
             <PropertyRef Name="ID_Imagen" />
           </Key>
-          <Property Name="ID_Imagen" Type="int" Nullable="false" />
+          <Property Name="ID_Imagen" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Producto" Type="int" Nullable="false" />
           <Property Name="Nombre_Img" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Imagen_URL" Type="varchar" MaxLength="252" Nullable="false" />
@@ -47,7 +47,7 @@
           <Key>
             <PropertyRef Name="ID_Metodo" />
           </Key>
-          <Property Name="ID_Metodo" Type="int" Nullable="false" />
+          <Property Name="ID_Metodo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Descripcion" Type="text" Nullable="false" />
         </EntityType>
@@ -66,7 +66,7 @@
           <Key>
             <PropertyRef Name="ID_Pedido" />
           </Key>
-          <Property Name="ID_Pedido" Type="int" Nullable="false" />
+          <Property Name="ID_Pedido" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Cliente" Type="int" Nullable="false" />
           <Property Name="ID_UsEntrega" Type="int" Nullable="false" />
           <Property Name="ID_Estado" Type="int" Nullable="false" />
@@ -80,7 +80,7 @@
           <Key>
             <PropertyRef Name="ID_Producto" />
           </Key>
-          <Property Name="ID_Producto" Type="int" Nullable="false" />
+          <Property Name="ID_Producto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Categoria" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Descripcion" Type="text" Nullable="false" />
@@ -91,7 +91,7 @@
           <Key>
             <PropertyRef Name="ID_Promocion" />
           </Key>
-          <Property Name="ID_Promocion" Type="int" Nullable="false" />
+          <Property Name="ID_Promocion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre_Prom" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Descrip_Prom" Type="text" Nullable="false" />
           <Property Name="Porc_Desc" Type="decimal" Precision="5" Scale="2" Nullable="false" />
@@ -103,7 +103,7 @@
           <Key>
             <PropertyRef Name="ID_Rol" />
           </Key>
-          <Property Name="ID_Rol" Type="int" Nullable="false" />
+          <Property Name="ID_Rol" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Descripcion" Type="text" Nullable="false" />
         </EntityType>
@@ -125,7 +125,7 @@
           <Key>
             <PropertyRef Name="ID_Valoracion" />
           </Key>
-          <Property Name="ID_Valoracion" Type="int" Nullable="false" />
+          <Property Name="ID_Valoracion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Cliente" Type="int" Nullable="false" />
           <Property Name="ID_Producto" Type="int" Nullable="false" />
           <Property Name="Puntuacion" Type="int" Nullable="false" />
@@ -384,8 +384,7 @@
             <End Role="VALORACION" EntitySet="VALORACION" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DreamCakesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
