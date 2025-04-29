@@ -209,9 +209,6 @@
     <Compile Include="Repositories\Models\ROL.cs">
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\Models\sysdiagram.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
     <Compile Include="Repositories\Models\USUARIO.cs">
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
