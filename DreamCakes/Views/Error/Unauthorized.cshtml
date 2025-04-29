@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Acceso no autorizado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="error-container">
+    <div class="error-icon">🔒</div>
+    <h1>403 - Acceso Denegado</h1>
+    <p>No tienes permiso para acceder a esta página.</p>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <p>Tu rol actual no tiene acceso a este recurso.</p>
+    }
+    else
+    {
+        <p>Debes iniciar sesión para acceder a esta página.</p>
+    }
+
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+        Volver al inicio
+    </a>
+</div>

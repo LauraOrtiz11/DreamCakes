@@ -145,10 +145,14 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\PromotionController.cs" />
-    <Compile Include="Controllers\RegisterController.cs" />
+    <Compile Include="Controllers\ProfileController.cs"
+	<Compile Include="Controllers\PromotionController.cs" />
+    <Compile Include="Dtos\ProductDto.cs" />
+    <Compile Include="Dtos\ProfileDto.cs" />
     <Compile Include="Dtos\PromotionDto.cs" />
     <Compile Include="Dtos\LoginDto.cs" />
     <Compile Include="Dtos\RegisterDto.cs" />
@@ -156,7 +160,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\LoginRepository.cs" />
+    <Compile Include="Repositories\AuthRepository.cs" />
     <Compile Include="Repositories\Models\CATEGORIA.cs">
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
@@ -209,11 +213,15 @@
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
     <Compile Include="Repositories\PromotionRepository.cs" />
-    <Compile Include="Repositories\RegisterRepository.cs" />
-    <Compile Include="Services\LoginService.cs" />
-    <Compile Include="Services\PromocionService.cs" />
-    <Compile Include="Services\RegisterService.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Services\AuthService.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Utilities\AuthErrorsUtility.cs" />
+	<Compile Include="Services\PromocionService.cs" />
+    <Compile Include="Utilities\CookieUtility.cs" />
     <Compile Include="Utilities\EncryptUtility.cs" />
+    <Compile Include="Utilities\RoleAuthorizeUtility.cs" />
+    <Compile Include="Utilities\SessionManagerUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -266,7 +274,10 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\Login.js" />
+    <Content Include="Scripts\ModalManager.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\Register.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -278,17 +289,20 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Admin\Promotion.cshtml" />
-    <Content Include="Views\Login\LoginIndex.cshtml" />
-    <Content Include="Views\Register\RegisterIndex.cshtml" />
-    <Content Include="Views\Promotions\Create.cshtml" />
-    <Content Include="Views\Promotions\Edit.cshtml" />
-    <Content Include="Views\Promotions\Details.cshtml" />
-    <Content Include="Views\Promotions\Delete.cshtml" />
-    <Content Include="Views\Promotions\Index.cshtml" />
+    <Content Include="Views\Auth\Login.cshtml" />
+    <Content Include="Views\Auth\Register.cshtml" />
+    <Content Include="Views\Error\Unauthorized.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\General.cshtml" />
+    <Content Include="Views\Client\Catalog.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
+	<Content Include="Views\Promotions\Create.cshtml" />
+	<Content Include="Views\Promotions\Edit.cshtml" />
+	<Content Include="Views\Promotions\Details.cshtml" />
+	<Content Include="Views\Promotions\Delete.cshtml" />
+	<Content Include="Views\Promotions\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

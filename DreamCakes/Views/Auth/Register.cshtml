@@ -51,11 +51,10 @@
                         <div id="telefonoError" class="text-danger" style="display: none;"></div>
                     </div>
 
-                    <div class=".form-group-Reg floating-label">
-                        @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control floating-input", placeholder = " ", id = "Direccion" } })
-                        @Html.LabelFor(model => model.Direccion, "Dirección", htmlAttributes: new { @class = "floating-text" })
-
-                        <div id="direccionError" class="text-danger" style="display: none;"></div>
+                    <div class="form-group floating-label">
+                        @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control floating-input", placeholder = " " } })
+                        @Html.LabelFor(model => model.Direccion, htmlAttributes: new { @class = "floating-text" })
+                        @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
                     </div>
 
                     <div class=".form-group-Reg floating-label">

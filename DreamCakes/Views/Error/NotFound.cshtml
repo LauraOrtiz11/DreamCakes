@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Página no encontrada";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="error-container">
+    <div class="error-icon">🔍</div>
+    <h1>404 - Página no encontrada</h1>
+    <p>La página que buscas no existe o ha sido movida.</p>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+        Volver al inicio
+    </a>
+</div>
