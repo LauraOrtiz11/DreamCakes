@@ -17,11 +17,12 @@ namespace DreamCakes.Services
         public List<PromotionDTO> GetPromotions()
         {
             // Obtiene todas las promociones desde el repositorio.
-            var promociones = repository.GetAll();
+            var promotions = repository.GetAll();
 
             // Convierte las entidades Promocione a PromotionDTO.
-            return promociones.Select(p => new PromotionDTO
+            return promotions.Select(p => new PromotionDTO
             {
+                ID_Prom = p.ID_Promocion,
                 NameProm = p.Nombre_Prom,
                 DiscountPer = p.Porc_Desc,
                 StartDate = p.Fecha_Ini,
@@ -43,6 +44,7 @@ namespace DreamCakes.Services
             // Convierte la entidad a DTO.
             return new PromotionDTO
             {
+                ID_Prom = promo.ID_Promocion,
                 NameProm = promo.Nombre_Prom,
                 DiscountPer = promo.Porc_Desc,
                 StartDate = promo.Fecha_Ini,

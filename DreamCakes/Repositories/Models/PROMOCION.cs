@@ -11,7 +11,9 @@ namespace DreamCakes.Repositories.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class PROMOCION
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,7 +21,7 @@ namespace DreamCakes.Repositories.Models
         {
             this.DETALLE_PEDIDO = new HashSet<DETALLE_PEDIDO>();
         }
-    
+        
         public int ID_Promocion { get; set; }
         public string Nombre_Prom { get; set; }
         public string Descrip_Prom { get; set; }
