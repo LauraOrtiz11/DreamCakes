@@ -18,16 +18,19 @@ namespace DreamCakes.Services
             _imageService = new ImageService();
         }
 
+        // Obtiene la lista de todos los productos disponibles con stock.
         public List<ProductDto> GetAllProducts()
         {
             return _productRepository.GetAllProducts();
         }
 
+        // Obtiene un producto por su identificador.
         public ProductDto GetProductById(int productId)
         {
             return _productRepository.GetProductById(productId);
         }
 
+        // Crea un nuevo producto sin imágenes asociadas.
         public int CreateProductWithoutImages(ProductDto productDto)
         {
             using (var transaction = _productRepository.BeginTransaction())
@@ -53,12 +56,14 @@ namespace DreamCakes.Services
             }
         }
 
+        // Actualiza los datos de un producto existente y opcionalmente guarda nuevas imágenes.
         public bool UpdateProduct(ProductDto productDto, IEnumerable<HttpPostedFileBase> newImages = null)
         {
             var newImageUrls = newImages != null ? _imageService.SaveUploadedImages(newImages) : new List<string>();
             return _productRepository.UpdateProduct(productDto, newImageUrls);
         }
 
+        // Elimina un producto y sus imágenes asociadas tanto en la base de datos como en el sistema de archivos.
         public bool DeleteProduct(int productId)
         {
             var product = _productRepository.GetProductByIdForDeletion(productId);
@@ -67,7 +72,7 @@ namespace DreamCakes.Services
 
             foreach (var image in product.Images)
             {
-                FileHelper.DeleteFile(image.Url);
+                FileHelperUtility.DeleteFile(image.Url);
             }
 
             return _productRepository.DeleteProduct(productId);

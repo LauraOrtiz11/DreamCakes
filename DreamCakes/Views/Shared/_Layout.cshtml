@@ -34,26 +34,9 @@
                 @if (userRole == 1)
                 {
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Promotion", "Admin")">
+                        <a class="nav-link" href="@Url.Action("Index", "Promotions")">
                             <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
                             Promociones
-                        </a>
-                    </li>
-
-
-                }
-                else if (userRole == 2)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Catalog", "Client")">
-                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalog" />
-                            Catalogo
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Buy", "Client")">
-                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                            Comprar
                         </a>
                     </li>
                     <li class="nav-item">
@@ -62,6 +45,18 @@
                             Catalogo de Productos
                         </a>
                     </li>
+
+                }
+                else if (userRole == 2)
+                {
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Buy", "Client")">
+                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                            Comprar
+                        </a>
+                    </li>
+
                 }
                 else if (userRole == 3)
                 {

@@ -14,6 +14,7 @@ namespace DreamCakes.Repositories
             _context = new DreamCakesEntities();
         }
 
+        // Obtiene todas las categorías, incluyendo activas e inactivas.
         public List<CategoryDto> GetAllCategories()
         {
             return _context.CATEGORIAs
@@ -26,6 +27,7 @@ namespace DreamCakes.Repositories
                 }).ToList();
         }
 
+        // Obtiene únicamente las categorías activas (Estado = true).
         public List<CategoryDto> GetActiveCategories()
         {
             return _context.CATEGORIAs

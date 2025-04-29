@@ -9,6 +9,7 @@ namespace DreamCakes.Services
     {
         private readonly AuthRepository authRepository = new AuthRepository();
 
+        // Autentica a un usuario mediante su correo electrónico y contraseña.
         public LoginDto Authenticate(LoginDto loginDto)
         {
             try
@@ -55,6 +56,7 @@ namespace DreamCakes.Services
             }
         }
 
+        // Registra un nuevo usuario si el correo no está en uso.
         public RegisterDto Register(RegisterDto registerDto)
         {
             try

@@ -1,6 +1,6 @@
 ﻿using DreamCakes.Dtos;
 using DreamCakes.Repositories;
-using DreamCakes.Repositories.Models; // Añade esta directiva using
+using DreamCakes.Repositories.Models;
 using System.Web;
 using System.Collections.Generic;
 using DreamCakes.Utilities;
@@ -15,7 +15,6 @@ namespace DreamCakes.Services
 
         public ImageService()
         {
-            // Cambiar esta línea para crear el contexto correctamente
             _imageRepository = new ImageRepository(new DreamCakesEntities());
         }
 
@@ -29,7 +28,7 @@ namespace DreamCakes.Services
             {
                 if (image != null && image.ContentLength > 0)
                 {
-                    var imageUrl = FileHelper.SaveFile(image, _imageBasePath);
+                    var imageUrl = FileHelperUtility.SaveFile(image, _imageBasePath);
                     if (!string.IsNullOrEmpty(imageUrl))
                     {
                         savedUrls.Add(imageUrl);
@@ -61,7 +60,7 @@ namespace DreamCakes.Services
         {
             try
             {
-                FileHelper.DeleteFile(imageUrl);
+                FileHelperUtility.DeleteFile(imageUrl);
                 return _imageRepository.DeleteImage(productId, imageUrl);
             }
             catch (Exception)

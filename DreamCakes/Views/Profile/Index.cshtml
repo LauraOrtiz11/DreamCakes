@@ -36,46 +36,46 @@
 
                     <div class="profile-form-group">
                         <label class="profile-form-label">Nombres</label>
-                        <div class="profile-form-input">
-                            @Html.TextBoxFor(model => model.Nombres, new { })
+                        
+                            @Html.TextBoxFor(model => model.Nombres, new { @class = "profile-form-input" })
                             @Html.ValidationMessageFor(model => model.Nombres, "", new { @class = "text-danger" })
-                        </div>
+                        
                     </div>
 
                     <div class="profile-form-group">
                         <label class="profile-form-label">Apellidos</label>
-                        <div class="profile-form-input">
-                            @Html.TextBoxFor(model => model.Apellidos,  new { })
+                        
+                            @Html.TextBoxFor(model => model.Apellidos,  new { @class = "profile-form-input" })
                             @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
-                        </div>
+                        
                     </div>
 
                     <div class="profile-form-group">
                         <label class="profile-form-label">Email</label>
                         <div class="profile-form-input">    
-                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.TextBoxFor(model => model.Email, new { @class = "profile-form-input" })
                         </div>
                     </div>
 
                     <div class="profile-form-group">
                         <label class="profile-form-label">Teléfono</label>
-                        <div class="profile-form-input">
-                            @Html.TextBoxFor(model => model.Telefono, new { @class = "form-control" })
+                        
+                            @Html.TextBoxFor(model => model.Telefono, new { @class = "profile-form-input" })
                             @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
-                        </div>
+                        
                     </div>
 
                     <div class="profile-form-group">
                         <label class="profile-form-label">Dirección</label>
                         <div class="profile-form-input">
-                            @Html.TextBoxFor(model => model.Direccion, new { @class = "form-control" })
+                            @Html.TextBoxFor(model => model.Direccion, new { @class = "profile-form-input" })
                             @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="profile-form-actions">
                             <button type="submit" class="btn-wine">Guardar Cambios</button>
-                            <a href="@Url.Action("Index", "Home")" class="btn-gray">Cancelar</a>
+                            
                     </div>
                 }
             </div>

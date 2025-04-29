@@ -18,11 +18,13 @@ namespace DreamCakes.Repositories
             _imageRepository = new ImageRepository(_context);
         }
 
+        // Inicia una transacción de base de datos manualmente.
         public DbContextTransaction BeginTransaction()
         {
             return _context.Database.BeginTransaction();
         }
 
+        // Obtiene todos los productos con stock disponible, incluyendo sus imágenes y nombre de categoría.
         public List<ProductDto> GetAllProducts()
         {
             return _context.PRODUCTOes
@@ -46,6 +48,7 @@ namespace DreamCakes.Repositories
                 }).ToList();
         }
 
+        // Obtiene un producto específico por su ID, incluyendo imágenes y categoría.
         public ProductDto GetProductById(int productId)
         {
             return _context.PRODUCTOes
@@ -69,6 +72,7 @@ namespace DreamCakes.Repositories
                 }).FirstOrDefault();
         }
 
+        // Obtiene un producto con sus imágenes para fines de eliminación.
         public ProductDto GetProductByIdForDeletion(int productId)
         {
             return _context.PRODUCTOes
@@ -84,6 +88,7 @@ namespace DreamCakes.Repositories
                 }).FirstOrDefault();
         }
 
+        // Crea un nuevo producto en la base de datos sin imágenes.
         public int CreateProductWithoutImages(ProductDto productDto)
         {
             try
@@ -115,6 +120,7 @@ namespace DreamCakes.Repositories
             }
         }
 
+        // Actualiza un producto existente, incluyendo la adición de nuevas imágenes.
         public bool UpdateProduct(ProductDto productDto, List<string> newImageUrls)
         {
             using (var transaction = _context.Database.BeginTransaction())
@@ -157,6 +163,7 @@ namespace DreamCakes.Repositories
             }
         }
 
+        // Elimina un producto y sus imágenes asociadas de la base de datos.
         public bool DeleteProduct(int productId)
         {
             using (var transaction = _context.Database.BeginTransaction())

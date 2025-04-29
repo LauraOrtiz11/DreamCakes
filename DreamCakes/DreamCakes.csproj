@@ -229,7 +229,7 @@
     <Compile Include="Utilities\AuthErrorsUtility.cs" />
     <Compile Include="Utilities\CookieUtility.cs" />
     <Compile Include="Utilities\EncryptUtility.cs" />
-    <Compile Include="Utilities\FileHelper.cs" />
+    <Compile Include="Utilities\FileHelperUtility.cs" />
     <Compile Include="Utilities\RoleAuthorizeUtility.cs" />
     <Compile Include="Utilities\SessionManagerUtility.cs" />
   </ItemGroup>

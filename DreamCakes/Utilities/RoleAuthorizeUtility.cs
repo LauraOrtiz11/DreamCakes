@@ -11,11 +11,13 @@ namespace DreamCakes.Utilities
     {
         private readonly int[] _allowedRoles;
 
+        // Inicializa una nueva instancia de la clase <see cref="RoleAuthorizeUtility"/> con los roles permitidos.
         public RoleAuthorizeUtility(params int[] allowedRoles)
         {
             _allowedRoles = allowedRoles ?? throw new ArgumentNullException(nameof(allowedRoles));
         }
 
+        // Verifica si el usuario tiene permiso para acceder al recurso protegido, basado en los roles permitidos.
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             // Primero verifica autenticación básica
@@ -41,6 +43,7 @@ namespace DreamCakes.Utilities
             }
         }
 
+        // Maneja la solicitud no autorizada cuando el usuario no tiene los permisos adecuados.
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
             if (filterContext?.HttpContext == null)
@@ -49,8 +52,7 @@ namespace DreamCakes.Utilities
             }
 
             if (filterContext.HttpContext.User.Identity.IsAuthenticated)
-            {
-                // Usuario autenticado pero sin permisos (403)
+            {               
                 filterContext.Result = new RedirectToRouteResult(
                     new RouteValueDictionary
                     {

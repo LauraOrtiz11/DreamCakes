@@ -4,8 +4,9 @@ using System.Web;
 
 namespace DreamCakes.Utilities
 {
-    public static class FileHelper
+    public static class FileHelperUtility
     {
+        // Guarda un archivo en el servidor y devuelve su ruta relativa.
         public static string SaveFile(HttpPostedFileBase file, string basePath)
         {
             if (file == null || file.ContentLength == 0)
@@ -32,6 +33,7 @@ namespace DreamCakes.Utilities
             }
         }
 
+        // Elimina un archivo del servidor dado su URL relativa.
         public static bool DeleteFile(string fileUrl)
         {
             if (string.IsNullOrEmpty(fileUrl))

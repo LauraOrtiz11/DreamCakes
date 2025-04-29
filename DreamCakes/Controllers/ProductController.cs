@@ -9,12 +9,14 @@ using System.Linq;
 
 namespace DreamCakes.Controllers
 {
+    [RoleAuthorizeUtility(1)]
     public class ProductController : Controller
     {
         private readonly ProductService _productService;
         private readonly ImageService _imageService;
         private readonly CategoryService _categoryService;
 
+        // Inicializa los servicios necesarios para la gestión de productos, imágenes y categorías.
         public ProductController()
         {
             _productService = new ProductService();
@@ -22,6 +24,7 @@ namespace DreamCakes.Controllers
             _categoryService = new CategoryService();
         }
 
+        // Muestra la lista de todos los productos disponibles.
         public ActionResult Index()
         {
             try
@@ -36,6 +39,7 @@ namespace DreamCakes.Controllers
             }
         }
 
+        // Muestra los detalles de un producto específico por su ID.
         public ActionResult Details(int id)
         {
             try
@@ -51,6 +55,7 @@ namespace DreamCakes.Controllers
             }
         }
 
+        // Muestra el formulario para crear un nuevo producto.
         public ActionResult Create()
         {
             try
@@ -65,6 +70,7 @@ namespace DreamCakes.Controllers
             }
         }
 
+        // Procesa la creación de un nuevo producto con validación de datos e imágenes.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProductDto productDto, IEnumerable<HttpPostedFileBase> productImages)
@@ -112,7 +118,7 @@ namespace DreamCakes.Controllers
                     _productService.DeleteProduct(productId);
                     foreach (var url in savedImageUrls)
                     {
-                        FileHelper.DeleteFile(url);
+                        FileHelperUtility.DeleteFile(url);
                     }
                     ViewBag.ErrorMessage = "Error al asociar las imágenes al producto";
                     ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
@@ -124,7 +130,6 @@ namespace DreamCakes.Controllers
             }
             catch (Exception ex)
             {
-                // Log del error
                 System.Diagnostics.Debug.WriteLine($"Error al crear producto: {ex}");
                 ViewBag.ErrorMessage = "Ocurrió un error inesperado al crear el producto";
                 ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
@@ -132,6 +137,7 @@ namespace DreamCakes.Controllers
             }
         }
 
+        // Muestra el formulario para editar un producto existente.
         public ActionResult Edit(int id)
         {
             try
@@ -149,6 +155,7 @@ namespace DreamCakes.Controllers
             }
         }
 
+        // Procesa la edición de un producto, incluyendo la posible adición de nuevas imágenes.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ProductDto productDto, IEnumerable<HttpPostedFileBase> newImages)
@@ -180,6 +187,7 @@ namespace DreamCakes.Controllers
             }
         }
 
+        // Elimina un producto según su ID. Retorna el resultado como JSON.
         [HttpPost]
         public ActionResult Delete(int id)
         {
@@ -202,6 +210,7 @@ namespace DreamCakes.Controllers
             }
         }
 
+        // Elimina una imagen específica asociada a un producto. Retorna el resultado como JSON.
         [HttpPost]
         public ActionResult DeleteImage(int productId, string imageUrl)
         {

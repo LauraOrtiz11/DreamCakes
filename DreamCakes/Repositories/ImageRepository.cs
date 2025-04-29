@@ -14,6 +14,7 @@ namespace DreamCakes.Repositories
             _context = context;
         }
 
+        // Agrega una lista de imágenes a un producto específico en la base de datos.
         public bool AddImagesToProduct(int productId, List<ImageDto> images)
         {
             try
@@ -36,6 +37,7 @@ namespace DreamCakes.Repositories
             }
         }
 
+        // Elimina una imagen específica de un producto, según su URL e ID de producto.
         public bool DeleteImage(int productId, string imageUrl)
         {
             try

@@ -551,11 +551,13 @@ footer {
 
 .profile-info-card {
     font-weight: bold;
+    justify-content:center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .profile-info-header {
     text-align: center;
+    
     font-weight: bold;
     padding: 15px 20px;
     border-bottom: 1px solid #eee;
@@ -576,20 +578,18 @@ footer {
 .profile-form-group {
     display: flex;
     margin-bottom: 15px;
-    align-items: center;
-    gap: initial;
+    justify-content:center;
+    gap: 8px;
 }
 
 
 
 .profile-form-input {
-    flex: 1;
+    text-align:center;
     border-radius: 10px;
 }
 
-    .profile-form-input.input {
-        border-radius: 10px;
-    }
+
 
 .profile-form-control {
     width: 100%;
@@ -613,7 +613,7 @@ footer {
 /* Botones */
 .profile-form-actions {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 10px;
     margin-top: 20px;
 }

@@ -13,11 +13,13 @@ namespace DreamCakes.Services
             _categoryRepository = new CategoryRepository();
         }
 
+        // Obtiene la lista completa de categorías, incluyendo inactivas.
         public List<CategoryDto> GetAllCategories()
         {
             return _categoryRepository.GetAllCategories();
         }
 
+        // Obtiene únicamente las categorías activas.
         public List<CategoryDto> GetActiveCategories()
         {
             return _categoryRepository.GetActiveCategories();
