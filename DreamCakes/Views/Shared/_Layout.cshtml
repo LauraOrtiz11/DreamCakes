@@ -15,85 +15,82 @@
             <div class="navbar-container">
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")">Dream Cakes</a>
 
-                @{
-                    var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
-                    var userRole = isAuthenticated ? Session["ID_Rol"] as int? : null;
-                }
+                @{ var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
+                                var userRole = isAuthenticated ? Session["ID_Rol"] as int? : null; }
 
                 <!-- Menú para usuarios autenticados -->
                 @if (isAuthenticated)
                 {
-                    <ul class="navbar-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Home")">
-                                <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
-                                Inicio
-                            </a>
-                        </li>
+    <ul class="navbar-menu">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Home")">
+                <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
+                Inicio
+            </a>
+        </li>
 
-                        @if (userRole == 1)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Promotion", "Admin")">
-                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                                    Promociones
-                                </a>
-                            </li>
-
-                        }
-                        else if (userRole == 2)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Catalog", "Client")">
-                                    <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalog" />
-                                    Catalogo
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Buy", "Client")">
-                                    <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                                    Comprar
-                                </a>
-                            </li>
-                        }
-                        else if (userRole == 3)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Entregas", "Delivery")">
-                                    Entregas
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Historial", "Delivery")">
-                                    Historial
-                                </a>
-                            </li>
-                        }
-                    </ul>
-
-                
-                    @Html.Partial("~/Views/Register/RegisterIndex.cshtml")
-                    <div class="navbar-actions ">
-                        <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
-                    </div>
-                    @Html.Partial("~/Views/Login/LoginIndex.cshtml")
-                    <div class="navbar-actions">
-                        <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
-                    </div>
-                    
-
-                }
-                else
+        @if (userRole == 1)
+        {
+<li class="nav-item">
+    <a class="nav-link" href="@Url.Action("Promotion", "Admin")">
+        <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+        Promociones
+    </a>
+</li> }
+                else if (userRole == 2)
                 {
+<li class="nav-item">
+    <a class="nav-link" href="@Url.Action("Catalog", "Client")">
+        <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalog" />
+        Catalogo
+    </a>
+</li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Buy", "Client")">
+                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                            Comprar
+                        </a>
+                    </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Index", "Product")">
+                                                <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Promotion" />
+                                                Catalogo de Productos
+                                            </a>
+                                        </li> }
+                                                        else if (userRole == 3)
+                                                        {
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Entregas", "Delivery")">
+                                                Entregas
+                                            </a>
+                                        </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" href="@Url.Action("Historial", "Delivery")">
+                                                                    Historial
+                                                                </a>
+                                                            </li>                }
+    </ul>
 
-                    <!-- Menú de Registro y Login -->
-                    @Html.Partial("~/Views/Auth/Register.cshtml")
-                    @Html.Partial("~/Views/Auth/Login.cshtml")
+
                     <div class="navbar-actions">
-                        <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
-                        <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
+                        <a href="@Url.Action("Index", "Profile")">
+                            <img src="@Url.Content("~/Content/icons/Profile.svg")" width="28" height="20" alt="Mi Perfil" />
+                        </a>
                     </div>
-                }
+
+                                    <div class="navbar-actions">
+                                        <a href="@Url.Action("Logout", "Auth")" class="btn-wine">
+                                            Cerrar Sesión
+                                        </a>
+                                    </div> }
+                                                else
+                                                { <!-- Menú de Registro y Login -->
+                                                    @Html.Partial("~/Views/Auth/Register.cshtml")
+                                                                    @Html.Partial("~/Views/Auth/Login.cshtml")
+                                                                                    <div class="navbar-actions">
+                                                                                        <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
+                                                                                        <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
+                                                                                    </div>}
             </div>
         </nav>
     </header>
@@ -113,9 +110,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-   <!-- Tiempo que duran los TempData en caso de error o una respuesta positiva -->
+    <!-- Tiempo que duran los TempData en caso de error o una respuesta positiva -->
     <script>
-    
+
     $(document).ready(function () {
         @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
         {
@@ -164,4 +161,3 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
- 
