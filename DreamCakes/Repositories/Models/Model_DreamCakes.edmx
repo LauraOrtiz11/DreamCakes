@@ -18,7 +18,7 @@
           <Key>
             <PropertyRef Name="ID_DP" />
           </Key>
-          <Property Name="ID_DP" Type="int" Nullable="false" />
+          <Property Name="ID_DP" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Pedido" Type="int" Nullable="false" />
           <Property Name="ID_Producto" Type="int" Nullable="false" />
           <Property Name="ID_Promocion" Type="int" />
@@ -47,7 +47,7 @@
           <Key>
             <PropertyRef Name="ID_Metodo" />
           </Key>
-          <Property Name="ID_Metodo" Type="int" Nullable="false" />
+          <Property Name="ID_Metodo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Descripcion" Type="text" Nullable="false" />
         </EntityType>
@@ -66,7 +66,7 @@
           <Key>
             <PropertyRef Name="ID_Pedido" />
           </Key>
-          <Property Name="ID_Pedido" Type="int" Nullable="false" />
+          <Property Name="ID_Pedido" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Cliente" Type="int" Nullable="false" />
           <Property Name="ID_UsEntrega" Type="int" Nullable="false" />
           <Property Name="ID_Estado" Type="int" Nullable="false" />
@@ -103,7 +103,7 @@
           <Key>
             <PropertyRef Name="ID_Rol" />
           </Key>
-          <Property Name="ID_Rol" Type="int" Nullable="false" />
+          <Property Name="ID_Rol" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Descripcion" Type="text" Nullable="false" />
         </EntityType>
@@ -125,7 +125,7 @@
           <Key>
             <PropertyRef Name="ID_Valoracion" />
           </Key>
-          <Property Name="ID_Valoracion" Type="int" Nullable="false" />
+          <Property Name="ID_Valoracion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Cliente" Type="int" Nullable="false" />
           <Property Name="ID_Producto" Type="int" Nullable="false" />
           <Property Name="Puntuacion" Type="int" Nullable="false" />

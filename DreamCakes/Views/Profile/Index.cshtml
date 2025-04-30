@@ -1,18 +1,17 @@
 ﻿@model DreamCakes.Dtos.ProfileDto
 
-@{
-    ViewBag.Title = "Mi Perfil";
-}
+@{ ViewBag.Title = "Mi Perfil"; }
 
 <div class="profile-container">
-<div class="row">
-    <div class="col-md-4">
-        <div class="profile-card">
+    <div class="row">
+        <div class="col-md-4">
             <div class="profile-card">
-                <img src="@Model.ImagenPerfil" class="profile-img" alt="Foto de perfil">
-                <h4 class="profile-name">@Model.Nombres @Model.Apellidos</h4>
-                <p class="profile-role">@Model.NombreRol</p>
-                <button class="profile-img-btn">Cambiar foto</button>
+                <div class="profile-card">
+                    <img src="@Model.ImagenPerfil" class="profile-img" alt="Foto de perfil">
+                    <h4 class="profile-name">@Model.Nombres @Model.Apellidos</h4>
+                    <p class="profile-role">@Model.NombreRol</p>
+                    <button class="profile-img-btn">Cambiar foto</button>
+                </div>
             </div>
         </div>
     </div>
@@ -82,7 +81,6 @@
         </div>
     </div>
 </div>
-</div>
 
 <style>
     .img-thumbnail {
@@ -91,5 +89,6 @@
 
     .form-control[readonly] {
         background-color: #f8f9fa;
+
     }
 </style>

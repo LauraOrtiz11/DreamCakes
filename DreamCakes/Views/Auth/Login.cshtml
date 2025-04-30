@@ -14,20 +14,18 @@
             <div class="modal-body">
                 @if (TempData["ErrorMessage"] != null)
                 {
-                    <div class="alert alert-danger">
-                        @TempData["ErrorMessage"]
-                    </div>
-                }
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>}
                 @if (TempData["SuccessMessage"] != null)
                 {
-                    <div class="alert alert-success">
-                        @TempData["SuccessMessage"]
-                    </div>
-                }
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>}
 
                 @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { id = "loginForm" }))
                 {
-                    @Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
                     <div class=".form-group-Reg floating-label">
                         @Html.TextBoxFor(m => m.Email, new
@@ -39,7 +37,6 @@
                         @Html.LabelFor(m => m.Email, "Correo", htmlAttributes: new { @class = "floating-text" })
                         <div id="loginEmailError" class="text-danger login-error" style="display: none;"></div>
                     </div>
-
                     <div class=".form-group-Reg floating-label">
                         @Html.PasswordFor(m => m.Contrasena, new
                         {

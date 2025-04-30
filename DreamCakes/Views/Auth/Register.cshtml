@@ -10,26 +10,23 @@
 
             @using (Html.BeginForm("Register", "Auth", FormMethod.Post, new { @class = "form-horizontal", id = "registerForm" }))
             {
-                @Html.AntiForgeryToken()
+@Html.AntiForgeryToken()
 
                 <div class="modal-header">
                     <h5 class="modal-title">Registro</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                </div>
-                if (TempData["ErrorMessage"] != null)
-                {
-                    <div class="alert alert-danger">
-                        @TempData["ErrorMessage"]
-                    </div>
-                }
-                if (TempData["SuccessMessage"] != null)
-                {
-                    <div class="alert alert-success">
-                        @TempData["SuccessMessage"]
-                    </div>
-                }
+                </div> if (TempData["ErrorMessage"] != null)
+                                {
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div> }
+                                if (TempData["SuccessMessage"] != null)
+                                {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div> }
                 <div class="modal-body">
                     <div id="generalError"></div>
 
@@ -53,7 +50,6 @@
 
                         <div id="telefonoError" class="text-danger" style="display: none;"></div>
                     </div>
-
                     <div class=".form-group-Reg floating-label">
                         @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control floating-input", placeholder = " ", id = "Direccion" } })
                         @Html.LabelFor(model => model.Direccion, "Dirección", htmlAttributes: new { @class = "floating-text" })
@@ -73,7 +69,6 @@
 
                         <div id="contrasenaError" class="text-danger" style="display: none;"></div>
                     </div>
-
                     <!-- LINK LOGIN -->
                     <div class="text-center">
                         ¿Ya tienes cuenta?
@@ -81,10 +76,9 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
-                    <button type="submit" class="btn-wine">Registrarse</button>
-                </div>
-            }
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn-wine">Registrarse</button>
+                                </div>            }
         </div>
     </div>
 </div>

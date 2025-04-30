@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace DreamCakes.Dtos
+
+namespace DreamCakes.Models.DTO
 {
-    public class PromotionDto
+    public class PromotionDTO
     {
-        public int ID_Promocion { get; set; }
-        public string Nombre_Prom { get; set; }
-        public string Descrip_Prom { get; set; }
-        public decimal Porc_Desc { get; set; }
-        public DateTime Fecha_Ini { get; set; }
-        public DateTime Fecha_Fin { get; set; }
-
-        public int Estado { get; set; }
-
-        public int Response { get; set; }
-        public string Message { get; set; } = string.Empty;
-
+        public int ID_Prom { get; set; }
+        public string NameProm { get; set; }
+        public decimal DiscountPer { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public bool StateProm { get; set; }
+        public string DescriProm { get; set; }
     }
 }

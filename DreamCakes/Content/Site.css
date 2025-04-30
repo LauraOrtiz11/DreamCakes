@@ -485,7 +485,6 @@ footer {
     margin-top: 1.5rem;
     padding: 0.5rem 1.5rem;
 }
-
 /* ---------------------------- */
 /* Profile Section */
 /* ---------------------------- */
@@ -551,13 +550,13 @@ footer {
 
 .profile-info-card {
     font-weight: bold;
+
     justify-content:center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .profile-info-header {
     text-align: center;
-    
     font-weight: bold;
     padding: 15px 20px;
     border-bottom: 1px solid #eee;
@@ -578,14 +577,14 @@ footer {
 .profile-form-group {
     display: flex;
     margin-bottom: 15px;
-    justify-content:center;
+    justify-content: center;
     gap: 8px;
 }
 
 
 
 .profile-form-input {
-    text-align:center;
+    text-align: center;
     border-radius: 10px;
 }
 
