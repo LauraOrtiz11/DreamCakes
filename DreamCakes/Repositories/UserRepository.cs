@@ -14,6 +14,7 @@ namespace DreamCakes.Repositories
             _context = new DreamCakesEntities();
         }
 
+        // Obtiene el perfil de un usuario por su ID.
         public ProfileDto GetUserProfile(int userId)
         {
             return _context.USUARIOs
@@ -31,6 +32,7 @@ namespace DreamCakes.Repositories
                 }).FirstOrDefault();
         }
 
+        // Actualiza el perfil de un usuario en la base de datos.
         public bool UpdateUserProfile(ProfileDto profileDto)
         {
             var user = _context.USUARIOs.Find(profileDto.ID_Usuario);

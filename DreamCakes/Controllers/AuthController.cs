@@ -108,7 +108,7 @@ namespace DreamCakes.Controllers
                     case 1: 
                         return RedirectToAction("Promotion", "Admin");
                     case 2: 
-                        return RedirectToAction("Catalog", "Client");
+                        return RedirectToAction("Index", "Home");
                     case 3: 
                         return RedirectToAction("Dashboard", "Delivery");
                     default:

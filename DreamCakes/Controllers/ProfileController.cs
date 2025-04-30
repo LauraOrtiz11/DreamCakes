@@ -1,10 +1,11 @@
 ﻿using DreamCakes.Dtos;
 using DreamCakes.Services;
 using System.Web.Mvc;
+using DreamCakes.Utilities;
 
 namespace DreamCakes.Controllers
 {
-    [Authorize] // Requiere autenticación
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly UserService _userService;
@@ -14,6 +15,7 @@ namespace DreamCakes.Controllers
             _userService = new UserService();
         }
 
+        // Muestra la vista del perfil del usuario actualmente autenticado, obteniendo su información desde la sesión.
         public ActionResult Index()
         {
             // Obtener ID del usuario logueado desde la sesión
@@ -22,6 +24,7 @@ namespace DreamCakes.Controllers
             return View(profile);
         }
 
+        // Procesa la actualización del perfil del usuario si el modelo es válido.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Index(ProfileDto model)
@@ -30,10 +33,10 @@ namespace DreamCakes.Controllers
             {
                 if (_userService.UpdateUserProfile(model))
                 {
-                    TempData["SuccessMessage"] = "Perfil actualizado correctamente";
+                    TempData["SuccessMessage"] = AuthErrorsUtility.PROFILE_UPDATE;
                     return RedirectToAction("Index");
                 }
-                ModelState.AddModelError("", "Error al actualizar el perfil");
+                ModelState.AddModelError("", AuthErrorsUtility.PROFILE_UPDATE_ERROR);
             }
             return View(model);
         }

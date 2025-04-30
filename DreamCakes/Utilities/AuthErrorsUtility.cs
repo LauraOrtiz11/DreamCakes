@@ -19,10 +19,14 @@ namespace DreamCakes.Utilities
         public const string INACTIVE_ACCOUNT = "Cuenta inactiva";
         public const string LOGIN_SUCCESS = "Inicio de sesión exitoso";
 
+        public const string PROFILE_UPDATE = "Perfil actualizado correctamente";
+        public const string PROFILE_UPDATE_ERROR = "Error al actualizar el perfil";
+
         // Mensajes de registro 
         public const string REGISTER_SUCCESS = "¡Registro exitoso! Por favor inicie sesión.";
         public const string GENERAL_REGISTER_ERROR = "Error al registrar el usuario.";
         public const string EMAIL_EXISTS = "El correo ya está registrado";
+        
 
         // Errores generales
         public const string GENERAL_SERVER_ERROR = "Error en el servidor. Por favor intente más tarde.";

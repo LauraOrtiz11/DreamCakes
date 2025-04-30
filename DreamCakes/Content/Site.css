@@ -108,9 +108,10 @@ input:-webkit-autofill:active {
     transition: background-color 0.3s ease;
     transition: all 0.3s;
 }
+
 .btn-gray {
     background-color: var(--dark-gray);
-    color:var(--text);
+    color: var(--text);
     border: 1px solid;
     padding: 0.1rem 1rem;
     border-radius: 8px;
@@ -118,11 +119,12 @@ input:-webkit-autofill:active {
     transition: background-color 0.3s ease;
     transition: all 0.3s;
 }
-.btn-gray:hover {
-    background-color: var(--gray);
-    color: var(--text);
-    text-decoration: none;
-}
+
+    .btn-gray:hover {
+        background-color: var(--gray);
+        color: var(--text);
+        text-decoration: none;
+    }
 
 .btn-wine:hover {
     background-color: var(--light-wine);
@@ -141,11 +143,11 @@ input:-webkit-autofill:active {
     transition: background-color 0.3s ease;
 }
 
-.btn-purple:hover {
-    background-color: var(--light-purple);
-    color: var(--gray);
-    text-decoration: none;
-}
+    .btn-purple:hover {
+        background-color: var(--light-purple);
+        color: var(--gray);
+        text-decoration: none;
+    }
 
 
 .btn-icon {
@@ -159,9 +161,9 @@ input:-webkit-autofill:active {
     justify-content: center;
 }
 
-.btn-icon:hover {
-    transform: scale(1.1);
-}
+    .btn-icon:hover {
+        transform: scale(1.1);
+    }
 
 /* ---------------------------- */
 /* Navigation */
@@ -204,7 +206,6 @@ input:-webkit-autofill:active {
 }
 
 .nav-link {
-    
     color: var(--text);
     font-weight: 500;
     text-decoration: none;
@@ -213,16 +214,15 @@ input:-webkit-autofill:active {
     transition: background-color 0.4s ease;
 }
 
-.nav-link:hover {
-    background-color: var(--dark-gray);
-    color: var(--text)
-}
+    .nav-link:hover {
+        background-color: var(--dark-gray);
+        color: var(--text)
+    }
+
 .navbar-actions {
     gap: 2px;
     display: inline-block;
-
     margin-left: 8px;
-
 }
 
 
@@ -265,10 +265,10 @@ input:-webkit-autofill:active {
     cursor: pointer;
 }
 
-.close:focus {
-    outline: none;
-    box-shadow: none;
-}
+    .close:focus {
+        outline: none;
+        box-shadow: none;
+    }
 
 .login-link {
     text-decoration: none;
@@ -277,12 +277,12 @@ input:-webkit-autofill:active {
     transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-.login-link:hover {
-    color: var(--wine);
-    text-shadow: 0 0 5px rgba(128, 0, 128, 0.4);
-    cursor: pointer;
-    text-decoration: none;
-}
+    .login-link:hover {
+        color: var(--wine);
+        text-shadow: 0 0 5px rgba(128, 0, 128, 0.4);
+        cursor: pointer;
+        text-decoration: none;
+    }
 
 
 /* ---------------------------- */
@@ -316,18 +316,18 @@ input:-webkit-autofill:active {
     gap: 1rem;
 }
 
-.home-text h1 {
-    font-weight: 700;
-    color: var(--purple);
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
+    .home-text h1 {
+        font-weight: 700;
+        color: var(--purple);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
 
-.home-text p {
-    color: var(--dark-gray);
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-}
+    .home-text p {
+        color: var(--dark-gray);
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
 
 .home-img {
     flex: 1;
@@ -335,12 +335,12 @@ input:-webkit-autofill:active {
     justify-content: center;
 }
 
-.home-img img {
-    width: 750px;
-    max-width: 100%;
-    border-radius: 1rem;
-    object-fit: contain;
-}
+    .home-img img {
+        width: 750px;
+        max-width: 100%;
+        border-radius: 1rem;
+        object-fit: contain;
+    }
 
 /* ---------------------------- */
 /* Promotions Section */
@@ -359,11 +359,11 @@ input:-webkit-autofill:active {
     margin-bottom: 1.5rem;
 }
 
-.promotions-header h2 {
-    color: #4D2C91;
-    font-weight: bold;
-    text-transform: uppercase;
-}
+    .promotions-header h2 {
+        color: #4D2C91;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
 
 .promotions-table {
     display: flex;
@@ -550,7 +550,8 @@ footer {
 
 .profile-info-card {
     font-weight: bold;
-    justify-content: center;
+
+    justify-content:center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 

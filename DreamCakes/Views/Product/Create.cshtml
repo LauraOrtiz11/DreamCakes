@@ -1,0 +1,156 @@
+﻿@model DreamCakes.Dtos.ProductDto
+@{
+    ViewBag.Title = "Crear Nuevo Producto";
+}
+
+<div class="container mt-4">
+    <h2>@ViewBag.Title</h2>
+    <hr />
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+    @using (Html.BeginForm("Create", "Product", FormMethod.Post, new { enctype = "multipart/form-data", id = "createForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, "Nombre")
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control", placeholder = "Nombre del producto" })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, "Descripción")
+                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = 4, placeholder = "Descripción detallada del producto" })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CategoryId, "Categoría")
+                    @Html.DropDownListFor(model => model.CategoryId,
+                        (SelectList)ViewBag.Categories,
+                        "Seleccione una categoría",
+                        new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Price, "Precio")
+                    @Html.TextBoxFor(model => model.Price, new
+                    {
+                        @class = "form-control",
+                        type = "number",
+                        step = "0.01",
+                        min = "0.01"
+                    })
+                    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Stock, "Stock")
+                    @Html.TextBoxFor(model => model.Stock, new
+                    {
+                        @class = "form-control",
+                        type = "number",
+                        min = "0",
+                        placeholder = "0"
+                    })
+                    @Html.ValidationMessageFor(model => model.Stock, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Imágenes del Producto (Mínimo 1, Máximo 5)</label>
+                    <input type="file" name="productImages" id="productImages" class="form-control-file" multiple accept="image/*" required />
+                    <small class="form-text text-muted">
+                        Formatos aceptados: .jpg, .jpeg, .png. Tamaño máximo por imagen: 2MB
+                    </small>
+                    <div id="imagePreview" class="mt-2 d-flex flex-wrap"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mt-4">
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+                <i class="fas fa-save"></i> Guardar Producto
+            </button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script>
+    $(document).ready(function () {
+        // Validación de imágenes al enviar el formulario
+        $('#createForm').submit(function (e) {
+            var files = $('#productImages')[0].files;
+
+            if (files.length < 1 || files.length > 5) {
+                alert('Debe seleccionar entre 1 y 5 imágenes para el producto');
+                return false;
+            }
+
+            // Validar tamaño y tipo de archivo
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+                if (validTypes.indexOf(file.type) === -1) {
+                    alert('El archivo ' + file.name + ' no es una imagen válida (solo JPG, JPEG o PNG)');
+                    return false;
+                }
+
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('La imagen ' + file.name + ' es demasiado grande (máximo 2MB)');
+                    return false;
+                }
+            }
+
+            // Deshabilitar el botón para evitar múltiples envíos
+            $('#submitBtn').prop('disabled', true);
+            return true;
+        });
+
+        // Vista previa de imágenes
+        $('#productImages').change(function () {
+            $('#imagePreview').empty();
+            var files = this.files;
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#imagePreview').append(
+                        '<div class="mr-2 mb-2" style="width: 100px; height: 100px; overflow: hidden; border: 1px solid #ddd;">' +
+                        '<img src="' + e.target.result + '" style="width: 100%; height: 100%; object-fit: cover;" />' +
+                        '</div>'
+                    );
+                }
+
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+   
+    </script>
+}
