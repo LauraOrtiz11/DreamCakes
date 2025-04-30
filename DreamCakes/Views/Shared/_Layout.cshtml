@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewBag.Title - Dream Cakes</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
@@ -9,124 +9,92 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
 <body>
-    <!-- Navbar dinámico según rol  -->
     <header>
         <nav class="navbar-custom">
             <div class="navbar-container">
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")">Dream Cakes</a>
 
-                @{ var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
-                                var userRole = isAuthenticated ? Session["ID_Rol"] as int? : null; }
+                @{
+                    var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
+                    var userRole = isAuthenticated ? Session["ID_Rol"] as int? : null;
+                }
 
-                <!-- Menú para usuarios autenticados -->
                 @if (isAuthenticated)
                 {
-            <ul class="navbar-menu">
-                <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("Index", "Home")">
-                        <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
-                        Inicio
-                    </a>
-                </li>
+                    <ul class="navbar-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Home")">
+                                <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
+                                Inicio
+                            </a>
+                        </li>
 
-                @if (userRole == 1)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "Promotions")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Promociones
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "Product")">
-                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Promotion" />
-                            Catalogo de Productos
-                        </a>
-                    </li>
-
-                }
-                else if (userRole == 2)
-                {
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Buy", "Client")">
-                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                            Comprar
-                        </a>
-                    </li>
-
-                }
-                else if (userRole == 3)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Entregas", "Delivery")">
-                            Entregas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Historial", "Delivery")">
-                            Historial
-                        </a>
-                    </li>
-                }
-            </ul>
-
-                    
-                    <div class="navbar-actions">
-                        <a href="@Url.Action("Index", "Profile")">
-                            <img src="@Url.Content("~/Content/icons/Profile.svg")" width="28" height="20" alt="Mi Perfil" />
-                        </a>
-                    </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="@Url.Action("Index", "Product")">
-                                                <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Promotion" />
-                                                Catalogo de Productos
-                                            </a>
-                                        </li> }
-                                                        else if (userRole == 3)
-                                                        {
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="@Url.Action("Entregas", "Delivery")">
-                                                Entregas
-                                            </a>
-                                        </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link" href="@Url.Action("Historial", "Delivery")">
-                                                                    Historial
-                                                                </a>
-                                                            </li>                }
-    </ul>
-
+                        @if (userRole == 1)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "Promotions")">
+                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                                    Promociones
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "Product")">
+                                    <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catálogo" />
+                                    Catálogo de Productos
+                                </a>
+                            </li>
+                        }
+                        else if (userRole == 2)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Buy", "Client")">
+                                    <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                                    Comprar
+                                </a>
+                            </li>
+                        }
+                        else if (userRole == 3)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Entregas", "Delivery")">
+                                    Entregas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Historial", "Delivery")">
+                                    Historial
+                                </a>
+                            </li>
+                        }
+                    </ul>
 
                     <div class="navbar-actions">
                         <a href="@Url.Action("Index", "Profile")">
                             <img src="@Url.Content("~/Content/icons/Profile.svg")" width="28" height="20" alt="Mi Perfil" />
+                        </a>
+                        <a href="@Url.Action("Logout", "Auth")" class="btn-wine">
+                            Cerrar Sesión
                         </a>
                     </div>
+                }
+                else
+                {
+                    @Html.Partial("~/Views/Auth/Register.cshtml")
+                    @Html.Partial("~/Views/Auth/Login.cshtml")
 
-                                    <div class="navbar-actions">
-                                        <a href="@Url.Action("Logout", "Auth")" class="btn-wine">
-                                            Cerrar Sesión
-                                        </a>
-                                    </div> }
-                                                else
-                                                { <!-- Menú de Registro y Login -->
-                                                    @Html.Partial("~/Views/Auth/Register.cshtml")
-                                                                    @Html.Partial("~/Views/Auth/Login.cshtml")
-                                                                                    <div class="navbar-actions">
-                                                                                        <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
-                                                                                        <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
-                                                                                    </div>}
+                    <div class="navbar-actions">
+                        <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
+                        <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
+                    </div>
+                }
             </div>
         </nav>
     </header>
 
-    <!-- Contenido Principal -->
     <main role="main">
         @RenderBody()
     </main>
 
-    <!-- Footer -->
     <footer>
         &copy; @DateTime.Now.Year - Todos los derechos reservados Dream Cakes.
     </footer>
@@ -135,53 +103,45 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-
-    <!-- Tiempo que duran los TempData en caso de error o una respuesta positiva -->
     <script>
-
-    $(document).ready(function () {
-        @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
-        {
-            if (TempData["ShowModal"] != null)
+        $(document).ready(function () {
+            @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
             {
-                if (TempData["ShowModal"].ToString() == "login")
+                if (TempData["ShowModal"] != null)
                 {
-                    <text>
-                    setTimeout(function() { $('#loginModal').modal('show'); }, 300);
-                    </text>
-                }
-                else if (TempData["ShowModal"].ToString() == "register")
-                {
-                    <text>
-                    setTimeout(function() { $('#registerModal').modal('show'); }, 300);
-                    </text>
+                    if (TempData["ShowModal"].ToString() == "login")
+                    {
+                        <text>
+                            setTimeout(function () { $('#loginModal').modal('show'); }, 300);
+                        </text>
+                    }
+                    else if (TempData["ShowModal"].ToString() == "register")
+                    {
+                        <text>
+                            setTimeout(function () { $('#registerModal').modal('show'); }, 300);
+                        </text>
+                    }
                 }
             }
-        }
-    });
-    </script>
+        });
 
-    <script>
-    $(document).ready(function() {
-        // Función para impiar modales
-        function cleanModals() {
-            $('.modal form')[0].reset();
-            $('.text-danger, .alert').hide();
-            $.post('@Url.Action("ClearTempMessages", "Cleanup")');
-        }
+        $(document).ready(function () {
+            function cleanModals() {
+                $('.modal form')[0].reset();
+                $('.text-danger, .alert').hide();
+                $.post('@Url.Action("ClearTempMessages", "Cleanup")');
+            }
 
-        // Configurar eventos
-        $('.modal').on('hidden.bs.modal', cleanModals);
-        $('.modal .close').click(cleanModals);
+            $('.modal').on('hidden.bs.modal', cleanModals);
+            $('.modal .close').click(cleanModals);
 
-        // Mostrar modal inicial si hay mensajes
-        @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
-        {
-            <text>
-            $('#@TempData["ShowModal"]Modal').modal('show');
-            </text>
-        }
-    });
+            @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
+            {
+                <text>
+                    $('#@TempData["ShowModal"]Modal').modal('show');
+                </text>
+            }
+        });
     </script>
 
     @RenderSection("scripts", required: false)
