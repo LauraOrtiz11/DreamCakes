@@ -19,7 +19,7 @@ namespace DreamCakes.Controllers
         public ActionResult Index()
         {
             // Obtener ID del usuario logueado desde la sesión
-            var userId = (int)Session["ID_Usuario"];
+            var userId = (int)Session["ID_User"];
             var profile = _userService.GetUserProfile(userId);
             return View(profile);
         }

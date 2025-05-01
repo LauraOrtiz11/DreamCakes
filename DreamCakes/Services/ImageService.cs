@@ -48,7 +48,7 @@ namespace DreamCakes.Services
             {
                 images.Add(new ImageDto
                 {
-                    Name = System.IO.Path.GetFileName(url),
+                    ImageName = System.IO.Path.GetFileName(url),
                     Url = url
                 });
             }

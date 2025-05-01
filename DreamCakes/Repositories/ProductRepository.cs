@@ -33,15 +33,15 @@ namespace DreamCakes.Repositories
                 .Where(p => p.Stock > 0)
                 .Select(p => new ProductDto
                 {
-                    ProductId = p.ID_Producto,
-                    CategoryId = p.ID_Categoria,
-                    Name = p.Nombre,
-                    Description = p.Descripcion,
+                    ID_Product = p.ID_Producto,
+                    ID_Category = p.ID_Categoria,
+                    ProductName = p.Nombre,
+                    ProductDescri = p.Descripcion,
                     Price = p.Precio,
                     Stock = p.Stock,
                     Images = p.IMAGENs.Select(i => new ImageDto
                     {
-                        Name = i.Nombre_Img,
+                        ImageName = i.Nombre_Img,
                         Url = i.Imagen_URL
                     }).ToList(),
                     CategoryName = p.CATEGORIA.Nom_Categ
@@ -57,15 +57,15 @@ namespace DreamCakes.Repositories
                 .Where(p => p.ID_Producto == productId)
                 .Select(p => new ProductDto
                 {
-                    ProductId = p.ID_Producto,
-                    CategoryId = p.ID_Categoria,
-                    Name = p.Nombre,
-                    Description = p.Descripcion,
+                    ID_Product = p.ID_Producto,
+                    ID_Category = p.ID_Categoria,
+                    ProductName = p.Nombre,
+                    ProductDescri = p.Descripcion,
                     Price = p.Precio,
                     Stock = p.Stock,
                     Images = p.IMAGENs.Select(i => new ImageDto
                     {
-                        Name = i.Nombre_Img,
+                        ImageName = i.Nombre_Img,
                         Url = i.Imagen_URL
                     }).ToList(),
                     CategoryName = p.CATEGORIA.Nom_Categ
@@ -80,7 +80,7 @@ namespace DreamCakes.Repositories
                 .Where(p => p.ID_Producto == productId)
                 .Select(p => new ProductDto
                 {
-                    ProductId = p.ID_Producto,
+                    ID_Product = p.ID_Producto,
                     Images = p.IMAGENs.Select(i => new ImageDto
                     {
                         Url = i.Imagen_URL
@@ -95,9 +95,9 @@ namespace DreamCakes.Repositories
             {
                 var product = new PRODUCTO
                 {
-                    ID_Categoria = productDto.CategoryId,
-                    Nombre = productDto.Name,
-                    Descripcion = productDto.Description,
+                    ID_Categoria = productDto.ID_Category,
+                    Nombre = productDto.ProductName,
+                    Descripcion = productDto.ProductDescri,
                     Precio = productDto.Price,
                     Stock = productDto.Stock
                 };
@@ -127,12 +127,12 @@ namespace DreamCakes.Repositories
             {
                 try
                 {
-                    var product = _context.PRODUCTOes.Find(productDto.ProductId);
+                    var product = _context.PRODUCTOes.Find(productDto.ID_Product);
                     if (product == null) return false;
 
-                    product.ID_Categoria = productDto.CategoryId;
-                    product.Nombre = productDto.Name;
-                    product.Descripcion = productDto.Description;
+                    product.ID_Categoria = productDto.ID_Category;
+                    product.Nombre = productDto.ProductName;
+                    product.Descripcion = productDto.ProductDescri;
                     product.Precio = productDto.Price;
                     product.Stock = productDto.Stock;
 
@@ -140,11 +140,11 @@ namespace DreamCakes.Repositories
                     {
                         var images = newImageUrls.Select(url => new ImageDto
                         {
-                            Name = System.IO.Path.GetFileName(url),
+                            ImageName = System.IO.Path.GetFileName(url),
                             Url = url
                         }).ToList();
 
-                        if (!_imageRepository.AddImagesToProduct(productDto.ProductId, images))
+                        if (!_imageRepository.AddImagesToProduct(productDto.ID_Product, images))
                         {
                             transaction.Rollback();
                             return false;

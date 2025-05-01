@@ -23,7 +23,7 @@ namespace DreamCakes.Services
             return promotions.Select(p => new PromotionDTO
             {
                 ID_Prom = p.ID_Promocion,
-                NameProm = p.Nombre_Prom,
+                PromName = p.Nombre_Prom,
                 DiscountPer = p.Porc_Desc,
                 StartDate = p.Fecha_Ini,
                 EndDate = p.Fecha_Fin,
@@ -45,7 +45,7 @@ namespace DreamCakes.Services
             return new PromotionDTO
             {
                 ID_Prom = promo.ID_Promocion,
-                NameProm = promo.Nombre_Prom,
+                PromName = promo.Nombre_Prom,
                 DiscountPer = promo.Porc_Desc,
                 StartDate = promo.Fecha_Ini,
                 EndDate = promo.Fecha_Fin,
@@ -59,7 +59,7 @@ namespace DreamCakes.Services
         {
             var promo = new PROMOCION
             {
-                Nombre_Prom = dto.NameProm,
+                Nombre_Prom = dto.PromName,
                 Porc_Desc = dto.DiscountPer,
                 Fecha_Ini = dto.StartDate,
                 Fecha_Fin = dto.EndDate,
@@ -79,7 +79,7 @@ namespace DreamCakes.Services
             var promo = new PROMOCION
             {
                 ID_Promocion = dto.ID_Prom,
-                Nombre_Prom = dto.NameProm,
+                Nombre_Prom = dto.PromName,
                 Porc_Desc = dto.DiscountPer,
                 Fecha_Ini = dto.StartDate,
                 Fecha_Fin = dto.EndDate,

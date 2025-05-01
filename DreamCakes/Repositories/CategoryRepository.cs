@@ -20,10 +20,10 @@ namespace DreamCakes.Repositories
             return _context.CATEGORIAs
                 .Select(c => new CategoryDto
                 {
-                    CategoryId = c.ID_Categoria,
-                    Name = c.Nom_Categ,
-                    Description = c.Descrip_Categ,
-                    IsActive = c.Estado
+                    ID_Category = c.ID_Categoria,
+                    CategoryName = c.Nom_Categ,
+                    CategoryDescri = c.Descrip_Categ,
+                    CategoryState = c.Estado
                 }).ToList();
         }
 
@@ -34,9 +34,9 @@ namespace DreamCakes.Repositories
                 .Where(c => c.Estado)
                 .Select(c => new CategoryDto
                 {
-                    CategoryId = c.ID_Categoria,
-                    Name = c.Nom_Categ,
-                    Description = c.Descrip_Categ
+                    ID_Category = c.ID_Categoria,
+                    CategoryName = c.Nom_Categ,
+                    CategoryDescri = c.Descrip_Categ
                 }).ToList();
         }
     }

@@ -21,13 +21,13 @@ namespace DreamCakes.Repositories
                 .Where(u => u.ID_Usuario == userId)
                 .Select(u => new ProfileDto
                 {
-                    ID_Usuario = u.ID_Usuario,
-                    Nombres = u.Nombres,
-                    Apellidos = u.Apellidos,
-                    Telefono = u.Telefono,
-                    Direccion = u.Direccion,
+                    ID_User = u.ID_Usuario,
+                    UserName = u.Nombres,
+                    UserSName = u.Apellidos,
+                    PhoneNumb = u.Telefono,
+                    Address = u.Direccion,
                     Email = u.Email,
-                    ID_Rol = u.ID_Rol,
+                    ID_Role = u.ID_Rol,
                     
                 }).FirstOrDefault();
         }
@@ -35,13 +35,13 @@ namespace DreamCakes.Repositories
         // Actualiza el perfil de un usuario en la base de datos.
         public bool UpdateUserProfile(ProfileDto profileDto)
         {
-            var user = _context.USUARIOs.Find(profileDto.ID_Usuario);
+            var user = _context.USUARIOs.Find(profileDto.ID_User);
             if (user == null) return false;
 
-            user.Nombres = profileDto.Nombres;
-            user.Apellidos = profileDto.Apellidos;
-            user.Telefono = profileDto.Telefono;
-            user.Direccion = profileDto.Direccion;
+            user.Nombres = profileDto.UserName;
+            user.Apellidos = profileDto.UserSName;
+            user.Telefono = profileDto.PhoneNumb;
+            user.Direccion = profileDto.Address;
             user.Email = profileDto.Email;
 
             _context.Entry(user).State = EntityState.Modified;

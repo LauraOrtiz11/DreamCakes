@@ -25,7 +25,7 @@ namespace DreamCakes.Services
                 }
 
                 // Validar contraseña 
-                if (!EncryptUtility.Verify(loginDto.Contrasena, user.Contrasena))
+                if (!EncryptUtility.Verify(loginDto.Password, user.Contrasena))
                 {
                     loginDto.Response = 0;
                     loginDto.Message = AuthErrorsUtility.INVALID_CREDENTIALS;
@@ -42,9 +42,9 @@ namespace DreamCakes.Services
                 
                 loginDto.Response = 1;
                 loginDto.Message = "Autenticación exitosa";
-                loginDto.ID_Usuario = user.ID_Usuario;
-                loginDto.ID_Rol = user.ID_Rol;
-                loginDto.ID_Estado = user.ID_Estado;
+                loginDto.ID_User = user.ID_Usuario;
+                loginDto.ID_Role = user.ID_Rol;
+                loginDto.ID_State = user.ID_Estado;
 
                 return loginDto;
             }
@@ -70,9 +70,9 @@ namespace DreamCakes.Services
                 }
 
                 //Encriptar la contraseña
-                registerDto.Contrasena = EncryptUtility.Hash(registerDto.Contrasena);
-                registerDto.ID_Estado = 1; // Activo por defecto
-                registerDto.ID_Rol = 2; // Cliente por defecto
+                registerDto.Password = EncryptUtility.Hash(registerDto.Password);
+                registerDto.ID_State = 1; // Activo por defecto
+                registerDto.ID_Role = 2; // Cliente por defecto
 
                 // Creación del Usuario 
                 var result = authRepository.CreateUser(registerDto);

@@ -24,7 +24,7 @@ namespace DreamCakes.Repositories
                     _context.IMAGENs.Add(new IMAGEN
                     {
                         ID_Producto = productId,
-                        Nombre_Img = image.Name,
+                        Nombre_Img = image.ImageName,
                         Imagen_URL = image.Url
                     });
                 }

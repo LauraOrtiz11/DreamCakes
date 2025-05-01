@@ -34,11 +34,11 @@ namespace DreamCakes.Controllers
                 }
 
                 // Configurar autenticación con Cookies
-                CookieUtility.CreateAuthCookie(Response, result.Email, result.ID_Rol);
+                CookieUtility.CreateAuthCookie(Response, result.Email, result.ID_Role);
                 SessionManagerUtility.SetUserSession(Session, result);
 
                 // Redirección según el rol a la vista principal de cada uno
-                return RedirectToRole(result.ID_Rol);
+                return RedirectToRole(result.ID_Role);
             }
             catch (Exception ex)
             {

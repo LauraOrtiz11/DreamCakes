@@ -33,14 +33,14 @@ namespace DreamCakes.Repositories
             {
                 var User = new USUARIO
                 {
-                    Nombres = registerDto.Nombres,
-                    Apellidos = registerDto.Apellidos,
-                    Telefono = registerDto.Telefono,
-                    Direccion = registerDto.Direccion,
+                    Nombres = registerDto.UserName,
+                    Apellidos = registerDto.UserSName,
+                    Telefono = registerDto.PhoneNumb,
+                    Direccion = registerDto.Address,
                     Email = registerDto.Email,
-                    Contrasena = registerDto.Contrasena,
-                    ID_Estado = registerDto.ID_Estado,
-                    ID_Rol = registerDto.ID_Rol
+                    Contrasena = registerDto.Password,
+                    ID_Estado = registerDto.ID_State,
+                    ID_Rol = registerDto.ID_Role
                 };
 
                 context.USUARIOs.Add(User);
@@ -48,7 +48,7 @@ namespace DreamCakes.Repositories
 
                 registerDto.Response = 1;
                 registerDto.Message = AuthErrorsUtility.REGISTER_SUCCESS;
-                registerDto.ID_Usuario = User.ID_Usuario;
+                registerDto.ID_User = User.ID_Usuario;
                 return registerDto;
             }
             catch (Exception ex)
