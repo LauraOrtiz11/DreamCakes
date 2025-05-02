@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DreamCakes.Dtos.ProductDto>
+﻿@model IEnumerable<DreamCakes.Dtos.Admin.AdminProductDto>
 @{
     ViewBag.Title = "Lista de Productos";
 }
@@ -38,25 +38,25 @@
                         <td>
                             @if (item.Images != null && item.Images.Any())
                             {
-                                <img src="@item.Images.First().Url" alt="@item.Name" style="width: 60px; height: 60px; object-fit: cover;" />
+                                <img src="@item.Images.First().ImgUrl" alt="@item.ProdName" style="width: 60px; height: 60px; object-fit: cover;" />
                             }
                             else
                             {
                                 <span class="text-muted">Sin imagen</span>
                             }
                         </td>
-                        <td>@item.Name</td>
+                        <td>@item.ProdName</td>
                         <td>@item.CategoryName</td>
-                        <td>@item.Price.ToString("C")</td>
-                        <td>@item.Stock</td>
+                        <td>@item.ProdPrice.ToString("C")</td>
+                        <td>@item.ProdStock</td>
                         <td>
-                            <a href="@Url.Action("Edit", new { id = item.ProductId })" class="btn btn-sm btn-primary">
+                            <a href="@Url.Action("Edit", new { id = item.ID_Product })" class="btn btn-sm btn-primary">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
-                            <a href="@Url.Action("Details", new { id = item.ProductId })" class="btn btn-sm btn-info">
+                            <a href="@Url.Action("Details", new { id = item.ID_Product })" class="btn btn-sm btn-info">
                                 <i class="fas fa-info-circle"></i> Detalles
                             </a>
-                            <button onclick="deleteProduct(@item.ProductId)" class="btn btn-sm btn-danger">
+                            <button onclick="deleteProduct(@item.ID_Product)" class="btn btn-sm btn-danger">
                                 <i class="fas fa-trash"></i> Eliminar
                             </button>
                         </td>

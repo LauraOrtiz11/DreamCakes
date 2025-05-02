@@ -37,6 +37,6 @@ namespace DreamCakes.Repositories.Models
         public virtual DbSet<ROL> ROLs { get; set; }
         public virtual DbSet<USUARIO> USUARIOs { get; set; }
         public virtual DbSet<VALORACION> VALORACIONs { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        
     }
 }

@@ -1,0 +1,290 @@
+﻿@model DreamCakes.Dtos.Client.ClientProductDetailDto
+@{
+    ViewBag.Title = Model.ProductName;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Galería de Imágenes -->
+        <div class="col-md-6">
+            <div class="mb-3">
+                <img id="mainProductImage" src="@Model.Images.FirstOrDefault()?.ImageUrl"
+                     class="img-fluid rounded" alt="@Model.ProductName"
+                     style="max-height: 400px; width: 100%; object-fit: contain;">
+            </div>
+            <div class="d-flex flex-wrap">
+                @foreach (var image in Model.Images)
+                {
+                    <img src="@image.ImageUrl" class="img-thumbnail m-1"
+                         style="width: 80px; height: 80px; cursor: pointer;"
+                         onclick="document.getElementById('mainProductImage').src = this.src"
+                         alt="@image.ImageName">
+                }
+            </div>
+        </div>
+
+        <!-- Detalles del Producto -->
+        <div class="col-md-6">
+            <h2>@Model.ProductName</h2>
+            <p class="text-muted">@Model.CategoryName</p>
+
+            <div class="d-flex align-items-center mb-3">
+                <div class="mr-2">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <i class="fas fa-star @(i <= Model.ProductRating ? "text-warning" : "text-muted")"></i>
+                    }
+                </div>
+                <span class="text-muted">(@Model.Ratings.Count valoraciones)</span>
+            </div>
+
+            <h3 class="text-primary mb-4">@Model.ProductPrice.ToString("C")</h3>
+
+            <div class="mb-4">
+                <p>@Model.ProductDescription</p>
+            </div>
+
+            <div class="mb-4">
+                <p class="@(Model.ProductStock > 0 ? "text-success" : "text-danger")">
+                    <strong>Disponibilidad:</strong>
+                    @(Model.ProductStock > 0 ? $"En stock ({Model.ProductStock} unidades)" : "Agotado")
+                </p>
+            </div>
+
+            @if (Model.ProductStock > 0)
+            {
+                <div class="input-group mb-3" style="max-width: 200px;">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" onclick="decrementQuantity()">-</button>
+                    </div>
+                    <input type="number" id="quantity" class="form-control text-center" value="1" min="1" max="@Model.ProductStock">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" onclick="incrementQuantity()">+</button>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-lg mb-4">
+                    <i class="fas fa-shopping-cart"></i> Añadir al Carrito
+                </button>
+            }
+
+            <!-- Pestañas -->
+            <ul class="nav nav-tabs mb-3" id="productTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab">Detalles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab">Valoraciones (@Model.Ratings.Count)</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="productTabsContent">
+                <div class="tab-pane fade show active" id="details" role="tabpanel">
+                    <h5>Información del Producto</h5>
+                    <ul>
+                        <li>Producto artesanal</li>
+                        <li>Ingredientes de alta calidad</li>
+                        <li>Peso aproximado: 500g</li>
+                        <li>Conservar en refrigeración</li>
+                    </ul>
+                </div>
+
+                <div class="tab-pane fade" id="reviews" role="tabpanel">
+                    <!-- Formulario de Valoración -->
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5>Deja tu valoración</h5>
+                                <form id="ratingForm" onsubmit="submitRating(event)">
+                                    <input type="hidden" name="ProductID" value="@Model.ProductID" />
+
+                                    <div class="form-group">
+                                        <label>Puntuación</label>
+                                        <div class="rating-stars">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="far fa-star rating-star" data-value="@i"></i>
+                                            }
+                                            <input type="hidden" name="Rating" id="selectedRating" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Comentario</label>
+                                        <textarea name="Comment" class="form-control" rows="3" required></textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Enviar Valoración</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <a href="@Url.Action("Login", "Account")">Inicia sesión</a> para dejar una valoración.
+                        </div>
+                    }
+
+                    <!-- Lista de Valoraciones -->
+                    <div id="reviewsList">
+                        <h5>Valoraciones de Clientes</h5>
+
+                        @if (Model.Ratings.Any())
+                        {
+                            foreach (var rating in Model.Ratings)
+                            {
+                                <div class="media mb-4">
+                                    <div class="mr-3">
+                                        <div class="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                             style="width: 50px; height: 50px;">
+                                            @rating.ClientName.Substring(0, 1)
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <h6 class="mt-0">@rating.ClientName</h6>
+                                        <div class="mb-2">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="fas fa-star @(i <= rating.Rating ? "text-warning" : "text-muted")"></i>
+                                            }
+                                            <small class="text-muted ml-2">@rating.CreatedDate.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                        <p>@rating.Comment</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-light">
+                                Este producto aún no tiene valoraciones. ¡Sé el primero en opinar!
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Manejo de cantidad
+        function incrementQuantity() {
+            const input = document.getElementById('quantity');
+            const max = parseInt(input.max);
+            if (parseInt(input.value) < max) {
+                input.value = parseInt(input.value) + 1;
+            }
+        }
+
+        function decrementQuantity() {
+            const input = document.getElementById('quantity');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        // Rating con estrellas
+        document.querySelectorAll('.rating-star').forEach(star => {
+            star.addEventListener('click', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                document.getElementById('selectedRating').value = value;
+
+                // Actualizar visualización
+                document.querySelectorAll('.rating-star').forEach((s, index) => {
+                    if (index < value) {
+                        s.classList.remove('far');
+                        s.classList.add('fas', 'text-warning');
+                    } else {
+                        s.classList.remove('fas', 'text-warning');
+                        s.classList.add('far');
+                    }
+                });
+            });
+
+            star.addEventListener('mouseover', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+
+                document.querySelectorAll('.rating-star').forEach((s, index) => {
+                    if (index < value) {
+                        s.classList.add('text-warning');
+                    }
+                });
+            });
+
+            star.addEventListener('mouseout', function() {
+                const currentRating = parseInt(document.getElementById('selectedRating').value) || 0;
+
+                document.querySelectorAll('.rating-star').forEach((s, index) => {
+                    if (index >= currentRating) {
+                        s.classList.remove('text-warning');
+                    }
+                });
+            });
+        });
+
+        // Envío de valoración con AJAX
+        function submitRating(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch('@Url.Action("SubmitRating", "ClientProduct")', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.Success) {
+                    location.reload(); // Recargar para mostrar la nueva valoración
+                } else {
+                    alert(data.Message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al enviar la valoración');
+            });
+        }
+    </script>
+
+    <style>
+        .rating-stars {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .rating-star {
+            transition: all 0.2s;
+        }
+
+        .user-avatar {
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid #007bff;
+        }
+
+        .thumbnail-container img {
+            transition: transform 0.2s;
+        }
+
+            .thumbnail-container img:hover {
+                transform: scale(1.1);
+            }
+    </style>
+}

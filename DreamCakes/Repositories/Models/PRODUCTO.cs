@@ -28,7 +28,8 @@ namespace DreamCakes.Repositories.Models
         public string Descripcion { get; set; }
         public decimal Precio { get; set; }
         public int Stock { get; set; }
-    
+        public Nullable<decimal> PromPuntuacion { get; set; }
+
         public virtual CATEGORIA CATEGORIA { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DETALLE_PEDIDO> DETALLE_PEDIDO { get; set; }

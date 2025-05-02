@@ -18,7 +18,9 @@ namespace DreamCakes.Repositories.Models
         public int ID_Cliente { get; set; }
         public int ID_Producto { get; set; }
         public int Puntuacion { get; set; }
-    
+        public string Comentario { get; set; }
+        public System.DateTime Fecha_Creacion { get; set; }
+        public Nullable<System.DateTime> Fecha_Modificacion { get; set; }
         public virtual PRODUCTO PRODUCTO { get; set; }
         public virtual USUARIO USUARIO { get; set; }
     }
