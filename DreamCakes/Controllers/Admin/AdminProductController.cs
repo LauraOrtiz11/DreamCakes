@@ -1,4 +1,5 @@
-﻿using DreamCakes.Services;
+﻿using DreamCakes.Services.Admin;
+using DreamCakes.Dtos.Admin;
 using DreamCakes.Dtos;
 using System;
 using System.Web.Mvc;
@@ -7,21 +8,21 @@ using System.Web;
 using DreamCakes.Utilities;
 using System.Linq;
 
-namespace DreamCakes.Controllers
+namespace DreamCakes.Controllers.Admin
 {
     [RoleAuthorizeUtility(1)]
-    public class ProductController : Controller
+    public class AdminProductController : Controller
     {
-        private readonly ProductService _productService;
-        private readonly ImageService _imageService;
-        private readonly CategoryService _categoryService;
+        private readonly AdminProductService _productService;
+        private readonly AdminImageService _imageService;
+        private readonly AdminCategoryService _categoryService;
 
         // Inicializa los servicios necesarios para la gestión de productos, imágenes y categorías.
-        public ProductController()
+        public AdminProductController()
         {
-            _productService = new ProductService();
-            _imageService = new ImageService();
-            _categoryService = new CategoryService();
+            _productService = new AdminProductService();
+            _imageService = new AdminImageService();
+            _categoryService = new AdminCategoryService();
         }
 
         // Muestra la lista de todos los productos disponibles.
@@ -35,7 +36,7 @@ namespace DreamCakes.Controllers
             catch (Exception)
             {
                 ViewBag.ErrorMessage = "Error al cargar el catálogo de productos";
-                return View(new List<ProductDto>());
+                return View(new List<AdminProductDto>());
             }
         }
 
@@ -60,7 +61,7 @@ namespace DreamCakes.Controllers
         {
             try
             {
-                ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                 return View();
             }
             catch (Exception)
@@ -73,13 +74,13 @@ namespace DreamCakes.Controllers
         // Procesa la creación de un nuevo producto con validación de datos e imágenes.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProductDto productDto, IEnumerable<HttpPostedFileBase> productImages)
+        public ActionResult Create(AdminProductDto productDto, IEnumerable<HttpPostedFileBase> productImages)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                     return View(productDto);
                 }
 
@@ -87,7 +88,7 @@ namespace DreamCakes.Controllers
                 if (productImages == null || !productImages.Any(f => f != null && f.ContentLength > 0))
                 {
                     ViewBag.ErrorMessage = "Debe subir al menos una imagen para el producto";
-                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                     return View(productDto);
                 }
 
@@ -96,7 +97,7 @@ namespace DreamCakes.Controllers
                 if (productId <= 0)
                 {
                     ViewBag.ErrorMessage = "Error al crear el producto en la base de datos";
-                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                     return View(productDto);
                 }
 
@@ -107,7 +108,7 @@ namespace DreamCakes.Controllers
                     // Si falla al guardar imágenes, eliminar el producto creado
                     _productService.DeleteProduct(productId);
                     ViewBag.ErrorMessage = "Error al guardar las imágenes del producto";
-                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                     return View(productDto);
                 }
 
@@ -121,7 +122,7 @@ namespace DreamCakes.Controllers
                         FileHelperUtility.DeleteFile(url);
                     }
                     ViewBag.ErrorMessage = "Error al asociar las imágenes al producto";
-                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                     return View(productDto);
                 }
 
@@ -132,7 +133,7 @@ namespace DreamCakes.Controllers
             {
                 System.Diagnostics.Debug.WriteLine($"Error al crear producto: {ex}");
                 ViewBag.ErrorMessage = "Ocurrió un error inesperado al crear el producto";
-                ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                 return View(productDto);
             }
         }
@@ -145,7 +146,7 @@ namespace DreamCakes.Controllers
                 var product = _productService.GetProductById(id);
                 if (product == null) return HttpNotFound();
 
-                ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                 return View(product);
             }
             catch (Exception)
@@ -158,13 +159,13 @@ namespace DreamCakes.Controllers
         // Procesa la edición de un producto, incluyendo la posible adición de nuevas imágenes.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ProductDto productDto, IEnumerable<HttpPostedFileBase> newImages)
+        public ActionResult Edit(AdminProductDto productDto, IEnumerable<HttpPostedFileBase> newImages)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                    ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                     return View(productDto);
                 }
 
@@ -176,13 +177,13 @@ namespace DreamCakes.Controllers
                 }
 
                 ViewBag.ErrorMessage = "Error updating product";
-                ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                 return View(productDto);
             }
             catch (Exception)
             {
                 ViewBag.ErrorMessage = "Unexpected error updating product";
-                ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "CategoryId", "Name");
+                ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                 return View(productDto);
             }
         }

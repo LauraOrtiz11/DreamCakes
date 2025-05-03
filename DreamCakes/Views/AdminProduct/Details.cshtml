@@ -1,4 +1,4 @@
-﻿@model DreamCakes.Dtos.ProductDto
+﻿@model DreamCakes.Dtos.Admin.AdminProductDto
 @{
     ViewBag.Title = "Detalles del Producto";
 }
@@ -11,15 +11,15 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">@Model.Name</h4>
+                    <h4 class="card-title">@Model.ProdName</h4>
                     <h6 class="card-subtitle mb-2 text-muted">@Model.CategoryName</h6>
-                    <p class="card-text">@Model.Description</p>
+                    <p class="card-text">@Model.ProdDescription</p>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
-                            <strong>Precio:</strong> @Model.Price.ToString("C")
+                            <strong>Precio:</strong> @Model.ProdPrice.ToString("C")
                         </li>
                         <li class="list-group-item">
-                            <strong>Stock disponible:</strong> @Model.Stock
+                            <strong>Stock disponible:</strong> @Model.ProdStock
                         </li>
                     </ul>
                 </div>
@@ -34,7 +34,7 @@
                     foreach (var image in Model.Images)
                     {
                         <div class="mr-3 mb-3" style="width: 150px;">
-                            <img src="@image.Url" alt="@image.Name"
+                            <img src="@image.ImgUrl" alt="@image.ImgName"
                                  class="img-thumbnail" style="width: 100%; height: 150px; object-fit: cover;" />
                         </div>
                     }
@@ -48,7 +48,7 @@
     </div>
 
     <div class="mt-4">
-        <a href="@Url.Action("Edit", new { id = Model.ProductId })" class="btn btn-primary">
+        <a href="@Url.Action("Edit", new { id = Model.ID_Product })" class="btn btn-primary">
             <i class="fas fa-edit"></i> Editar
         </a>
         <a href="@Url.Action("Index")" class="btn btn-secondary">

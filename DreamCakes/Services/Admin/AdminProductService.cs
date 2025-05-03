@@ -1,37 +1,37 @@
-﻿using DreamCakes.Dtos;
-using DreamCakes.Repositories;
+﻿using DreamCakes.Dtos.Admin;
+using DreamCakes.Repositories.Admin;
 using System.Web;
 using System.Collections.Generic;
 using DreamCakes.Utilities;
 using System;
 
-namespace DreamCakes.Services
+namespace DreamCakes.Services.Admin
 {
-    public class ProductService
+    public class AdminProductService
     {
-        private readonly ProductRepository _productRepository;
-        private readonly ImageService _imageService;
+        private readonly AdminProductRepository _productRepository;
+        private readonly AdminImageService _imageService;
 
-        public ProductService()
+        public AdminProductService()
         {
-            _productRepository = new ProductRepository();
-            _imageService = new ImageService();
+            _productRepository = new AdminProductRepository();
+            _imageService = new AdminImageService();
         }
 
         // Obtiene la lista de todos los productos disponibles con stock.
-        public List<ProductDto> GetAllProducts()
+        public List<AdminProductDto> GetAllProducts()
         {
             return _productRepository.GetAllProducts();
         }
 
         // Obtiene un producto por su identificador.
-        public ProductDto GetProductById(int productId)
+        public AdminProductDto GetProductById(int productId)
         {
             return _productRepository.GetProductById(productId);
         }
 
         // Crea un nuevo producto sin imágenes asociadas.
-        public int CreateProductWithoutImages(ProductDto productDto)
+        public int CreateProductWithoutImages(AdminProductDto productDto)
         {
             using (var transaction = _productRepository.BeginTransaction())
             {
@@ -57,7 +57,7 @@ namespace DreamCakes.Services
         }
 
         // Actualiza los datos de un producto existente y opcionalmente guarda nuevas imágenes.
-        public bool UpdateProduct(ProductDto productDto, IEnumerable<HttpPostedFileBase> newImages = null)
+        public bool UpdateProduct(AdminProductDto productDto, IEnumerable<HttpPostedFileBase> newImages = null)
         {
             var newImageUrls = newImages != null ? _imageService.SaveUploadedImages(newImages) : new List<string>();
             return _productRepository.UpdateProduct(productDto, newImageUrls);
@@ -72,7 +72,7 @@ namespace DreamCakes.Services
 
             foreach (var image in product.Images)
             {
-                FileHelperUtility.DeleteFile(image.Url);
+                FileHelperUtility.DeleteFile(image.ImgUrl);
             }
 
             return _productRepository.DeleteProduct(productId);

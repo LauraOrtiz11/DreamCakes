@@ -1,21 +1,22 @@
-﻿using DreamCakes.Dtos;
+﻿using DreamCakes.Dtos.Admin;
+using DreamCakes.Dtos;
 using DreamCakes.Repositories.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
-namespace DreamCakes.Repositories
+namespace DreamCakes.Repositories.Admin
 {
-    public class ProductRepository
+    public class AdminProductRepository
     {
         private readonly DreamCakesEntities _context;
-        private readonly ImageRepository _imageRepository;
+        private readonly AdminImageRepository _imageRepository;
 
-        public ProductRepository()
+        public AdminProductRepository()
         {
             _context = new DreamCakesEntities();
-            _imageRepository = new ImageRepository(_context);
+            _imageRepository = new AdminImageRepository();
         }
 
         // Inicia una transacción de base de datos manualmente.
@@ -25,81 +26,81 @@ namespace DreamCakes.Repositories
         }
 
         // Obtiene todos los productos con stock disponible, incluyendo sus imágenes y nombre de categoría.
-        public List<ProductDto> GetAllProducts()
+        public List<AdminProductDto> GetAllProducts()
         {
             return _context.PRODUCTOes
                 .Include(p => p.IMAGENs)
                 .Include(p => p.CATEGORIA)
                 .Where(p => p.Stock > 0)
-                .Select(p => new ProductDto
+                .Select(p => new AdminProductDto
                 {
-                    ProductId = p.ID_Producto,
-                    CategoryId = p.ID_Categoria,
-                    Name = p.Nombre,
-                    Description = p.Descripcion,
-                    Price = p.Precio,
-                    Stock = p.Stock,
+                    ID_Product = p.ID_Producto,
+                    ID_Category = p.ID_Categoria,
+                    ProdName = p.Nombre,
+                    ProdDescription = p.Descripcion,
+                    ProdPrice = p.Precio,
+                    ProdStock = p.Stock,
                     Images = p.IMAGENs.Select(i => new ImageDto
                     {
-                        Name = i.Nombre_Img,
-                        Url = i.Imagen_URL
+                        ImgName = i.Nombre_Img,
+                        ImgUrl = i.Imagen_URL
                     }).ToList(),
                     CategoryName = p.CATEGORIA.Nom_Categ
                 }).ToList();
         }
 
         // Obtiene un producto específico por su ID, incluyendo imágenes y categoría.
-        public ProductDto GetProductById(int productId)
+        public AdminProductDto GetProductById(int productId)
         {
             return _context.PRODUCTOes
                 .Include(p => p.IMAGENs)
                 .Include(p => p.CATEGORIA)
                 .Where(p => p.ID_Producto == productId)
-                .Select(p => new ProductDto
+                .Select(p => new AdminProductDto
                 {
-                    ProductId = p.ID_Producto,
-                    CategoryId = p.ID_Categoria,
-                    Name = p.Nombre,
-                    Description = p.Descripcion,
-                    Price = p.Precio,
-                    Stock = p.Stock,
+                    ID_Product = p.ID_Producto,
+                    ID_Category = p.ID_Categoria,
+                    ProdName = p.Nombre,
+                    ProdDescription = p.Descripcion,
+                    ProdPrice = p.Precio,
+                    ProdStock = p.Stock,
                     Images = p.IMAGENs.Select(i => new ImageDto
                     {
-                        Name = i.Nombre_Img,
-                        Url = i.Imagen_URL
+                        ImgName = i.Nombre_Img,
+                        ImgUrl = i.Imagen_URL
                     }).ToList(),
                     CategoryName = p.CATEGORIA.Nom_Categ
                 }).FirstOrDefault();
         }
 
         // Obtiene un producto con sus imágenes para fines de eliminación.
-        public ProductDto GetProductByIdForDeletion(int productId)
+        public AdminProductDto GetProductByIdForDeletion(int productId)
         {
             return _context.PRODUCTOes
                 .Include(p => p.IMAGENs)
                 .Where(p => p.ID_Producto == productId)
-                .Select(p => new ProductDto
+                .Select(p => new AdminProductDto
                 {
-                    ProductId = p.ID_Producto,
+                    ID_Product = p.ID_Producto,
                     Images = p.IMAGENs.Select(i => new ImageDto
                     {
-                        Url = i.Imagen_URL
+                        ImgUrl = i.Imagen_URL
                     }).ToList()
                 }).FirstOrDefault();
         }
 
         // Crea un nuevo producto en la base de datos sin imágenes.
-        public int CreateProductWithoutImages(ProductDto productDto)
+        public int CreateProductWithoutImages(AdminProductDto productDto)
         {
             try
             {
                 var product = new PRODUCTO
                 {
-                    ID_Categoria = productDto.CategoryId,
-                    Nombre = productDto.Name,
-                    Descripcion = productDto.Description,
-                    Precio = productDto.Price,
-                    Stock = productDto.Stock
+                    ID_Categoria = productDto.ID_Category,
+                    Nombre = productDto.ProdName,
+                    Descripcion = productDto.ProdDescription,
+                    Precio = productDto.ProdPrice,
+                    Stock = productDto.ProdStock
                 };
 
                 _context.PRODUCTOes.Add(product);
@@ -114,37 +115,37 @@ namespace DreamCakes.Repositories
             }
             catch (Exception ex)
             {
-                // Log del error
-                System.Diagnostics.Debug.WriteLine($"Error en repositorio: {ex.ToString()}");
+                
+                System.Diagnostics.Debug.WriteLine($"Error en repositorio: {ex}");
                 return 0;
             }
         }
 
         // Actualiza un producto existente, incluyendo la adición de nuevas imágenes.
-        public bool UpdateProduct(ProductDto productDto, List<string> newImageUrls)
+        public bool UpdateProduct(AdminProductDto productDto, List<string> newImageUrls)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var product = _context.PRODUCTOes.Find(productDto.ProductId);
+                    var product = _context.PRODUCTOes.Find(productDto.ID_Product);
                     if (product == null) return false;
 
-                    product.ID_Categoria = productDto.CategoryId;
-                    product.Nombre = productDto.Name;
-                    product.Descripcion = productDto.Description;
-                    product.Precio = productDto.Price;
-                    product.Stock = productDto.Stock;
+                    product.ID_Categoria = productDto.ID_Category;
+                    product.Nombre = productDto.ProdName;
+                    product.Descripcion = productDto.ProdDescription;
+                    product.Precio = productDto.ProdPrice;
+                    product.Stock = productDto.ProdStock;
 
                     if (newImageUrls != null && newImageUrls.Count > 0)
                     {
                         var images = newImageUrls.Select(url => new ImageDto
                         {
-                            Name = System.IO.Path.GetFileName(url),
-                            Url = url
+                            ImgName = System.IO.Path.GetFileName(url),
+                            ImgUrl = url
                         }).ToList();
 
-                        if (!_imageRepository.AddImagesToProduct(productDto.ProductId, images))
+                        if (!_imageRepository.AddImagesToProduct(productDto.ID_Product, images))
                         {
                             transaction.Rollback();
                             return false;

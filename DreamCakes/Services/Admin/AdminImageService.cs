@@ -1,21 +1,21 @@
 ﻿using DreamCakes.Dtos;
-using DreamCakes.Repositories;
+using DreamCakes.Repositories.Admin;
 using DreamCakes.Repositories.Models;
 using System.Web;
 using System.Collections.Generic;
 using DreamCakes.Utilities;
 using System;
 
-namespace DreamCakes.Services
+namespace DreamCakes.Services.Admin
 {
-    public class ImageService
+    public class AdminImageService
     {
-        private readonly ImageRepository _imageRepository;
+        private readonly AdminImageRepository _imageRepository;
         private readonly string _imageBasePath = "~/Content/ImgProducts/";
 
-        public ImageService()
+        public AdminImageService()
         {
-            _imageRepository = new ImageRepository(new DreamCakesEntities());
+            _imageRepository = new AdminImageRepository();
         }
 
         public List<string> SaveUploadedImages(IEnumerable<HttpPostedFileBase> images)
@@ -48,8 +48,8 @@ namespace DreamCakes.Services
             {
                 images.Add(new ImageDto
                 {
-                    Name = System.IO.Path.GetFileName(url),
-                    Url = url
+                    ImgName = System.IO.Path.GetFileName(url),
+                    ImgUrl = url
                 });
             }
 

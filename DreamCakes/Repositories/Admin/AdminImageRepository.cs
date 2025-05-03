@@ -3,15 +3,16 @@ using DreamCakes.Repositories.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-namespace DreamCakes.Repositories
+using DreamCakes.Dtos.Admin;
+namespace DreamCakes.Repositories.Admin
 {
-    public class ImageRepository
+    public class AdminImageRepository
     {
         private readonly DreamCakesEntities _context;
 
-        public ImageRepository(DreamCakesEntities context)
+        public AdminImageRepository()
         {
-            _context = context;
+            _context = new DreamCakesEntities();
         }
 
         // Agrega una lista de imágenes a un producto específico en la base de datos.
@@ -24,8 +25,8 @@ namespace DreamCakes.Repositories
                     _context.IMAGENs.Add(new IMAGEN
                     {
                         ID_Producto = productId,
-                        Nombre_Img = image.Name,
-                        Imagen_URL = image.Url
+                        Nombre_Img = image.ImgName,
+                        Imagen_URL = image.ImgUrl
                     });
                 }
                 _context.SaveChanges();
