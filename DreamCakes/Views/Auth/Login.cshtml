@@ -38,13 +38,13 @@
                         <div id="loginEmailError" class="text-danger login-error" style="display: none;"></div>
                     </div>
                     <div class=".form-group-Reg floating-label">
-                        @Html.PasswordFor(m => m.Contrasena, new
+                        @Html.PasswordFor(m => m.Password, new
                         {
                             @class = "form-control floating-input login-input",
                             placeholder = " ",
                             id = "LoginPassword"
                         })
-                        @Html.LabelFor(m => m.Contrasena, "Contraseña",  htmlAttributes: new { @class = "floating-text" })
+                        @Html.LabelFor(m => m.Password, "Contraseña",  htmlAttributes: new { @class = "floating-text" })
                         <div id="loginPasswordError" class="text-danger login-error" style="display: none;"></div>
                     </div>
 
