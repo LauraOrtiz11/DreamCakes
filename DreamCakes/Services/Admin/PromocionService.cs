@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DreamCakes.Models.DTO;
+using DreamCakes.Dtos.Admin;
 using DreamCakes.Repositories.Admin;
 using DreamCakes.Repositories.Models;
 
@@ -14,13 +14,14 @@ namespace DreamCakes.Services.Admin
         private PromotionRepository repository = new PromotionRepository();
 
         // Método que obtiene todas las promociones y las convierte en DTO.
-        public List<PromotionDTO> GetPromotions()
+
+        public List<PromotionDto> GetPromotions()
         {
             // Obtiene todas las promociones desde el repositorio.
             var promotions = repository.GetAll();
 
             // Convierte las entidades Promocione a PromotionDTO.
-            return promotions.Select(p => new PromotionDTO
+            return promotions.Select(p => new PromotionDto
             {
                 ID_Prom = p.ID_Promocion,
                 NameProm = p.Nombre_Prom,
@@ -33,7 +34,7 @@ namespace DreamCakes.Services.Admin
         }
 
         // Método que obtiene una promoción específica por su Id.
-        public PromotionDTO GetPromotionById(int id)
+        public PromotionDto GetPromotionById(int id)
         {
             // Busca la promoción usando el repositorio.
             var promo = repository.GetById(id);
@@ -42,7 +43,8 @@ namespace DreamCakes.Services.Admin
             if (promo == null) return null;
 
             // Convierte la entidad a DTO.
-            return new PromotionDTO
+
+            return new PromotionDto
             {
                 ID_Prom = promo.ID_Promocion,
                 NameProm = promo.Nombre_Prom,
@@ -55,7 +57,7 @@ namespace DreamCakes.Services.Admin
         }
 
         // Método para agregar una nueva promoción.
-        public void AddPromotion(PromotionDTO dto)
+        public void AddPromotion(PromotionDto dto)
         {
             var promo = new PROMOCION
             {
@@ -74,7 +76,8 @@ namespace DreamCakes.Services.Admin
 
 
         // Método para actualizar una promoción existente.
-        public void UpdatePromotion(PromotionDTO dto)
+
+        public void UpdatePromotion(PromotionDto dto)
         {
             var promo = new PROMOCION
             {

@@ -2,7 +2,8 @@
 using System.Web.Mvc;
 using System.Collections.Generic;
 using DreamCakes.Services.Admin;
-using DreamCakes.Models.DTO;
+
+using DreamCakes.Dtos.Admin;
 
 namespace DreamCakes.Controllers.Admin
 {
@@ -23,7 +24,7 @@ namespace DreamCakes.Controllers.Admin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PromotionDTO dto)
+        public ActionResult Create(PromotionDto dto)
         {
             if (ModelState.IsValid)
             {
@@ -75,7 +76,9 @@ namespace DreamCakes.Controllers.Admin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public ActionResult Edit(PromotionDTO dto)
+        
         {
             if (ModelState.IsValid)
             {
@@ -166,3 +169,4 @@ namespace DreamCakes.Controllers.Admin
         }
     }
 }
+

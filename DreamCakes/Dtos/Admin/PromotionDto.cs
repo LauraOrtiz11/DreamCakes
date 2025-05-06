@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace DreamCakes.Models.DTO
+
+namespace DreamCakes.Dtos.Admin
 {
-    public class PromotionDTO : IValidatableObject
+    public class PromotionDto : IValidatableObject
+
     {
         public int ID_Prom { get; set; }
 
