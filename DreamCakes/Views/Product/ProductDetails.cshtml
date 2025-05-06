@@ -1,0 +1,121 @@
+﻿@model DreamCakes.Dtos.ProductDto
+@{
+    ViewBag.Title = "Detalles del Producto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <!-- Banner de Promoción -->
+    @if (ViewBag.ActivePromotion != null)
+    {
+        <div class="promo-banner mb-4 text-center p-3" style="background-color: #FF6B6B; color: white; border-radius: 10px;">
+            <h4>@ViewBag.ActivePromotion.DiscountPer% de descuento</h4>
+            <p>Solo por hoy</p>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Imágenes del producto -->
+        <div class="col-md-6">
+            <div class="product-image-main mb-3">
+                <img src="@(Model.Images.Any() ? Model.Images.First().ImgUrl : "/Content/Images/default-product.png")"
+                     class="img-fluid rounded" alt="@Model.Name">
+            </div>
+            <div class="product-thumbnails">
+                @foreach (var image in Model.Images.Take(3))
+                {
+                    <img src="@image.ImgUrl" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                }
+            </div>
+        </div>
+
+        <!-- Detalles del producto -->
+        <div class="col-md-6">
+            <h2>@Model.Name</h2>
+            <p class="text-muted">@Model.Description</p>
+
+            <div class="product-details mt-4">
+                <h4 class="text-primary">$@Model.Price <small>COP</small></h4>
+
+                <p><strong>Disponibilidad:</strong> @Model.Stock unidades</p>
+
+                <div class="rating mb-3">
+                    @{
+                        int fullStars = (int)Model.AvgRating;
+                        bool hasHalfStar = (Model.AvgRating - fullStars) >= 0.5m;
+                    }
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        if (i <= fullStars)
+                        {
+                            <i class="fas fa-star text-warning"></i>
+                        }
+                        else if (i == fullStars + 1 && hasHalfStar)
+                        {
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                        }
+                        else
+                        {
+                            <i class="far fa-star text-secondary"></i>
+                        }
+                    }
+                    <span class="ml-2">(@Model.AvgRating.ToString("0.0"))</span>
+                </div>
+
+                <div class="quantity-selector mb-3">
+                    <label>Cantidad:</label>
+                    <input type="number" min="1" max="@Model.Stock" value="1" class="form-control" style="width: 80px;">
+                </div>
+
+                <button class="btn btn-danger btn-lg">
+                    <i class="fas fa-cart-plus"></i> Añadir al carrito
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reseñas -->
+    <div class="product-reviews mt-5">
+        <h4>Reseñas</h4>
+        <div class="review-list">
+            <!-- Aquí irían las reseñas dinámicas -->
+            <div class="review-item p-3 mb-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                <div class="review-header d-flex justify-content-between">
+                    <strong>Cliente Satisfecho</strong>
+                    <div class="text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <p class="mb-0">¡Excelente producto! Superó mis expectativas.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .product-image-main {
+        height: 400px;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+
+        .product-image-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .product-thumbnails {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .quantity-selector input {
+        display: inline-block;
+    }
+</style>

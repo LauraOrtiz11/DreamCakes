@@ -48,9 +48,7 @@
                     @Html.TextBoxFor(model => model.ProdPrice, new
                {
                    @class = "form-control",
-                   type = "number",
-                   step = "0.01",
-                   min = "0.01"
+                  
                })
                     @Html.ValidationMessageFor(model => model.ProdPrice, "", new { @class = "text-danger" })
                 </div>

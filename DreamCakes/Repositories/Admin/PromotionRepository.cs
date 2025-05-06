@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DreamCakes.Models;
-using DreamCakes.Models.DTO;
+using DreamCakes.Dtos.Admin;
 using DreamCakes.Repositories.Models;
 
-namespace DreamCakes.Repositories
+namespace DreamCakes.Repositories.Admin
 {
     // Clase que se encarga del acceso directo a datos para promociones.
     public class PromotionRepository
@@ -91,7 +90,7 @@ namespace DreamCakes.Repositories
             db.SaveChanges();
         }
 
-        internal void Update(PromotionDTO promo)
+        internal void Update(PromotionDto promo)
         {
             throw new NotImplementedException();
         }

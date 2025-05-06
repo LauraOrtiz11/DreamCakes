@@ -1,0 +1,120 @@
+﻿@model DreamCakes.Dtos.CatalogResponseDto
+@{
+    ViewBag.Title = "Catálogo de Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <!-- Banner de Promoción -->
+    <!-- Banner de Promociones -->
+    @if (Model.ActivePromotions.Any())
+    {
+        <div class="promotion-banner mb-4">
+            <div id="promoCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.ActivePromotions.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <div class="promo-card p-4 text-center" style="background-color: #f8f9fa; border-radius: 10px;">
+                                <h3 class="text-danger">@Model.ActivePromotions[i].NameProm</h3>
+                                <p>@Model.ActivePromotions[i].DescriProm</p>
+                                <div class="promo-badge">
+                                    <span class="badge bg-danger">@Model.ActivePromotions[i].DiscountPer% OFF</span>
+                                </div>
+                                <small class="text-muted">Válido hasta @Model.ActivePromotions[i].EndDate.ToString("dd/MM/yyyy")</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <a class="carousel-control-prev" href="#promoCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Anterior</span>
+                </a>
+                <a class="carousel-control-next" href="#promoCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Siguiente</span>
+                </a>
+            </div>
+        </div>
+    }
+
+    <!-- Barra de Búsqueda y Filtros -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            @using (Html.BeginForm("Search", "Product", FormMethod.Get, new { @class = "form-inline" }))
+            {
+                <div class="input-group w-100">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Buscar productos..." />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Filtros de categoría -->
+    <div class="category-filters mb-4">
+        <div class="d-flex flex-wrap">
+            <a href="@Url.Action("Catalog")" class="btn btn-outline-secondary m-1">Todos</a>
+            @foreach (var category in ViewBag.AvailableCategories)
+            {
+                <a href="@Url.Action("Catalog", new { category = category })"
+                   class="btn btn-outline-secondary m-1">@category</a>
+            }
+        </div>
+    </div>
+
+    <!-- Grid de productos -->
+    <div class="row">
+        @foreach (var productGroup in Model.ProductsByCategory)
+        {
+            foreach (var product in productGroup.Value)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="product-card card h-100">
+                        @if (product.Images.Any())
+                        {
+                            <img src="@product.Images.First().ImgUrl" class="card-img-top" alt="@product.Name">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text">@product.Description</p>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <a href="@Url.Action("ProductDetails", new { id = product.ID_Product })"
+                               class="btn btn-danger btn-block">
+                                Ver más
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    .product-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-card img {
+            height: 200px;
+            object-fit: cover;
+        }
+
+    .promo-banner {
+        background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+    }
+</style>

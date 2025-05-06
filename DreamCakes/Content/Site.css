@@ -642,3 +642,32 @@ footer {
         width: 100%;
     }
 }
+
+/* Estilos generales */
+.btn-danger {
+    background-color: #FF6B6B;
+    border-color: #FF6B6B;
+}
+
+    .btn-danger:hover {
+        background-color: #e05a5a;
+        border-color: #e05a5a;
+    }
+
+/* Efecto hover para tarjetas */
+.product-card {
+    transition: all 0.3s ease;
+}
+
+    .product-card:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+/* Estilo para el banner de promoción */
+.promo-banner {
+    background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+    color: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
