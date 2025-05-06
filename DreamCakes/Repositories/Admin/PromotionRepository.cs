@@ -90,7 +90,9 @@ namespace DreamCakes.Repositories.Admin
             db.SaveChanges();
         }
 
+
         internal void Update(PromotionDto promo)
+
         {
             throw new NotImplementedException();
         }

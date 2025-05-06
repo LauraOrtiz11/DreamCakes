@@ -7,9 +7,9 @@
         <div class="col-md-4">
             <div class="profile-card">
                 <div class="profile-card">
-                    <img src="@Model.ImagenPerfil" class="profile-img" alt="Foto de perfil">
-                    <h4 class="profile-name">@Model.Nombres @Model.Apellidos</h4>
-                    <p class="profile-role">@Model.NombreRol</p>
+                    <img src="@Model.ProfileImage" class="profile-img" alt="Foto de perfil">
+                    <h4 class="profile-name">@Model.UserNames @Model.UserSecNames</h4>
+                    <p class="profile-role">@Model.RoleName</p>
                     <button class="profile-img-btn">Cambiar foto</button>
                 </div>
             </div>
@@ -29,23 +29,23 @@
                 @using (Html.BeginForm())
                 {
                     @Html.AntiForgeryToken()
-                    @Html.HiddenFor(model => model.ID_Usuario)
-                    @Html.HiddenFor(model => model.ID_Rol)
-                    @Html.HiddenFor(model => model.ImagenPerfil)
+                    @Html.HiddenFor(model => model.ID_User)
+                    @Html.HiddenFor(model => model.ID_Role)
+                    @Html.HiddenFor(model => model.ProfileImage)
 
                     <div class="profile-form-group">
                         <label class="profile-form-label">Nombres</label>
                         
-                            @Html.TextBoxFor(model => model.Nombres, new { @class = "profile-form-input" })
-                            @Html.ValidationMessageFor(model => model.Nombres, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(model => model.UserNames, new { @class = "profile-form-input" })
+                            @Html.ValidationMessageFor(model => model.UserNames, "", new { @class = "text-danger" })
                         
                     </div>
 
                     <div class="profile-form-group">
                         <label class="profile-form-label">Apellidos</label>
                         
-                            @Html.TextBoxFor(model => model.Apellidos,  new { @class = "profile-form-input" })
-                            @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(model => model.UserSecNames,  new { @class = "profile-form-input" })
+                            @Html.ValidationMessageFor(model => model.UserSecNames, "", new { @class = "text-danger" })
                         
                     </div>
 
@@ -59,16 +59,16 @@
                     <div class="profile-form-group">
                         <label class="profile-form-label">Teléfono</label>
                         
-                            @Html.TextBoxFor(model => model.Telefono, new { @class = "profile-form-input" })
-                            @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(model => model.PhoneNum, new { @class = "profile-form-input" })
+                            @Html.ValidationMessageFor(model => model.PhoneNum, "", new { @class = "text-danger" })
                         
                     </div>
 
                     <div class="profile-form-group">
                         <label class="profile-form-label">Dirección</label>
                         <div class="profile-form-input">
-                            @Html.TextBoxFor(model => model.Direccion, new { @class = "profile-form-input" })
-                            @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(model => model.Address, new { @class = "profile-form-input" })
+                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
                         </div>
                     </div>
 

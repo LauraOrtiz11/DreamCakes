@@ -14,6 +14,7 @@ namespace DreamCakes.Services.Admin
         private PromotionRepository repository = new PromotionRepository();
 
         // Método que obtiene todas las promociones y las convierte en DTO.
+
         public List<PromotionDto> GetPromotions()
         {
             // Obtiene todas las promociones desde el repositorio.
@@ -42,6 +43,7 @@ namespace DreamCakes.Services.Admin
             if (promo == null) return null;
 
             // Convierte la entidad a DTO.
+
             return new PromotionDto
             {
                 ID_Prom = promo.ID_Promocion,
@@ -74,6 +76,7 @@ namespace DreamCakes.Services.Admin
 
 
         // Método para actualizar una promoción existente.
+
         public void UpdatePromotion(PromotionDto dto)
         {
             var promo = new PROMOCION

@@ -8,10 +8,10 @@ namespace DreamCakes.Utilities
         // Establece los valores de la sesión del usuario a partir de un objeto LoginDto.
         public static void SetUserSession(HttpSessionStateBase session, LoginDto loginDto)
         {
-            session["ID_Usuario"] = loginDto.ID_Usuario;
+            session["ID_Usuario"] = loginDto.ID_User;
             session["UserEmail"] = loginDto.Email;
-            session["ID_Rol"] = loginDto.ID_Rol;
-            session["ID_Estado"] = loginDto.ID_Estado;
+            session["ID_Rol"] = loginDto.ID_Role;
+            session["ID_Estado"] = loginDto.ID_State;
         }
 
         // Limpia todos los datos relacionados con el usuario de la sesión.
