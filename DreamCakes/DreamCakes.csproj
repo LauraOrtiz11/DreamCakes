@@ -160,9 +160,9 @@
     <Compile Include="Dtos\Client\RatingResultDto.cs" />
     <Compile Include="Dtos\Client\SubmitRatingDto.cs" />
     <Compile Include="Dtos\ImageDto.cs" />
-    <Compile Include="Controllers\PromotionController.cs" />
+    <Compile Include="Controllers\Admin\PromotionController.cs" />
     <Compile Include="Dtos\ProfileDto.cs" />
-    <Compile Include="Dtos\PromotionDto.cs" />
+    <Compile Include="Dtos\Admin\PromotionDto.cs" />
     <Compile Include="Dtos\LoginDto.cs" />
     <Compile Include="Dtos\RegisterDto.cs" />
     <Compile Include="Global.asax.cs">
@@ -225,7 +225,7 @@
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Admin\AdminProductRepository.cs" />
-    <Compile Include="Repositories\PromotionRepository.cs" />
+    <Compile Include="Repositories\Admin\PromotionRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\Admin\AdminCategoryService.cs" />
@@ -234,7 +234,7 @@
     <Compile Include="Services\Client\ClientProductService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Utilities\AuthErrorsUtility.cs" />
-    <Compile Include="Services\PromocionService.cs" />
+    <Compile Include="Services\Admin\PromocionService.cs" />
     <Compile Include="Utilities\CookieUtility.cs" />
     <Compile Include="Utilities\EncryptUtility.cs" />
     <Compile Include="Utilities\FileHelperUtility.cs" />

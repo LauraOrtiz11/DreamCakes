@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using DreamCakes.Models.DTO;
-using DreamCakes.Repositories;
+using DreamCakes.Repositories.Admin;
 using DreamCakes.Repositories.Models;
 
-namespace DreamCakes.Services
+namespace DreamCakes.Services.Admin
 {
     // Clase que contiene la lógica de negocio para manejar promociones.
     public class PromotionService
