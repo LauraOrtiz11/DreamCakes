@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using System.Collections.Generic;
 using DreamCakes.Services.Admin;
-
 using DreamCakes.Dtos.Admin;
 
 namespace DreamCakes.Controllers.Admin
@@ -77,7 +76,7 @@ namespace DreamCakes.Controllers.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public ActionResult Edit(PromotionDTO dto)
+        public ActionResult Edit(PromotionDto dto)
         
         {
             if (ModelState.IsValid)

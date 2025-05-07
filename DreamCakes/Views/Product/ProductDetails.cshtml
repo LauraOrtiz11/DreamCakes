@@ -1,4 +1,4 @@
-﻿@model DreamCakes.Dtos.ProductDto
+﻿@model DreamCakes.Dtos.Client.ProductDto
 @{
     ViewBag.Title = "Detalles del Producto";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -18,8 +18,7 @@
         <!-- Imágenes del producto -->
         <div class="col-md-6">
             <div class="product-image-main mb-3">
-                <img src="@(Model.Images.Any() ? Model.Images.First().ImgUrl : "/Content/Images/default-product.png")"
-                     class="img-fluid rounded" alt="@Model.Name">
+                
             </div>
             <div class="product-thumbnails">
                 @foreach (var image in Model.Images.Take(3))

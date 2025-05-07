@@ -16,7 +16,7 @@ namespace DreamCakes.Repositories.Admin
         }
 
         // Agrega una lista de imágenes a un producto específico en la base de datos.
-        public bool AddImagesToProduct(int productId, List<ImageDto> images)
+        public bool AddImagesToProduct(int productId, List<AdminImageDto> images)
         {
             try
             {

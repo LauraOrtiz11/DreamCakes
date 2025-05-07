@@ -1,4 +1,4 @@
-﻿using DreamCakes.Dtos;
+﻿using DreamCakes.Dtos.Admin;
 using DreamCakes.Repositories.Admin;
 using DreamCakes.Repositories.Models;
 using System.Web;
@@ -43,10 +43,10 @@ namespace DreamCakes.Services.Admin
             if (imageUrls == null || imageUrls.Count == 0)
                 return false;
 
-            var images = new List<ImageDto>();
+            var images = new List<AdminImageDto>();
             foreach (var url in imageUrls)
             {
-                images.Add(new ImageDto
+                images.Add(new AdminImageDto
                 {
                     ImgName = System.IO.Path.GetFileName(url),
                     ImgUrl = url
