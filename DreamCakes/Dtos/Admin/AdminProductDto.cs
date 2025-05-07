@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using DreamCakes.Dtos;
+using DreamCakes.Dtos.Admin;
 
 namespace DreamCakes.Dtos.Admin
 {
@@ -14,6 +14,6 @@ namespace DreamCakes.Dtos.Admin
         public decimal ProdPrice { get; set; }
         public int ProdStock { get; set; }
         public string CategoryName { get; set; }
-        public List<ImageDto> Images { get; set; } = new List<ImageDto>();
+        public List<AdminImageDto> Images { get; set; } = new List<AdminImageDto>();
     }
 }

@@ -40,7 +40,7 @@ namespace DreamCakes.Repositories.Admin
                     ProdDescription = p.Descripcion,
                     ProdPrice = p.Precio,
                     ProdStock = p.Stock,
-                    Images = p.IMAGENs.Select(i => new ImageDto
+                    Images = p.IMAGENs.Select(i => new AdminImageDto
                     {
                         ImgName = i.Nombre_Img,
                         ImgUrl = i.Imagen_URL
@@ -64,7 +64,7 @@ namespace DreamCakes.Repositories.Admin
                     ProdDescription = p.Descripcion,
                     ProdPrice = p.Precio,
                     ProdStock = p.Stock,
-                    Images = p.IMAGENs.Select(i => new ImageDto
+                    Images = p.IMAGENs.Select(i => new AdminImageDto
                     {
                         ImgName = i.Nombre_Img,
                         ImgUrl = i.Imagen_URL
@@ -82,7 +82,7 @@ namespace DreamCakes.Repositories.Admin
                 .Select(p => new AdminProductDto
                 {
                     ID_Product = p.ID_Producto,
-                    Images = p.IMAGENs.Select(i => new ImageDto
+                    Images = p.IMAGENs.Select(i => new AdminImageDto
                     {
                         ImgUrl = i.Imagen_URL
                     }).ToList()
@@ -139,7 +139,7 @@ namespace DreamCakes.Repositories.Admin
 
                     if (newImageUrls != null && newImageUrls.Count > 0)
                     {
-                        var images = newImageUrls.Select(url => new ImageDto
+                        var images = newImageUrls.Select(url => new AdminImageDto
                         {
                             ImgName = System.IO.Path.GetFileName(url),
                             ImgUrl = url
