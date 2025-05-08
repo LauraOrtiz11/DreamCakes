@@ -3,6 +3,8 @@ using DreamCakes.Repositories.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -227,23 +229,60 @@ namespace DreamCakes.Repositories.Client
                 };
             }
         }
-        // DreamCakes.Repositories.Client/ProductRepository.cs
-        public async Task<List<ReviewDto>> GetProductReviews(int productId)
+        public async Task<ProductReviewsResponseDto> GetProductReviewsWithAverage(int productId)
         {
+            var response = new ProductReviewsResponseDto();
+
             try
             {
-                return await _context.Database.SqlQuery<ReviewDto>(
-                    "EXEC sp_GetProductReviews @ProductID",
-                    new System.Data.SqlClient.SqlParameter("@ProductID", productId)
-                ).ToListAsync();
+                using (var command = _context.Database.Connection.CreateCommand())
+                {
+                    command.CommandText = "sp_GetProductReviews";
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.Add(new SqlParameter("@ProductID", productId));
+
+                    await _context.Database.Connection.OpenAsync();
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        var reviews = new List<ReviewDto>();
+                        while (await reader.ReadAsync())
+                        {
+                            reviews.Add(new ReviewDto
+                            {
+                                ID_Review = reader.GetInt32(0),
+                                ID_Client = reader.GetInt32(1),
+                                ClientName = reader.IsDBNull(2) ? "Anónimo" : reader.GetString(2),
+                                Rating = reader.GetDecimal(3),
+                                Comment = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                CreatedDate = reader.GetDateTime(5),
+                                Response = reader.GetInt32(6)
+                            });
+                        }
+
+                        response.Reviews = reviews;
+
+                        if (await reader.NextResultAsync() && await reader.ReadAsync())
+                        {
+                            response.AverageRating = reader.IsDBNull(0) ? 0 : reader.GetDecimal(0);
+                            response.TotalReviews = reader.GetInt32(1);
+                        }
+                    }
+                }
+
+                response.Response = 1;
             }
             catch (Exception ex)
             {
-                return new List<ReviewDto>
-        {
-            new ReviewDto { Response = -1, Message = $"Error getting reviews: {ex.Message}" }
-        };
+                response.Response = -1;
+                response.Message = ex.Message;
             }
+            finally
+            {
+                _context.Database.Connection.Close();
+            }
+
+            return response;
         }
 
         public async Task<ReviewDto> SubmitReview(int productId, int clientId, int rating, string comment)

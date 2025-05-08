@@ -64,7 +64,7 @@ namespace DreamCakes.Controllers.Client
                     int? clientId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
 
                     // Obtener el producto con reseñas
-                    var product = await service.GetProductWithReviews(id, clientId);
+                    var product = await service.GetProductWithReviews(id);
 
                     if (product == null || product.Response != 1)
                     {
@@ -90,14 +90,11 @@ namespace DreamCakes.Controllers.Client
         {
             if (!ModelState.IsValid)
             {
-                return Json(new { Success = false, Message = "Invalid data" });
+                return Json(new { success = false, message = "Invalid data" });
             }
 
             int? clientId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
-            if (!clientId.HasValue)
-            {
-                return Json(new { Success = false, Message = "You must be logged in to submit a review" });
-            }
+
 
             using (var service = new ProductService())
             {
@@ -107,14 +104,14 @@ namespace DreamCakes.Controllers.Client
 
                     if (result.Response == 1)
                     {
-                        return Json(new { Success = true, Message = "Review submitted successfully" });
+                        return Json(new { success = true, message = "Review submitted successfully" });
                     }
 
-                    return Json(new { Success = false, Message = result.Message });
+                    return Json(new { success = false, message = result.Message });
                 }
                 catch
                 {
-                    return Json(new { Success = false, Message = "Internal error, please try again later" });
+                    return Json(new { success = false, message = "Internal error, please try again later" });
                 }
             }
         }

@@ -19,7 +19,8 @@ namespace DreamCakes.Dtos.Client
 
     public class ProductReviewsResponseDto
 {
-    public List<ReviewDto> Reviews { get; set; }
+        public ProductDto Product { get; set; }
+        public List<ReviewDto> Reviews { get; set; }
     public decimal AverageRating { get; set; }
     public int TotalReviews { get; set; }
     public int Response { get; set; }
