@@ -144,6 +144,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\Admin\AdminCategoryController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\Client\ProductController.cs" />
     <Compile Include="Dtos\Admin\AdminImageDto.cs" />
@@ -335,6 +336,11 @@
     <Content Include="Views\Product\Catalog.cshtml" />
     <Content Include="Views\Product\ProductDetails.cshtml" />
     <Content Include="Views\Product\_ProductDetailsModal.cshtml" />
+    <Content Include="Views\AdminCategory\Index.cshtml" />
+    <Content Include="Views\AdminCategory\Create.cshtml" />
+    <Content Include="Views\AdminCategory\Edit.cshtml" />
+    <Content Include="Views\AdminCategory\Details.cshtml" />
+    <Content Include="Views\AdminCategory\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

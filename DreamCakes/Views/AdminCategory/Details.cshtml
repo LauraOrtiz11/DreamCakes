@@ -1,0 +1,27 @@
+﻿@model DreamCakes.Dtos.Admin.AdminCategoryDto
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalles</h2>
+
+<div>
+    <h4>Categoria</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.CatName)</dt>
+        <dd>@Html.DisplayFor(model => model.CatName)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.CatDescription)</dt>
+        <dd>@Html.DisplayFor(model => model.CatDescription)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.CatIsActive)</dt>
+        <dd>@Html.DisplayFor(model => model.CatIsActive)</dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ID_Category }) |
+    @Html.ActionLink("Volver a la lista", "Index")
+</p>

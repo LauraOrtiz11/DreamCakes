@@ -13,16 +13,34 @@ namespace DreamCakes.Services.Admin
             _categoryRepository = new AdminCategoryRepository();
         }
 
-        // Obtiene la lista completa de categorías, incluyendo inactivas.
         public List<AdminCategoryDto> GetAllCategories()
         {
             return _categoryRepository.GetAllCategories();
         }
 
-        // Obtiene únicamente las categorías activas.
         public List<AdminCategoryDto> GetActiveCategories()
         {
             return _categoryRepository.GetActiveCategories();
+        }
+
+        public AdminCategoryDto GetCategoryById(int categoryId)
+        {
+            return _categoryRepository.GetCategoryById(categoryId);
+        }
+
+        public void CreateCategory(AdminCategoryDto catDto)
+        {
+            _categoryRepository.CreateCategory(catDto);
+        }
+
+        public void UpdateCategory(AdminCategoryDto catDto)
+        {
+            _categoryRepository.UpdateCategory(catDto);
+        }
+
+        public void DeleteCategory(int categoryId)
+        {
+            _categoryRepository.DeleteCategory(categoryId);
         }
     }
 }
