@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace DreamCakes.Controllers.Client
 {
+    [RoleAuthorizeUtility(2)]
     public class ProductController : Controller
     {
         public async Task<ActionResult> Catalog(string category = null)
@@ -53,7 +54,6 @@ namespace DreamCakes.Controllers.Client
             }
         }
 
-        // DreamCakes.Controllers.Client/ProductController.cs
         public async Task<ActionResult> ProductDetails(int id)
         {
             using (var service = new ProductService())

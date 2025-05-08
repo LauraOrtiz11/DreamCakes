@@ -145,6 +145,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\Client\OrderController.cs" />
     <Compile Include="Controllers\Client\ProductController.cs" />
     <Compile Include="Dtos\Admin\AdminImageDto.cs" />
     <Compile Include="Dtos\Admin\PromotionDto.cs" />
@@ -156,15 +157,15 @@
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Dtos\Admin\AdminProductDto.cs" />
     <Compile Include="Dtos\Admin\AdminCategoryDto.cs" />
-    <Compile Include="Dtos\Client\ErrorDto.cs" />
     <Compile Include="Dtos\Client\ImageDto.cs" />
+    <Compile Include="Dtos\Client\OrderDetailDto.cs" />
+    <Compile Include="Dtos\Client\OrderDto.cs" />
+    <Compile Include="Dtos\Client\OrderResponseDto.cs" />
     <Compile Include="Dtos\Client\ProductDetailsDto.cs" />
     <Compile Include="Dtos\Client\ProductDto.cs" />
     <Compile Include="Dtos\Client\ProductRatingDisplayDto.cs" />
-    <Compile Include="Dtos\Client\ProductRatingDto.cs" />
     <Compile Include="Dtos\Client\ProductsByCategoryDto.cs" />
     <Compile Include="Dtos\Client\ProductSearchResultDto.cs" />
-    <Compile Include="Dtos\Client\ProductWithReviewsDto.cs" />
     <Compile Include="Dtos\Client\RatingResponseDto.cs" />
     <Compile Include="Dtos\Client\ReviewDto.cs" />
     <Compile Include="Dtos\Client\ReviewRequestDto.cs" />
@@ -181,7 +182,7 @@
     <Compile Include="Repositories\AuthRepository.cs" />
     <Compile Include="Repositories\Admin\AdminCategoryRepository.cs" />
     <Compile Include="Repositories\Admin\AdminImageRepository.cs" />
-    <Compile Include="Repositories\Client\ProductRatingRepository.cs" />
+    <Compile Include="Repositories\Client\OrderRepository.cs" />
     <Compile Include="Repositories\Models\CATEGORIA.cs">
       <DependentUpon>Model_DreamCakes.tt</DependentUpon>
     </Compile>
@@ -241,7 +242,7 @@
     <Compile Include="Services\Admin\AdminCategoryService.cs" />
     <Compile Include="Services\Admin\AdminImageService.cs" />
     <Compile Include="Services\Admin\AdminProductService.cs" />
-    <Compile Include="Services\Client\ProductRatingService.cs" />
+    <Compile Include="Services\Client\OrderService.cs" />
     <Compile Include="Services\Client\ProductService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Utilities\AuthErrorsUtility.cs" />
@@ -338,6 +339,8 @@
     <Content Include="Views\Product\Catalog.cshtml" />
     <Content Include="Views\Product\ProductDetails.cshtml" />
     <Content Include="Views\Product\_ProductDetailsModal.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Order\OrderConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

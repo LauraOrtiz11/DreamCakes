@@ -40,7 +40,7 @@
                     @if (ViewBag.ActivePromotion != null)
                     {
                         <span class="text-muted text-decoration-line-through me-2">$@(Model.Price) COP</span>
-                        
+
                     }
                     else
                     {
@@ -72,7 +72,7 @@
                                 <i class="far fa-star text-warning"></i>
                             }
                         }
-                        
+
                     </div>
                     <div class="availability">
                         @if (Model.Stock > 0)
@@ -90,18 +90,19 @@
                 <div class="quantity-selector mb-4">
                     <label class="form-label"><strong>Cantidad:</strong></label>
                     <div class="input-group" style="width: 140px;">
-                        
-                        <input type="number" id="productQuantity" class="form-control text-center" min="1" max="@Model.Stock" value="1">
+                        <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">-</button>
+                        <input type="number" id="productQuantity" class="form-control text-center"
+                               min="1" max="@Model.Stock" value="1">
+                        <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">+</button>
                     </div>
+                    <small class="text-muted">Disponible: @Model.Stock unidades</small>
                 </div>
 
-                <!-- Botones de acción -->
-                <div class="action-buttons d-flex gap-2">
-                    <button class="btn btn-wine">
-                        <i class="fas fa-cart-plus me-2"></i> Añadir al carrito
-                    </button>
-                   
-                </div>
+                <!-- Botón para añadir al carrito -->
+                <button class="btn btn-wine" id="addToCartBtn"
+                        data-product-id="@Model.ID_Product">
+                    <i class="fas fa-cart-plus me-2"></i> Añadir al carrito
+                </button>
             </div>
         </div>
     </div>
@@ -247,7 +248,7 @@
                 <div style="font-weight: 500; font-size: 1rem;">
                     ${message}
                 </div>
-                
+
             </div>
         </div>
     `);
@@ -256,19 +257,89 @@
             }
 
 
-            // Manejar cantidad de productos
+             // Función para aumentar cantidad
             function increaseQuantity() {
                 const input = $('#productQuantity');
                 const max = parseInt(input.attr('max'));
                 const current = parseInt(input.val());
-                if (current < max) input.val(current + 1);
+                if (current < max) {
+                    input.val(current + 1);
+                } else {
+                    showAlert('No puedes agregar más unidades de las disponibles', 'warning');
+                }
             }
 
+            // Función para disminuir cantidad
             function decreaseQuantity() {
                 const input = $('#productQuantity');
                 const min = parseInt(input.attr('min'));
                 const current = parseInt(input.val());
-                if (current > min) input.val(current - 1);
+                if (current > min) {
+                    input.val(current - 1);
+                }
+            }
+
+            // Función para añadir al carrito
+            $('#addToCartBtn').click(function() {
+                const productId = $(this).data('product-id');
+                const quantity = parseInt($('#productQuantity').val());
+                const btn = $(this);
+
+                // Validación básica en cliente
+                if (isNaN(quantity) || quantity < 1) {
+                    showAlert('Por favor ingresa una cantidad válida', 'warning');
+                    return;
+                }
+
+                btn.prop('disabled', true)
+                   .html('<i class="fas fa-spinner fa-spin me-2"></i> Añadiendo...');
+
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Order")',
+                    type: 'POST',
+                    data: {
+                        productId: productId,
+                        quantity: quantity
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            showAlert(response.message, 'success');
+                            updateCartCounter();
+
+                            // Opción 1: Redirigir directamente al carrito
+                            window.location.href = response.redirect;
+
+                            // Opción 2: Mostrar mensaje y permitir seguir navegando
+                            // Descomentar esta línea y comentar la anterior si prefieres esta opción
+                            // setTimeout(() => { btn.html('<i class="fas fa-cart-plus me-2"></i> Añadir al carrito'); }, 1000);
+                        } else {
+                            showAlert(response.message, 'danger');
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMsg = 'Error de conexión con el servidor';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+                        showAlert(errorMsg, 'danger');
+                    },
+                    complete: function() {
+                        btn.prop('disabled', false)
+                           .html('<i class="fas fa-cart-plus me-2"></i> Añadir al carrito');
+                    }
+                });
+            });
+            $('#addToCartBtn').click(function () {
+                const productId = $(this).data('product-id');
+                const quantity = parseInt($('#productQuantity').val());
+                addToCart(productId, quantity);
+            });
+            updateCartCounter();
+
+            function updateCartCounter() {
+                $.get('@Url.Action("GetCartCount", "Order")', function(count) {
+                    $('.cart-counter').text(count);
+                });
             }
         });
     </script>

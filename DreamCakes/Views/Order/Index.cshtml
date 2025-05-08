@@ -1,0 +1,354 @@
+﻿@model DreamCakes.Dtos.Client.OrderDto
+@{
+    ViewBag.Title = "Carrito de Compras - Dreams Cake";
+}
+
+<div class="container">
+    <h1>Dreams Cake</h1>
+
+    <!-- Mensajes de retroalimentación -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="navigation mb-4">
+        @Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "btn btn-outline-secondary" })
+        <span class="btn btn-primary">Comprar</span>
+        <a href="#discount-section" class="btn btn-outline-secondary">Código Descuento</a>
+    </div>
+
+    <!-- Sección de Productos en el Carrito -->
+    <div class="products-section card mb-4">
+        <div class="card-header bg-white">
+            <h2 class="mb-0">PRODUCTOS</h2>
+        </div>
+
+        <div class="card-body">
+            @if (!Model.Details.Any())
+            {
+                <div class="text-center py-4">
+                    <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Tu carrito está vacío</p>
+                    @Html.ActionLink("Ver Productos", "Catalog", "Product", null, new { @class = "btn btn-wine" })
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th style="width: 150px;">Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Details)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-3" style="width: 60px;">
+                                                <!-- Aquí podrías incluir una imagen miniatura del producto -->
+                                                <div class="bg-light rounded" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-birthday-cake fa-2x text-muted"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <strong>@item.ProductName</strong>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @using (Html.BeginForm("AddToCart", "Order", FormMethod.Post))
+                                        {
+                                            @Html.Hidden("productId", item.ProductId)
+                                            <div class="input-group">
+                                                <input type="number" name="quantity" value="@item.Quantity" min="1"
+                                                       class="form-control form-control-sm" onchange="this.form.submit()" />
+                                                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fas fa-sync-alt"></i>
+                                                </button>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>@item.UnitPrice</td>
+                                    <td>@item.Subtotal</td>
+                                    <td class="text-end">
+                                        @using (Html.BeginForm("RemoveFromCart", "Order", FormMethod.Post))
+                                        {
+                                            @Html.Hidden("productId", item.ProductId)
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Sección de Descuentos -->
+    <div id="discount-section" class="discount-section card mb-4">
+        <div class="card-header bg-white">
+            <h3 class="mb-0">Aplicar Descuento</h3>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("ApplyPromotion", "Order", FormMethod.Post))
+            {
+                <div class="input-group">
+                    <input type="text" name="promotionCode" class="form-control" placeholder="Ingrese código de descuento" />
+                    <button type="submit" class="btn btn-primary">Aplicar</button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Sección de Acciones -->
+    <div class="actions card mb-4">
+        <div class="card-header bg-white">
+            <h3 class="mb-0">Acción</h3>
+        </div>
+        <div class="card-body">
+            <button type="button" class="btn btn-info me-2" data-bs-toggle="modal" data-bs-target="#scheduleModal">
+                <i class="fas fa-calendar-alt me-2"></i>Programar Pedido
+            </button>
+
+            @if (Model.Details.Any())
+            {
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#checkoutModal">
+                    <i class="fas fa-credit-card me-2"></i>Realizar Pedido
+                </button>
+            }
+        </div>
+    </div>
+
+    <!-- Sección de Total -->
+    <div class="total-section card mb-4">
+        <div class="card-header bg-white">
+            <h3 class="mb-0">Resumen</h3>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+                <span>Subtotal:</span>
+                <span>@Model.Details.Sum(d => d.Subtotal)</span>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.PromotionCode))
+            {
+                <div class="d-flex justify-content-between mb-2 text-success">
+                    <span>Descuento (@Model.PromotionCode):</span>
+                    <span>-@Model.Details.Where(d => d.PromotionId.HasValue).Sum(d => d.UnitPrice * d.Quantity * d.PromotionId.Value / 100)</span>
+                </div>
+            }
+            <div class="d-flex justify-content-between fw-bold fs-5">
+                <span>Total:</span>
+                <span>@Model.Details.Sum(d => d.Subtotal)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Programar Pedido -->
+<div class="modal fade" id="scheduleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Programar Pedido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Html.BeginForm("ScheduleOrder", "Order", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Dirección de Entrega</label>
+                        @Html.TextBoxFor(m => m.DeliveryAddress, new { @class = "form-control", required = "required" })
+                    </div>
+                   
+                    @Html.HiddenFor(m => m.ClientId)
+                    @Html.HiddenFor(m => m.DeliveryUserId)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Programar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Realizar Pedido -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Pedido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Html.BeginForm("PlaceOrder", "Order", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Dirección de Entrega</label>
+                        @Html.TextBoxFor(m => m.DeliveryAddress, new { @class = "form-control", required = "required" })
+                    </div>
+                    @Html.HiddenFor(m => m.ClientId)
+                    @Html.HiddenFor(m => m.DeliveryUserId)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Validar fecha mínima para programación
+            $('input[type="datetime-local"]').attr('min', new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString().slice(0, 16));
+
+            $('.quantity-btn').click(function() {
+                var input = $(this).siblings('.quantity-input');
+                var currentVal = parseInt(input.val());
+                
+                if ($(this).data('action') === 'increase') {
+                    input.val(currentVal + 1);
+                } else {
+                    if (currentVal > 1) {
+                        input.val(currentVal - 1);
+                    }
+                }
+                
+                // Enviar el formulario
+                input.closest('form').submit();
+            });
+        });
+    </script>
+
+    <style>
+        .btn-wine {
+            background-color: #722f37;
+            color: white;
+        }
+
+            .btn-wine:hover {
+                background-color: #5a252c;
+                color: white;
+            }
+
+        .navigation .btn {
+            min-width: 100px;
+        }
+
+        .product-image-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .quantity-input {
+            width: 70px;
+            text-align: center;
+        }
+
+        /* Sección de productos */
+        .products-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .product-image {
+            width: 50px;
+            height: 50px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Sección de acciones */
+        .actions-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-schedule {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-checkout {
+            background-color: #28a745;
+            color: white;
+        }
+
+        /* Sección de total */
+        .total-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .grand-total {
+            font-weight: bold;
+            font-size: 1.2em;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+    </style>
+}

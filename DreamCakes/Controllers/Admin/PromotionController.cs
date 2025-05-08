@@ -3,9 +3,10 @@ using System.Web.Mvc;
 using System.Collections.Generic;
 using DreamCakes.Services.Admin;
 using DreamCakes.Dtos.Admin;
-
+using DreamCakes.Utilities;
 namespace DreamCakes.Controllers.Admin
 {
+    [RoleAuthorizeUtility(1)]
     public class PromotionsController : Controller
     {
         private PromotionService service = new PromotionService();

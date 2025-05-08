@@ -1,0 +1,44 @@
+﻿@model DreamCakes.Dtos.Order.OrderDto
+@{
+    ViewBag.Title = "Confirmación de Pedido - Dreams Cake";
+}
+
+<div class="container">
+    <h1>Dreams Cake</h1>
+
+    <div class="alert alert-success">
+        <h2>¡Pedido realizado con éxito!</h2>
+        <p>@ViewBag.SuccessMessage</p>
+    </div>
+
+    <div class="order-details">
+        <h3>Detalles del Pedido</h3>
+        <p><strong>Número de Pedido:</strong> @Model.Id</p>
+        <p><strong>Fecha:</strong> @Model.OrderDate.ToString("g")</p>
+        <p><strong>Tipo:</strong> @Model.OrderType</p>
+
+        @if (Model.OrderType == "Programado")
+        {
+            <p><strong>Fecha de entrega programada:</strong> @Model.DeliveryDate.ToString("g")</p>
+        }
+
+        <p><strong>Dirección de entrega:</strong> @Model.DeliveryAddress</p>
+        <p><strong>Total:</strong> @Model.Total.ToString("C")</p>
+
+        <h4>Productos:</h4>
+        <ul>
+            @foreach (var item in Model.Details)
+            {
+                <li>@item.ProductName - @item.Quantity x @item.UnitPrice.ToString("C") = @item.Subtotal.ToString("C")</li>
+            }
+        </ul>
+    </div>
+
+    <div class="actions">
+        @Html.ActionLink("Volver al inicio", "Index", "Home", null, new { @class = "btn btn-primary" })
+    </div>
+
+    <footer>
+        <p>© Todos los derechos reservados Dream Cakes 2025</p>
+    </footer>
+</div>
