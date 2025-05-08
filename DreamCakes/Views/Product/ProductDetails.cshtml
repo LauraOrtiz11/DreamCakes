@@ -8,113 +8,430 @@
     <!-- Banner de Promoción -->
     @if (ViewBag.ActivePromotion != null)
     {
-        <div class="promo-banner mb-4 text-center p-3" style="background-color: #FF6B6B; color: white; border-radius: 10px;">
-            <h4>@ViewBag.ActivePromotion.DiscountPer% de descuento</h4>
-            <p>Solo por hoy</p>
+        <div class="promo-banner mb-4 text-center p-3" style="background-color: #FF6B6B; color: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <h4>@ViewBag.ActivePromotion.DiscountPer% DE DESCUENTO</h4>
+            <p class="mb-0">Válido hasta @ViewBag.ActivePromotion.EndDate.ToString("dd MMM yyyy")</p>
         </div>
     }
 
     <div class="row">
         <!-- Imágenes del producto -->
         <div class="col-md-6">
-            <div class="product-image-main mb-3">
-                
-            </div>
-            <div class="product-thumbnails">
-                @foreach (var image in Model.Images.Take(3))
+            <div class="product-image-main mb-3 bg-light rounded" style="height: 400px; display: flex; align-items: center; justify-content: center;">
+                @if (Model.Images.Any())
                 {
-                    <img src="@image.ImgUrl" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                    <img src="@Model.Images.First().ImgUrl" class="img-fluid" style="max-height: 100%; object-fit: contain;" alt="@Model.Name">
+                }
+                else
+                {
+                    <i class="fas fa-camera fa-5x text-muted"></i>
+                }
+            </div>
+            <div class="product-thumbnails d-flex flex-wrap gap-2">
+                @foreach (var image in Model.Images.Take(4))
+                {
+                    <div class="thumbnail-container" style="width: 80px; height: 80px; border: 2px solid #eee; border-radius: 5px; overflow: hidden;">
+                        <img src="@image.ImgUrl" class="img-fluid h-100 w-100" style="object-fit: cover; cursor: pointer;" onclick="changeMainImage(this)">
+                    </div>
                 }
             </div>
         </div>
 
         <!-- Detalles del producto -->
         <div class="col-md-6">
-            <h2>@Model.Name</h2>
-            <p class="text-muted">@Model.Description</p>
+            <h2 class="product-title">@Model.Name</h2>
+            <p class="text-muted product-description">@Model.Description</p>
 
             <div class="product-details mt-4">
-                <h4 class="text-primary">$@Model.Price <small>COP</small></h4>
-
-                <p><strong>Disponibilidad:</strong> @Model.Stock unidades</p>
-
-                <div class="rating mb-3">
-                    @{
-                        int fullStars = (int)Model.AvgRating;
-                        bool hasHalfStar = (Model.AvgRating - fullStars) >= 0.5m;
-                    }
-                    @for (int i = 1; i <= 5; i++)
+                <!-- Precio y promoción -->
+                <div class="price-section mb-3">
+                    @if (ViewBag.ActivePromotion != null)
                     {
-                        if (i <= fullStars)
-                        {
-                            <i class="fas fa-star text-warning"></i>
+                        <span class="text-muted text-decoration-line-through me-2">$@((Model.Price * 1.00m).ToString("N0")) COP</span>
+                        <h4 class="text-danger d-inline-block">$@((Model.Price * (1 - ViewBag.ActivePromotion.DiscountPer/100)).ToString("N0")) COP</h4>
+                        <span class="badge bg-danger ms-2">@ViewBag.ActivePromotion.DiscountPer% OFF</span>
+                    }
+                    else
+                    {
+                        <h4 class="text-primary">$@Model.Price.ToString("N0") <small>COP</small></h4>
+                    }
+                </div>
+
+                <!-- Rating y disponibilidad -->
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rating me-3">
+                        @{
+                            decimal avgRating = Model.AvgRating;
+                            int fullStars = (int)Math.Floor(avgRating);
+                            bool hasHalfStar = (avgRating - fullStars) >= 0.3m;
                         }
-                        else if (i == fullStars + 1 && hasHalfStar)
+
+                        @for (int i = 1; i <= 5; i++)
                         {
-                            <i class="fas fa-star-half-alt text-warning"></i>
+                            if (i <= fullStars)
+                            {
+                                <i class="fas fa-star text-warning"></i>
+                            }
+                            else if (i == fullStars + 1 && hasHalfStar)
+                            {
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            }
+                            else
+                            {
+                                <i class="far fa-star text-warning"></i>
+                            }
+                        }
+                        <span class="ms-2">@avgRating.ToString("0.1") <small class="text-muted">(@Model.Reviews.Count reseñas)</small></span>
+                    </div>
+                    <div class="availability">
+                        @if (Model.Stock > 0)
+                        {
+                            <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Disponible</span>
                         }
                         else
                         {
-                            <i class="far fa-star text-secondary"></i>
+                            <span class="badge bg-secondary"><i class="fas fa-times-circle me-1"></i> Agotado</span>
                         }
-                    }
-                    <span class="ml-2">(@Model.AvgRating.ToString("0.0"))</span>
+                    </div>
                 </div>
 
-                <div class="quantity-selector mb-3">
-                    <label>Cantidad:</label>
-                    <input type="number" min="1" max="@Model.Stock" value="1" class="form-control" style="width: 80px;">
+                <!-- Selector de cantidad -->
+                <div class="quantity-selector mb-4">
+                    <label class="form-label"><strong>Cantidad:</strong></label>
+                    <div class="input-group" style="width: 140px;">
+                        <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">-</button>
+                        <input type="number" id="productQuantity" class="form-control text-center" min="1" max="@Model.Stock" value="1">
+                        <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">+</button>
+                    </div>
                 </div>
 
-                <button class="btn btn-danger btn-lg">
-                    <i class="fas fa-cart-plus"></i> Añadir al carrito
-                </button>
+                <!-- Botones de acción -->
+                <div class="action-buttons d-flex gap-2">
+                    <button class="btn btn-danger btn-lg flex-grow-1">
+                        <i class="fas fa-cart-plus me-2"></i> Añadir al carrito
+                    </button>
+                    <button class="btn btn-outline-secondary btn-lg">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Reseñas -->
-    <div class="product-reviews mt-5">
-        <h4>Reseñas</h4>
-        <div class="review-list">
-            <!-- Aquí irían las reseñas dinámicas -->
-            <div class="review-item p-3 mb-3" style="background-color: #f8f9fa; border-radius: 8px;">
-                <div class="review-header d-flex justify-content-between">
-                    <strong>Cliente Satisfecho</strong>
-                    <div class="text-warning">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-                <p class="mb-0">¡Excelente producto! Superó mis expectativas.</p>
+    <!-- Sección de Reseñas -->
+    <div class="product-reviews mt-5 pt-4 border-top">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="mb-0">Reseñas de clientes</h4>
+            <div>
+                <span class="me-3">Ordenar por:</span>
+                <select class="form-select d-inline-block" style="width: auto;">
+                    <option>Más recientes</option>
+                    <option>Mejor puntuadas</option>
+                    <option>Menor puntuadas</option>
+                </select>
             </div>
         </div>
+
+        @if (Model.CanReview)
+        {
+            <div class="review-form mb-5 p-4 bg-light rounded">
+                <h5 class="mb-4">Escribe tu reseña</h5>
+                <form id="reviewForm" method="post" action="@Url.Action("SubmitReview", "Product")">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="ProductID" value="@Model.ID_Product" />
+
+                    <div class="form-group mb-4">
+                        <label class="form-label d-block">¿Cómo calificarías este producto?</label>
+                        <div class="rating-stars">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <input type="radio" id="star@(i)" name="Rating" value="@i" required />
+                                <label for="star@(i)"><i class="fas fa-star"></i></label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label">Título de tu reseña (opcional)</label>
+                        <input type="text" name="Title" class="form-control" maxlength="100">
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label">Comentario (opcional)</label>
+                        <textarea name="Comment" class="form-control" rows="4" maxlength="500" placeholder="¿Qué te gustó o no te gustó de este producto?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary px-4 py-2">
+                        <i class="fas fa-paper-plane me-2"></i> Enviar reseña
+                    </button>
+                </form>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info mb-4">
+                <i class="fas fa-info-circle me-2"></i> Para poder calificar este producto primero debes realizar una compra.
+            </div>
+        }
+
+        @if (Model.Reviews.Any())
+        {
+            <div class="review-list">
+                @foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedDate))
+                {
+                    <div class="review-item p-4 mb-4 bg-white rounded shadow-sm">
+                        <div class="review-header d-flex justify-content-between mb-2">
+                            <div>
+                                <strong class="review-author">@review.ClientName</strong>
+                                <span class="text-muted ms-2">@review.CreatedDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))</span>
+                            </div>
+                            <div class="text-warning">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= review.Rating)
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="far fa-star"></i>
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(review.Comment))
+                        {
+                            <div class="review-body mt-3">
+                                <p class="mb-0">@review.Comment</p>
+                            </div>
+                        }
+
+                        <div class="review-footer mt-3 pt-2 border-top d-flex justify-content-end">
+                            <button class="btn btn-sm btn-outline-secondary me-2">
+                                <i class="far fa-thumbs-up me-1"></i> Útil
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="far fa-flag me-1"></i> Reportar
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <nav aria-label="Paginación de reseñas">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+        else
+        {
+            <div class="text-center py-5 bg-light rounded">
+                <i class="far fa-comment-dots fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Este producto aún no tiene reseñas</h5>
+                <p class="text-muted">Sé el primero en compartir tu opinión</p>
+            </div>
+        }
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Cambiar imagen principal al hacer clic en miniaturas
+            function changeMainImage(element) {
+                const mainImage = $('.product-image-main img');
+                mainImage.attr('src', $(element).attr('src'));
+            }
+
+            // Manejar envío de reseña
+            $('#reviewForm').submit(function (e) {
+                e.preventDefault();
+
+                if (!$('input[name="Rating"]:checked').val()) {
+                    showAlert('Por favor selecciona una calificación', 'warning');
+                    return false;
+                }
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    beforeSend: function () {
+                        $('button[type="submit"]').prop('disabled', true)
+                            .html('<i class="fas fa-spinner fa-spin me-2"></i> Enviando...');
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            showAlert('¡Gracias por tu reseña!', 'success');
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            showAlert(response.message || 'Error al enviar la reseña', 'danger');
+                        }
+                    },
+                    error: function () {
+                        showAlert('Error de conexión. Por favor intenta nuevamente.', 'danger');
+                    },
+                    complete: function () {
+                        $('button[type="submit"]').prop('disabled', false)
+                            .html('<i class="fas fa-paper-plane me-2"></i> Enviar reseña');
+                    }
+                });
+            });
+
+            // Mostrar notificación
+            function showAlert(message, type) {
+                const alert = $(`
+                        <div class="alert alert-${type} alert-dismissible fade show position-fixed"
+                             style="top: 20px; right: 20px; z-index: 1100;">
+                            ${message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    `);
+                $('body').append(alert);
+                setTimeout(() => alert.alert('close'), 5000);
+            }
+
+            // Manejar cantidad de productos
+            function increaseQuantity() {
+                const input = $('#productQuantity');
+                const max = parseInt(input.attr('max'));
+                const current = parseInt(input.val());
+                if (current < max) input.val(current + 1);
+            }
+
+            function decreaseQuantity() {
+                const input = $('#productQuantity');
+                const min = parseInt(input.attr('min'));
+                const current = parseInt(input.val());
+                if (current > min) input.val(current - 1);
+            }
+        });
+    </script>
+}
+
 <style>
+    .product-title {
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
     .product-image-main {
         height: 400px;
         overflow: hidden;
         border-radius: 10px;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-
-        .product-image-main img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
 
     .product-thumbnails {
         display: flex;
         gap: 10px;
-        margin-top: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
     }
 
-    .quantity-selector input {
-        display: inline-block;
+    .thumbnail-container {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .thumbnail-container:hover {
+            border-color: #ff6b6b !important;
+            transform: translateY(-2px);
+        }
+
+    .rating {
+        color: #ffc107;
+        font-size: 1.1rem;
+    }
+
+    .rating-stars {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+        .rating-stars input {
+            display: none;
+        }
+
+        .rating-stars label {
+            color: #ddd;
+            font-size: 1.8rem;
+            padding: 0 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+            .rating-stars input:checked ~ label,
+            .rating-stars input:hover ~ label,
+            .rating-stars label:hover,
+            .rating-stars label:hover ~ label {
+                color: #ffc107;
+            }
+
+    .review-item {
+        transition: all 0.3s ease;
+    }
+
+        .review-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+    .review-author {
+        font-size: 1.1rem;
+    }
+
+    .promo-banner {
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.02);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .action-buttons .btn {
+        transition: all 0.3s ease;
+    }
+
+        .action-buttons .btn:hover {
+            transform: translateY(-2px);
+        }
+
+    .quantity-selector .input-group {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .quantity-selector .btn-outline-secondary:hover {
+        background-color: #f8f9fa;
     }
 </style>

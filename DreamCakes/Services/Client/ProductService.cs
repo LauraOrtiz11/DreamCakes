@@ -1,6 +1,7 @@
 ﻿using DreamCakes.Dtos.Client;
 using DreamCakes.Repositories.Client;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -128,6 +129,67 @@ namespace DreamCakes.Services.Client
                 {
                     new CategoryDto { Response = -1, Message = $"Error: {ex.Message}" }
                 };
+            }
+        }
+        // DreamCakes.Services.Client/ProductService.cs
+        public async Task<ProductDto> GetProductWithReviews(int productId, int? clientId)
+        {
+            try
+            {
+                var catalogData = await _repository.GetCatalogData();
+                var product = catalogData.Products.FirstOrDefault(p => p.ID_Product == productId);
+
+                if (product == null)
+                {
+                    return new ProductDto { Response = 0, Message = "Product not found" };
+                }
+
+                // Obtener reseñas
+                product.Reviews = await _repository.GetProductReviews(productId);
+
+                // Verificar si el usuario puede reseñar
+                if (clientId.HasValue)
+                {
+                    product.CanReview = await _repository.HasPurchasedProduct(clientId.Value, productId)
+                                      && !product.Reviews.Any(r => r.ID_Client == clientId.Value);
+                }
+
+                return product;
+            }
+            catch (Exception ex)
+            {
+                return new ProductDto { Response = -1, Message = $"Error: {ex.Message}" };
+            }
+        }
+
+        public async Task<ReviewDto> SubmitProductReview(ReviewRequestDto request, int clientId)
+        {
+            try
+            {
+                if (request.Rating < 1 || request.Rating > 5)
+                {
+                    return new ReviewDto { Response = 0, Message = "Rating must be between 1 and 5" };
+                }
+
+                // Verificar que el cliente haya comprado el producto
+                bool hasPurchased = await _repository.HasPurchasedProduct(clientId, request.ProductID);
+                if (!hasPurchased)
+                {
+                    return new ReviewDto { Response = 0, Message = "You must purchase the product before reviewing" };
+                }
+
+                // Verificar que no haya reseñado antes
+                var existingReviews = await _repository.GetProductReviews(request.ProductID);
+                if (existingReviews.Any(r => r.ID_Client == clientId))
+                {
+                    return new ReviewDto { Response = 0, Message = "You have already reviewed this product" };
+                }
+
+                return await _repository.SubmitReview(request.ProductID, clientId, request.Rating, request.Comment);
+            }
+            catch (Exception ex)
+            {
+                return new ReviewDto { Response = -1, Message = $"Error: {ex.Message}" };
             }
         }
 

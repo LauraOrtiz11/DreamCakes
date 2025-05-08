@@ -164,7 +164,10 @@
     <Compile Include="Dtos\Client\ProductRatingDto.cs" />
     <Compile Include="Dtos\Client\ProductsByCategoryDto.cs" />
     <Compile Include="Dtos\Client\ProductSearchResultDto.cs" />
+    <Compile Include="Dtos\Client\ProductWithReviewsDto.cs" />
     <Compile Include="Dtos\Client\RatingResponseDto.cs" />
+    <Compile Include="Dtos\Client\ReviewDto.cs" />
+    <Compile Include="Dtos\Client\ReviewRequestDto.cs" />
     <Compile Include="Dtos\ProfileDto.cs" />
     <Compile Include="Dtos\Client\PromotionDto.cs" />
     <Compile Include="Controllers\Admin\PromotionController.cs" />

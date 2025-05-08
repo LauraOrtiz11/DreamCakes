@@ -13,6 +13,9 @@ namespace DreamCakes.Dtos.Client
         public int ID_Category { get; set; }
         public CategoryDto Category { get; set; }
         public List<ImageDto> Images { get; set; } = new List<ImageDto>();
+        public virtual List<ReviewDto> Reviews { get; set; }
+        public virtual bool CanReview { get; set; }
+
         public int Response { get; set; }
         public string Message { get; set; }
     }

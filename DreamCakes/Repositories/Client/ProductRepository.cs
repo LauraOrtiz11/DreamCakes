@@ -227,7 +227,50 @@ namespace DreamCakes.Repositories.Client
                 };
             }
         }
+        // DreamCakes.Repositories.Client/ProductRepository.cs
+        public async Task<List<ReviewDto>> GetProductReviews(int productId)
+        {
+            try
+            {
+                return await _context.Database.SqlQuery<ReviewDto>(
+                    "EXEC sp_GetProductReviews @ProductID",
+                    new System.Data.SqlClient.SqlParameter("@ProductID", productId)
+                ).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return new List<ReviewDto>
+        {
+            new ReviewDto { Response = -1, Message = $"Error getting reviews: {ex.Message}" }
+        };
+            }
+        }
 
+        public async Task<ReviewDto> SubmitReview(int productId, int clientId, int rating, string comment)
+        {
+            try
+            {
+                var result = await _context.Database.SqlQuery<ReviewDto>(
+                    "EXEC sp_InsertProductRating @ProductID, @ClientID, @Rating, @Comment",
+                    new System.Data.SqlClient.SqlParameter("@ProductID", productId),
+                    new System.Data.SqlClient.SqlParameter("@ClientID", clientId),
+                    new System.Data.SqlClient.SqlParameter("@Rating", rating),
+                    new System.Data.SqlClient.SqlParameter("@Comment", comment ?? (object)DBNull.Value)
+                ).FirstOrDefaultAsync();
+
+                return result ?? new ReviewDto { Response = -1, Message = "No response from database" };
+            }
+            catch (Exception ex)
+            {
+                return new ReviewDto { Response = -1, Message = $"Error submitting review: {ex.Message}" };
+            }
+        }
+
+        public async Task<bool> HasPurchasedProduct(int clientId, int productId)
+        {
+            return await _context.DETALLE_PEDIDO
+                .AnyAsync(dp => dp.PEDIDO.ID_Cliente == clientId && dp.ID_Producto == productId);
+        }
         public void Dispose()
         {
             _context?.Dispose();
