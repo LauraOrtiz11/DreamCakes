@@ -171,13 +171,7 @@ namespace DreamCakes.Services.Client
                     return new ReviewDto { Response = 0, Message = "Rating must be between 1 and 5" };
                 }
 
-                // Verificar que el cliente haya comprado el producto
-                bool hasPurchased = await _repository.HasPurchasedProduct(clientId, request.ProductID);
-                if (!hasPurchased)
-                {
-                    return new ReviewDto { Response = 0, Message = "You must purchase the product before reviewing" };
-                }
-
+                
                 
 
                 return await _repository.SubmitReview(request.ProductID, clientId, request.Rating, request.Comment);

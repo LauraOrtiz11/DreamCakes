@@ -1,0 +1,30 @@
+﻿@model DreamCakes.Dtos.Client.CartSummaryDto
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h6 class="card-title">Resumen</h6>
+        <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal:</span>
+            <span>@Model.Subtotal.ToString("C")</span>
+        </div>
+
+        @if (Model.DiscountTotal > 0)
+        {
+            <div class="d-flex justify-content-between mb-2 text-success">
+                <span>Descuento:</span>
+                <span>-@Model.DiscountTotal.ToString("C")</span>
+            </div>
+        }
+
+        <hr />
+
+        <div class="d-flex justify-content-between fw-bold">
+            <span>Total:</span>
+            <span>@Model.Total.ToString("C")</span>
+        </div>
+
+        <a href="@Url.Action("Index", "Order")" class="btn btn-primary w-100 mt-3">
+            <i class="fas fa-shopping-cart me-2"></i> Ver Carrito
+        </a>
+    </div>
+</div>

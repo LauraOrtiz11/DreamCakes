@@ -34,9 +34,9 @@ namespace DreamCakes.Repositories.Models
         public virtual DbSet<PEDIDO> PEDIDOes { get; set; }
         public virtual DbSet<PRODUCTO> PRODUCTOes { get; set; }
         public virtual DbSet<PROMOCION> PROMOCIONs { get; set; }
+        public virtual DbSet<PROMOCION_PRODUCTO> PROMOCION_PRODUCTO { get; set; }
         public virtual DbSet<ROL> ROLs { get; set; }
         public virtual DbSet<USUARIO> USUARIOs { get; set; }
         public virtual DbSet<VALORACION> VALORACIONs { get; set; }
-        
     }
 }

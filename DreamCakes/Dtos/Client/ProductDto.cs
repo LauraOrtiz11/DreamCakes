@@ -8,6 +8,9 @@ namespace DreamCakes.Dtos.Client
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
+
+        public string MainImageUrl { get; set; }
+
         public int Stock { get; set; }
         public decimal AvgRating { get; set; }
         public int ID_Category { get; set; }
@@ -19,6 +22,8 @@ namespace DreamCakes.Dtos.Client
         public int TotalReviews { get; set; }
         public int Response { get; set; }
         public string Message { get; set; }
+
+
     }
 
     public class ProductImageDto

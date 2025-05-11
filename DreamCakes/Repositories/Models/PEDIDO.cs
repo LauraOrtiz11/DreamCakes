@@ -23,7 +23,7 @@ namespace DreamCakes.Repositories.Models
     
         public int ID_Pedido { get; set; }
         public int ID_Cliente { get; set; }
-        public int ID_UsEntrega { get; set; }
+        public Nullable<int> ID_UsEntrega { get; set; }
         public int ID_Estado { get; set; }
         public System.DateTime Fecha_Pedido { get; set; }
         public string Tip_Pedido { get; set; }

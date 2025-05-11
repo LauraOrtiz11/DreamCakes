@@ -11,17 +11,16 @@ namespace DreamCakes.Repositories.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
+    
     public partial class PROMOCION
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PROMOCION()
         {
             this.DETALLE_PEDIDO = new HashSet<DETALLE_PEDIDO>();
+            this.PROMOCION_PRODUCTO = new HashSet<PROMOCION_PRODUCTO>();
         }
-        
+    
         public int ID_Promocion { get; set; }
         public string Nombre_Prom { get; set; }
         public string Descrip_Prom { get; set; }
@@ -32,5 +31,7 @@ namespace DreamCakes.Repositories.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DETALLE_PEDIDO> DETALLE_PEDIDO { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PROMOCION_PRODUCTO> PROMOCION_PRODUCTO { get; set; }
     }
 }

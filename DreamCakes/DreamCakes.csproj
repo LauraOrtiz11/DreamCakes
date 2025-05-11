@@ -158,14 +158,14 @@
     <Compile Include="Dtos\Admin\AdminProductDto.cs" />
     <Compile Include="Dtos\Admin\AdminCategoryDto.cs" />
     <Compile Include="Dtos\Client\ImageDto.cs" />
-    <Compile Include="Dtos\Client\OrderDetailDto.cs" />
+    <Compile Include="Dtos\Client\OrderDetailWithPromotionDto.cs" />
     <Compile Include="Dtos\Client\OrderDto.cs" />
-    <Compile Include="Dtos\Client\OrderResponseDto.cs" />
     <Compile Include="Dtos\Client\ProductDetailsDto.cs" />
     <Compile Include="Dtos\Client\ProductDto.cs" />
     <Compile Include="Dtos\Client\ProductRatingDisplayDto.cs" />
     <Compile Include="Dtos\Client\ProductsByCategoryDto.cs" />
     <Compile Include="Dtos\Client\ProductSearchResultDto.cs" />
+    <Compile Include="Dtos\Client\PromotionValidationDto.cs" />
     <Compile Include="Dtos\Client\RatingResponseDto.cs" />
     <Compile Include="Dtos\Client\ReviewDto.cs" />
     <Compile Include="Dtos\Client\ReviewRequestDto.cs" />
@@ -183,60 +183,63 @@
     <Compile Include="Repositories\Admin\AdminCategoryRepository.cs" />
     <Compile Include="Repositories\Admin\AdminImageRepository.cs" />
     <Compile Include="Repositories\Client\OrderRepository.cs" />
-    <Compile Include="Repositories\Models\CATEGORIA.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\DETALLE_PEDIDO.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\ESTADO.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\IMAGEN.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\METODO_PAGO.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\Model_DreamCakes.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model_DreamCakes.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\Model_DreamCakes.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\Model_DreamCakes.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model_DreamCakes.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\PAGO.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\PEDIDO.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\PRODUCTO.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\PROMOCION.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\ROL.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\USUARIO.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\Models\VALORACION.cs">
-      <DependentUpon>Model_DreamCakes.tt</DependentUpon>
-    </Compile>
     <Compile Include="Repositories\Admin\AdminProductRepository.cs" />
     <Compile Include="Repositories\Client\ProductRepository.cs" />
     <Compile Include="Repositories\Admin\PromotionRepository.cs" />
+    <Compile Include="Repositories\Models\CATEGORIA.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\DETALLE_PEDIDO.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\DreamCakes.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DreamCakes.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\DreamCakes.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\DreamCakes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DreamCakes.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\ESTADO.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\IMAGEN.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\METODO_PAGO.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\PAGO.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\PEDIDO.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\PRODUCTO.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\PROMOCION.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\PROMOCION_PRODUCTO.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\ROL.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\USUARIO.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Models\VALORACION.cs">
+      <DependentUpon>DreamCakes.tt</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\Admin\AdminCategoryService.cs" />
@@ -276,24 +279,24 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Repositories\Models\Model_DreamCakes.Context.tt">
+    <Content Include="Repositories\Models\DreamCakes.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model_DreamCakes.edmx</DependentUpon>
-      <LastGenOutput>Model_DreamCakes.Context.cs</LastGenOutput>
+      <DependentUpon>DreamCakes.edmx</DependentUpon>
+      <LastGenOutput>DreamCakes.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Repositories\Models\Model_DreamCakes.tt">
+    <Content Include="Repositories\Models\DreamCakes.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model_DreamCakes.edmx</DependentUpon>
-      <LastGenOutput>Model_DreamCakes.cs</LastGenOutput>
+      <DependentUpon>DreamCakes.edmx</DependentUpon>
+      <LastGenOutput>DreamCakes.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Repositories\Models\Model_DreamCakes.edmx">
+    <EntityDeploy Include="Repositories\Models\DreamCakes.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model_DreamCakes.Designer.cs</LastGenOutput>
+      <LastGenOutput>DreamCakes.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Repositories\Models\Model_DreamCakes.edmx.diagram">
-      <DependentUpon>Model_DreamCakes.edmx</DependentUpon>
+    <Content Include="Repositories\Models\DreamCakes.edmx.diagram">
+      <DependentUpon>DreamCakes.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -341,9 +344,16 @@
     <Content Include="Views\Product\_ProductDetailsModal.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Order\OrderConfirmation.cshtml" />
+    <Content Include="Views\DeliveryOrder\AssignedOrders.cshtml" />
+    <Content Include="Views\DeliveryOrder\AssignDelivery.cshtml" />
+    <Content Include="Views\Order\_CartSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Controllers\Delivery\" />
+    <Folder Include="Dtos\Delivery\" />
+    <Folder Include="Repositories\Delivery\" />
+    <Folder Include="Services\Delivery\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

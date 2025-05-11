@@ -12,17 +12,13 @@ namespace DreamCakes.Repositories.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class VALORACION
+    public partial class PROMOCION_PRODUCTO
     {
-        public int ID_Valoracion { get; set; }
-        public int ID_Cliente { get; set; }
+        public int ID_PromocionProducto { get; set; }
+        public int ID_Promocion { get; set; }
         public int ID_Producto { get; set; }
-        public decimal Puntuacion { get; set; }
-        public string Comentario { get; set; }
-        public System.DateTime Fecha_Creacion { get; set; }
-        public Nullable<System.DateTime> Fecha_Modificacion { get; set; }
     
         public virtual PRODUCTO PRODUCTO { get; set; }
-        public virtual USUARIO USUARIO { get; set; }
+        public virtual PROMOCION PROMOCION { get; set; }
     }
 }

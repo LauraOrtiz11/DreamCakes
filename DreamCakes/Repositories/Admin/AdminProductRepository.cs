@@ -164,32 +164,59 @@ namespace DreamCakes.Repositories.Admin
             }
         }
 
-        // Elimina un producto y sus imágenes asociadas de la base de datos.
         public bool DeleteProduct(int productId)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
+                    // Obtener el producto con sus imágenes
                     var product = _context.PRODUCTOes
                         .Include(p => p.IMAGENs)
                         .FirstOrDefault(p => p.ID_Producto == productId);
 
                     if (product == null) return false;
 
-                    _context.IMAGENs.RemoveRange(product.IMAGENs);
+                    // Eliminar imágenes
+                    if (product.IMAGENs.Any())
+                    {
+                        _context.IMAGENs.RemoveRange(product.IMAGENs);
+                    }
+
+                    // Eliminar relaciones con promociones
+                    var promoRelations = _context.PROMOCION_PRODUCTO
+                        .Where(pp => pp.ID_Producto == productId)
+                        .ToList();
+                    if (promoRelations.Any())
+                    {
+                        _context.PROMOCION_PRODUCTO.RemoveRange(promoRelations);
+                    }
+
+                    // Eliminar valoraciones del producto
+                    var valoraciones = _context.VALORACIONs
+                        .Where(v => v.ID_Producto == productId)
+                        .ToList();
+                    if (valoraciones.Any())
+                    {
+                        _context.VALORACIONs.RemoveRange(valoraciones);
+                    }
+
+                    // Eliminar el producto
                     _context.PRODUCTOes.Remove(product);
 
+                    // Guardar cambios
                     _context.SaveChanges();
                     transaction.Commit();
                     return true;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
+                    // Puedes registrar el error si lo deseas
                     return false;
                 }
             }
         }
+
     }
 }

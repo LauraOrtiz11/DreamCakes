@@ -5,6 +5,8 @@ using DreamCakes.Utilities;
 using System;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Web;
+
 
 namespace DreamCakes.Controllers
 {
@@ -89,8 +91,18 @@ namespace DreamCakes.Controllers
         {
             try
             {
+                // Eliminar cookies de autenticación y datos de sesión
                 CookieUtility.RemoveAuthCookie(Response);
                 SessionManagerUtility.ClearUserSession(Session);
+
+                // Prevenir el almacenamiento en caché y la navegación hacia atrás
+                Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.Cache.SetNoStore();
+                Response.AddHeader("Pragma", "no-cache");
+                Response.AddHeader("Cache-Control", "no-store");
+
+                // Redirigir al inicio
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
@@ -99,6 +111,7 @@ namespace DreamCakes.Controllers
                 return RedirectToAction("General", "Error");
             }
         }
+
 
         private ActionResult RedirectToRole(int roleId)
         {

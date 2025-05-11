@@ -1,14 +1,15 @@
 ﻿using DreamCakes.Dtos.Client;
 using DreamCakes.Services.Client;
-using DreamCakes.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Linq;
 
+
+
 namespace DreamCakes.Controllers
 {
-    [RoleAuthorizeUtility(2)] // Asumo que 2 es el rol de cliente
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly OrderService _orderService;
@@ -33,11 +34,47 @@ namespace DreamCakes.Controllers
         }
 
         [HttpPost]
-        public ActionResult ApplyPromotion(string promotionCode)
+        public ActionResult ApplyPromotion(int productId, string promotionCode)
         {
-            var result = _orderService.ValidatePromotionCode(promotionCode);
+            var result = _orderService.ValidatePromotionForProduct(promotionCode, productId);
 
-            SetResponseMessages(result);
+            if (result.Success)
+            {
+                TempData["SuccessMessage"] = result.Message;
+                // Actualizar el carrito con la promoción
+                var cart = GetCurrentCart();
+                var item = cart.FirstOrDefault(i => i.ProductId == productId);
+                if (item != null)
+                {
+                    item.PromotionId = result.Promotion.ID_Prom;
+                    // Recalcular subtotal con descuento
+                    item.Subtotal = item.UnitPrice * item.Quantity *
+                                   (100 - result.Promotion.DiscountPer) / 100;
+                }
+                Session["Cart"] = cart;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.Message;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult RemovePromotion(int productId)
+        {
+            var cart = GetCurrentCart();
+            var item = cart.FirstOrDefault(i => i.ProductId == productId);
+            if (item != null)
+            {
+                item.PromotionId = null;
+                // Recalcular subtotal sin descuento
+                item.Subtotal = item.UnitPrice * item.Quantity;
+                TempData["SuccessMessage"] = "Promoción removida correctamente";
+            }
+            Session["Cart"] = cart;
+
             return RedirectToAction("Index");
         }
 
@@ -80,10 +117,14 @@ namespace DreamCakes.Controllers
             if (result.Success)
             {
                 Session["Cart"] = result.Order.Details;
+                TempData["SuccessMessage"] = result.Message;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.Message;
             }
 
-            SetResponseMessages(result);
-            return RedirectOrAjax(result);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -91,28 +132,35 @@ namespace DreamCakes.Controllers
         {
             order.Details = GetCurrentCart();
             order.OrderDate = DateTime.Now;
-            order.StatusId = 1; // Pendiente
-            order.Total = order.Details.Sum(d => d.Subtotal);
-            order.PromotionCode = TempData["Promotion"]?.ToString();
+            order.StatusId = 3; // Pendiente
+            order.OrderType = "Inmediato";
+            order.DeliveryUserId = null; // Asegurar que sea null
 
             var result = _orderService.CreateOrder(order);
 
             if (result.Success)
             {
                 Session["Cart"] = null;
-                return View("OrderConfirmation", result.Order);
+                return RedirectToAction("OrderConfirmation", new { orderId = result.OrderId });
             }
 
-            SetResponseMessages(result);
+            TempData["ErrorMessage"] = result.Message;
             return RedirectToAction("Index");
         }
-
+        [HttpGet]
+        public ActionResult GetCartCount()
+        {
+            var cart = GetCurrentCart();
+            return Json(new { count = cart.Sum(item => item.Quantity) }, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public ActionResult ScheduleOrder(OrderDto order)
         {
             order.Details = GetCurrentCart();
             order.OrderType = "Programado";
-            order.PromotionCode = TempData["Promotion"]?.ToString();
+            order.StatusId = 3; // Pendiente
+            order.OrderDate = DateTime.Now;
+            order.DeliveryUserId = null; // Asegurar que sea null
 
             if (order.DeliveryDate < DateTime.Now.AddHours(2))
             {
@@ -125,18 +173,30 @@ namespace DreamCakes.Controllers
             if (result.Success)
             {
                 Session["Cart"] = null;
-                return View("OrderConfirmation", result.Order);
+                return RedirectToAction("OrderConfirmation", new { orderId = result.OrderId });
             }
 
-            SetResponseMessages(result);
+            TempData["ErrorMessage"] = result.Message;
             return RedirectToAction("Index");
         }
 
-        #region Helpers
-
-        private List<OrderDetailDto> GetCurrentCart()
+        public ActionResult OrderConfirmation(int orderId)
         {
-            return Session["Cart"] as List<OrderDetailDto> ?? new List<OrderDetailDto>();
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(order);
+        }
+
+        [ChildActionOnly]
+        public ActionResult CartSummary()
+        {
+            var cart = GetCurrentCart();
+            var summary = _orderService.GetCartSummary(cart);
+            return PartialView("_CartSummary", summary);
         }
 
         private void SetResponseMessages(OrderResponseDto result)
@@ -150,7 +210,7 @@ namespace DreamCakes.Controllers
                 TempData["ErrorMessage"] = result.Message;
             }
         }
-
+        #region Helpers
         private ActionResult RedirectOrAjax(OrderResponseDto result)
         {
             if (Request.IsAjaxRequest())
@@ -163,6 +223,10 @@ namespace DreamCakes.Controllers
                 });
             }
             return RedirectToAction("Index");
+        }
+        private List<OrderDetailDto> GetCurrentCart()
+        {
+            return Session["Cart"] as List<OrderDetailDto> ?? new List<OrderDetailDto>();
         }
 
         #endregion

@@ -305,11 +305,7 @@ namespace DreamCakes.Repositories.Client
             }
         }
 
-        public async Task<bool> HasPurchasedProduct(int clientId, int productId)
-        {
-            return await _context.DETALLE_PEDIDO
-                .AnyAsync(dp => dp.PEDIDO.ID_Cliente == clientId && dp.ID_Producto == productId);
-        }
+        
         public void Dispose()
         {
             _context?.Dispose();

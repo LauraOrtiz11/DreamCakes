@@ -1,42 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DreamCakes.Dtos.Client;
+﻿using DreamCakes.Dtos.Client;
 using DreamCakes.Repositories.Client;
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 
 namespace DreamCakes.Services.Client
 {
-    public class OrderService : IDisposable
+    public class OrderService 
     {
         private readonly OrderRepository _orderRepository;
-        private readonly ProductRepository _productRepository;
-
+        
         public OrderService()
         {
             _orderRepository = new OrderRepository();
-            _productRepository = new ProductRepository();
+           
         }
 
-        public OrderResponseDto ValidatePromotionCode(string promotionCode)
+        public OrderResponseDto ValidatePromotionForProduct(string promotionCode, int productId)
         {
             try
             {
-                var promotion = _orderRepository.GetPromotionByCode(promotionCode);
+                // Validar que el producto exista
+                var product = _orderRepository.GetProductById(productId);
+                if (product == null)
+                {
+                    return new OrderResponseDto
+                    {
+                        Success = false,
+                        Message = "Producto no encontrado",
+                        ErrorLocation = "OrderService.ValidatePromotionForProduct"
+                    };
+                }
 
+                // Obtener la promoción
+                var promotion = _orderRepository.GetPromotionByCode(promotionCode);
                 if (promotion == null)
                 {
                     return new OrderResponseDto
                     {
                         Success = false,
-                        Message = "Código de descuento no válido, por favor verificar"
+                        Message = "Código de promoción no válido",
+                        ErrorLocation = "OrderService.ValidatePromotionForProduct"
+                    };
+                }
+
+                // Verificar que la promoción aplique al producto
+                var isValid = _orderRepository.ValidateProductPromotion(productId, promotion.ID_Prom);
+                if (!isValid)
+                {
+                    return new OrderResponseDto
+                    {
+                        Success = false,
+                        Message = $"La promoción '{promotion.NameProm}' no aplica para este producto",
+                        ErrorLocation = "OrderService.ValidatePromotionForProduct"
                     };
                 }
 
                 return new OrderResponseDto
                 {
                     Success = true,
-                    Message = "Descuento aplicado correctamente",
-                    Order = new OrderDto { PromotionCode = promotion.NameProm }
+                    Message = $"Promoción '{promotion.NameProm}' aplicada correctamente",
+                    Promotion = promotion
                 };
             }
             catch (Exception ex)
@@ -44,117 +72,117 @@ namespace DreamCakes.Services.Client
                 return new OrderResponseDto
                 {
                     Success = false,
-                    Message = "Problemas internos, por favor intente de nuevo más tarde"
+                    Message = "Error al validar la promoción",
+                    TechnicalMessage = ex.Message,
+                    ErrorLocation = "OrderService.ValidatePromotionForProduct"
                 };
             }
         }
+
         public OrderResponseDto AddToCart(List<OrderDetailDto> currentCart, int productId, int quantity)
         {
             try
             {
-                // 1. Validación básica
-                if (quantity < 1)
+                // Validar cantidad
+                if (quantity <= 0)
                 {
                     return new OrderResponseDto
                     {
                         Success = false,
-                        Message = "La cantidad debe ser al menos 1",
-                        ErrorLocation = "Service: Validación inicial"
+                        Message = "La cantidad debe ser mayor a cero",
+                        ErrorLocation = "OrderService.AddToCart"
                     };
                 }
 
-                // 2. Obtener producto
+                // Obtener producto
                 var product = _orderRepository.GetProductById(productId);
-
-                // 3. Validar stock
-                if (quantity > product.Stock)
+                if (product == null)
                 {
                     return new OrderResponseDto
                     {
                         Success = false,
-                        Message = $"No hay suficiente stock. Disponible: {product.Stock} unidades",
-                        ErrorLocation = "Service: Validación de stock"
+                        Message = "Producto no encontrado",
+                        ErrorLocation = "OrderService.AddToCart"
                     };
                 }
 
-                // 4. Lógica para añadir al carrito
-                var cart = currentCart ?? new List<OrderDetailDto>();
-                var existingItem = cart.FirstOrDefault(p => p.ProductId == productId);
+                // Verificar stock
+                if (product.Stock < quantity)
+                {
+                    return new OrderResponseDto
+                    {
+                        Success = false,
+                        Message = $"No hay suficiente stock. Disponible: {product.Stock}",
+                        ErrorLocation = "OrderService.AddToCart"
+                    };
+                }
 
+                // Buscar si el producto ya está en el carrito
+                var existingItem = currentCart.FirstOrDefault(item => item.ProductId == productId);
                 if (existingItem != null)
                 {
+                    // Actualizar cantidad
                     existingItem.Quantity += quantity;
-                    existingItem.Subtotal = existingItem.UnitPrice * existingItem.Quantity;
+                    existingItem.UnitPrice = product.Price;
+                    existingItem.Subtotal = existingItem.Quantity * existingItem.UnitPrice;
+                    existingItem.ProductName = product.Name;
+                    existingItem.ProductImageUrl = product.MainImageUrl;
                 }
                 else
                 {
-                    cart.Add(new OrderDetailDto
+                    // Agregar nuevo item
+                    currentCart.Add(new OrderDetailDto
                     {
                         ProductId = productId,
-                        ProductName = product.Name,
-                        UnitPrice = product.Price,
                         Quantity = quantity,
-                        Subtotal = product.Price * quantity
+                        UnitPrice = product.Price,
+                        Subtotal = product.Price * quantity,
+                        ProductName = product.Name,
+                        ProductImageUrl = product.MainImageUrl
                     });
                 }
 
                 return new OrderResponseDto
                 {
                     Success = true,
-                    Message = $"{product.Name} añadido al carrito",
-                    Order = new OrderDto { Details = cart }
+                    Message = "Producto agregado al carrito",
+                    Order = new OrderDto { Details = currentCart }
                 };
             }
             catch (Exception ex)
             {
-                // Registrar el error completo
-                System.Diagnostics.Debug.WriteLine($"ERROR EN AddToCart: {ex.ToString()}");
-
                 return new OrderResponseDto
                 {
                     Success = false,
-                    Message = GetUserFriendlyErrorMessage(ex),
-                    ErrorLocation = GetErrorLocation(ex),
-                    TechnicalMessage = ex.Message
+                    Message = "Error al agregar producto al carrito",
+                    TechnicalMessage = ex.Message,
+                    ErrorLocation = "OrderService.AddToCart"
                 };
             }
-        }
-
-        private string GetUserFriendlyErrorMessage(Exception ex)
-        {
-            if (ex.Message.Contains("no encontrado"))
-                return "El producto solicitado no está disponible";
-            if (ex.Message.Contains("base de datos"))
-                return "Error al acceder a la información del producto";
-            return "Ocurrió un error al procesar tu solicitud";
-        }
-
-        private string GetErrorLocation(Exception ex)
-        {
-            if (ex.Message.Contains("OrderRepository"))
-                return "Repository";
-            if (ex.Message.Contains("Service"))
-                return "Service";
-            return "Unknown";
         }
 
         public OrderResponseDto RemoveFromCart(List<OrderDetailDto> currentCart, int productId)
         {
             try
             {
-                var cart = currentCart ?? new List<OrderDetailDto>();
-                var itemToRemove = cart.FirstOrDefault(p => p.ProductId == productId);
-
-                if (itemToRemove != null)
+                var itemToRemove = currentCart.FirstOrDefault(item => item.ProductId == productId);
+                if (itemToRemove == null)
                 {
-                    cart.Remove(itemToRemove);
+                    return new OrderResponseDto
+                    {
+                        Success = false,
+                        Message = "El producto no está en el carrito",
+                        ErrorLocation = "OrderService.RemoveFromCart"
+                    };
                 }
+
+                currentCart.Remove(itemToRemove);
 
                 return new OrderResponseDto
                 {
                     Success = true,
-                    Message = "Producto removido del carrito",
-                    Order = new OrderDto { Details = cart }
+                    Message = "Producto eliminado del carrito",
+                    Order = new OrderDto { Details = currentCart }
                 };
             }
             catch (Exception ex)
@@ -162,7 +190,9 @@ namespace DreamCakes.Services.Client
                 return new OrderResponseDto
                 {
                     Success = false,
-                    Message = $"Error al remover del carrito: {ex.Message}"
+                    Message = "Error al eliminar producto del carrito",
+                    TechnicalMessage = ex.Message,
+                    ErrorLocation = "OrderService.RemoveFromCart"
                 };
             }
         }
@@ -171,29 +201,72 @@ namespace DreamCakes.Services.Client
         {
             try
             {
+                // Validar que el carrito no esté vacío
                 if (order.Details == null || !order.Details.Any())
                 {
                     return new OrderResponseDto
                     {
                         Success = false,
-                        Message = "El pedido no puede estar vacío"
+                        Message = "El carrito está vacío",
+                        ErrorLocation = "OrderService.CreateOrder"
                     };
                 }
 
-                // Apply promotion if exists
-                if (!string.IsNullOrEmpty(order.PromotionCode))
+                // Validar dirección para pedidos con entrega
+                if (string.IsNullOrWhiteSpace(order.DeliveryAddress))
                 {
-                    ApplyPromotion(order);
+                    return new OrderResponseDto
+                    {
+                        Success = false,
+                        Message = "Debe ingresar una dirección de entrega",
+                        ErrorLocation = "OrderService.CreateOrder"
+                    };
                 }
 
-                // Save order
+                // Validar fecha para pedidos programados
+                if (order.OrderType == "Programado" && order.DeliveryDate < DateTime.Now.AddHours(2))
+                {
+                    return new OrderResponseDto
+                    {
+                        Success = false,
+                        Message = "La fecha de entrega debe ser al menos 2 horas después del momento actual",
+                        ErrorLocation = "OrderService.CreateOrder"
+                    };
+                }
+
+                // Validar stock actualizado
+                foreach (var detail in order.Details)
+                {
+                    var product = _orderRepository.GetProductById(detail.ProductId);
+                    if (product == null)
+                    {
+                        return new OrderResponseDto
+                        {
+                            Success = false,
+                            Message = $"Producto ID {detail.ProductId} no encontrado",
+                            ErrorLocation = "OrderService.CreateOrder"
+                        };
+                    }
+
+                    if (product.Stock < detail.Quantity)
+                    {
+                        return new OrderResponseDto
+                        {
+                            Success = false,
+                            Message = $"No hay suficiente stock de {product.Name}. Disponible: {product.Stock}",
+                            ErrorLocation = "OrderService.CreateOrder"
+                        };
+                    }
+                }
+
+                // Crear la orden
                 var orderId = _orderRepository.CreateOrder(order);
 
                 return new OrderResponseDto
                 {
                     Success = true,
-                    Message = order.OrderType == "Programado" ?
-                        "Pedido programado de manera correcta" : "Pedido realizado correctamente",
+                    Message = "Orden creada exitosamente",
+                    OrderId = orderId,
                     Order = order
                 };
             }
@@ -202,29 +275,19 @@ namespace DreamCakes.Services.Client
                 return new OrderResponseDto
                 {
                     Success = false,
-                    Message = "Error al procesar el pedido: " + ex.Message
+                    Message = "Error al crear la orden",
+                    TechnicalMessage = ex.Message,
+                    ErrorLocation = "OrderService.CreateOrder"
                 };
             }
         }
-
-        private void ApplyPromotion(OrderDto order)
+        public OrderDto GetOrderById(int orderId)
         {
-            var promotion = _orderRepository.GetPromotionByCode(order.PromotionCode);
-            if (promotion != null)
-            {
-                foreach (var detail in order.Details)
-                {
-                    detail.UnitPrice = detail.UnitPrice * (1 - (promotion.DiscountPer / 100));
-                    detail.Subtotal = detail.UnitPrice * detail.Quantity;
-                    detail.PromotionId = promotion.ID_Prom;
-                }
-                order.Total = order.Details.Sum(d => d.Subtotal);
-            }
+            return _orderRepository.GetOrderById(orderId);
         }
-
-        public void Dispose()
+        public CartSummaryDto GetCartSummary(List<OrderDetailDto> cartItems)
         {
-            // Cleanup resources if needed
+            return _orderRepository.GetCartSummary(cartItems);
         }
     }
 }

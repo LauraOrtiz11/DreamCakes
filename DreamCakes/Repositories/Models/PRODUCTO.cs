@@ -19,6 +19,7 @@ namespace DreamCakes.Repositories.Models
         {
             this.DETALLE_PEDIDO = new HashSet<DETALLE_PEDIDO>();
             this.IMAGENs = new HashSet<IMAGEN>();
+            this.PROMOCION_PRODUCTO = new HashSet<PROMOCION_PRODUCTO>();
             this.VALORACIONs = new HashSet<VALORACION>();
         }
     
@@ -29,12 +30,14 @@ namespace DreamCakes.Repositories.Models
         public decimal Precio { get; set; }
         public int Stock { get; set; }
         public Nullable<decimal> PromPuntuacion { get; set; }
-
+    
         public virtual CATEGORIA CATEGORIA { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DETALLE_PEDIDO> DETALLE_PEDIDO { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IMAGEN> IMAGENs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PROMOCION_PRODUCTO> PROMOCION_PRODUCTO { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<VALORACION> VALORACIONs { get; set; }
     }
