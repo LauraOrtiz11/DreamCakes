@@ -1,6 +1,9 @@
 ﻿using DreamCakes.Dtos.Client;
 using DreamCakes.Repositories.Client;
 using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -128,6 +131,54 @@ namespace DreamCakes.Services.Client
                 {
                     new CategoryDto { Response = -1, Message = $"Error: {ex.Message}" }
                 };
+            }
+        }
+        public async Task<ProductDto> GetProductWithReviews(int productId)
+        {
+            try
+            {
+                var catalogData = await _repository.GetCatalogData();
+                var product = catalogData.Products.FirstOrDefault(p => p.ID_Product == productId);
+
+                if (product == null)
+                {
+                    return new ProductDto { Response = 0, Message = "Product not found" };
+                }
+
+                // Obtener reseñas y promedio
+                var reviewsData = await _repository.GetProductReviewsWithAverage(productId);
+                product.Reviews = reviewsData.Reviews;
+                product.AvgRating = reviewsData.AverageRating; // <- esta línea es la clave
+                product.TotalReviews = reviewsData.TotalReviews;
+
+                
+
+                return product;
+            }
+            catch (Exception ex)
+            {
+                return new ProductDto { Response = -1, Message = $"Error: {ex.Message}" };
+            }
+        }
+
+
+        public async Task<ReviewDto> SubmitProductReview(ReviewRequestDto request, int clientId)
+        {
+            try
+            {
+                if (request.Rating < 1 || request.Rating > 5)
+                {
+                    return new ReviewDto { Response = 0, Message = "Rating must be between 1 and 5" };
+                }
+
+                
+                
+
+                return await _repository.SubmitReview(request.ProductID, clientId, request.Rating, request.Comment);
+            }
+            catch (Exception ex)
+            {
+                return new ReviewDto { Response = -1, Message = $"Error: {ex.Message}" };
             }
         }
 

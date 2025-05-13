@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="DreamCakesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="DreamCakesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CATEGORIA">
           <Key>
             <PropertyRef Name="ID_Categoria" />
@@ -68,7 +68,7 @@
           </Key>
           <Property Name="ID_Pedido" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Cliente" Type="int" Nullable="false" />
-          <Property Name="ID_UsEntrega" Type="int" Nullable="false" />
+          <Property Name="ID_UsEntrega" Type="int" />
           <Property Name="ID_Estado" Type="int" Nullable="false" />
           <Property Name="Fecha_Pedido" Type="datetime" Nullable="false" />
           <Property Name="Tip_Pedido" Type="varchar" MaxLength="20" Nullable="false" />
@@ -84,8 +84,9 @@
           <Property Name="ID_Categoria" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Descripcion" Type="text" Nullable="false" />
-          <Property Name="Precio" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Precio" Type="decimal" Precision="10" Scale="3" Nullable="false" />
           <Property Name="Stock" Type="int" Nullable="false" />
+          <Property Name="PromPuntuacion" Type="decimal" Precision="3" Scale="1" />
         </EntityType>
         <EntityType Name="PROMOCION">
           <Key>
@@ -94,10 +95,18 @@
           <Property Name="ID_Promocion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre_Prom" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Descrip_Prom" Type="text" Nullable="false" />
-          <Property Name="Porc_Desc" Type="decimal" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="Porc_Desc" Type="decimal" Precision="3" Scale="1" Nullable="false" />
           <Property Name="Fecha_Ini" Type="datetime" Nullable="false" />
           <Property Name="Fecha_Fin" Type="datetime" Nullable="false" />
           <Property Name="Estado" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PROMOCION_PRODUCTO">
+          <Key>
+            <PropertyRef Name="ID_PromocionProducto" />
+          </Key>
+          <Property Name="ID_PromocionProducto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_Promocion" Type="int" Nullable="false" />
+          <Property Name="ID_Producto" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ROL">
           <Key>
@@ -128,7 +137,10 @@
           <Property Name="ID_Valoracion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Cliente" Type="int" Nullable="false" />
           <Property Name="ID_Producto" Type="int" Nullable="false" />
-          <Property Name="Puntuacion" Type="int" Nullable="false" />
+          <Property Name="Puntuacion" Type="decimal" Precision="3" Scale="1" Nullable="false" />
+          <Property Name="Comentario" Type="nvarchar" MaxLength="500" />
+          <Property Name="Fecha_Creacion" Type="datetime" Nullable="false" />
+          <Property Name="Fecha_Modificacion" Type="datetime" />
         </EntityType>
         <Association Name="FK_DETALLE_PEDIDO">
           <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="1" />
@@ -227,7 +239,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PEDIDO_ENTREGA">
-          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="0..1" />
           <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="USUARIO">
@@ -247,6 +259,30 @@
             </Principal>
             <Dependent Role="PEDIDO">
               <PropertyRef Name="ID_Estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PP_Producto">
+          <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="1" />
+          <End Role="PROMOCION_PRODUCTO" Type="Self.PROMOCION_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_Producto" />
+            </Principal>
+            <Dependent Role="PROMOCION_PRODUCTO">
+              <PropertyRef Name="ID_Producto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PP_Promocion">
+          <End Role="PROMOCION" Type="Self.PROMOCION" Multiplicity="1" />
+          <End Role="PROMOCION_PRODUCTO" Type="Self.PROMOCION_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROMOCION">
+              <PropertyRef Name="ID_Promocion" />
+            </Principal>
+            <Dependent Role="PROMOCION_PRODUCTO">
+              <PropertyRef Name="ID_Promocion" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -320,6 +356,7 @@
           <EntitySet Name="PEDIDO" EntityType="Self.PEDIDO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PRODUCTO" EntityType="Self.PRODUCTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PROMOCION" EntityType="Self.PROMOCION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PROMOCION_PRODUCTO" EntityType="Self.PROMOCION_PRODUCTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ROL" EntityType="Self.ROL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USUARIO" EntityType="Self.USUARIO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="VALORACION" EntityType="Self.VALORACION" Schema="dbo" store:Type="Tables" />
@@ -363,6 +400,14 @@
             <End Role="ESTADO" EntitySet="ESTADO" />
             <End Role="PEDIDO" EntitySet="PEDIDO" />
           </AssociationSet>
+          <AssociationSet Name="FK_PP_Producto" Association="Self.FK_PP_Producto">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="PROMOCION_PRODUCTO" EntitySet="PROMOCION_PRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PP_Promocion" Association="Self.FK_PP_Promocion">
+            <End Role="PROMOCION" EntitySet="PROMOCION" />
+            <End Role="PROMOCION_PRODUCTO" EntitySet="PROMOCION_PRODUCTO" />
+          </AssociationSet>
           <AssociationSet Name="FK_PRODUCTO_CATEGORIA" Association="Self.FK_PRODUCTO_CATEGORIA">
             <End Role="CATEGORIA" EntitySet="CATEGORIA" />
             <End Role="PRODUCTO" EntitySet="PRODUCTO" />
@@ -384,7 +429,8 @@
             <End Role="VALORACION" EntitySet="VALORACION" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DreamCakesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -392,7 +438,7 @@
           <Key>
             <PropertyRef Name="ID_Categoria" />
           </Key>
-          <Property Name="ID_Categoria" Type="Int32" Nullable="false" />
+          <Property Name="ID_Categoria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nom_Categ" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Descrip_Categ" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Estado" Type="Boolean" Nullable="false" />
@@ -402,7 +448,7 @@
           <Key>
             <PropertyRef Name="ID_DP" />
           </Key>
-          <Property Name="ID_DP" Type="Int32" Nullable="false" />
+          <Property Name="ID_DP" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ID_Pedido" Type="Int32" Nullable="false" />
           <Property Name="ID_Producto" Type="Int32" Nullable="false" />
           <Property Name="ID_Promocion" Type="Int32" />
@@ -428,7 +474,7 @@
           <Key>
             <PropertyRef Name="ID_Imagen" />
           </Key>
-          <Property Name="ID_Imagen" Type="Int32" Nullable="false" />
+          <Property Name="ID_Imagen" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ID_Producto" Type="Int32" Nullable="false" />
           <Property Name="Nombre_Img" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Imagen_URL" Type="String" MaxLength="252" FixedLength="false" Unicode="false" Nullable="false" />
@@ -438,7 +484,7 @@
           <Key>
             <PropertyRef Name="ID_Metodo" />
           </Key>
-          <Property Name="ID_Metodo" Type="Int32" Nullable="false" />
+          <Property Name="ID_Metodo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="PAGOes" Relationship="Self.FK_PAGO_METODO" FromRole="METODO_PAGO" ToRole="PAGO" />
@@ -461,9 +507,9 @@
           <Key>
             <PropertyRef Name="ID_Pedido" />
           </Key>
-          <Property Name="ID_Pedido" Type="Int32" Nullable="false" />
+          <Property Name="ID_Pedido" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ID_Cliente" Type="Int32" Nullable="false" />
-          <Property Name="ID_UsEntrega" Type="Int32" Nullable="false" />
+          <Property Name="ID_UsEntrega" Type="Int32" />
           <Property Name="ID_Estado" Type="Int32" Nullable="false" />
           <Property Name="Fecha_Pedido" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Tip_Pedido" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
@@ -480,35 +526,48 @@
           <Key>
             <PropertyRef Name="ID_Producto" />
           </Key>
-          <Property Name="ID_Producto" Type="Int32" Nullable="false" />
+          <Property Name="ID_Producto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ID_Categoria" Type="Int32" Nullable="false" />
           <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Precio" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Precio" Type="Decimal" Precision="10" Scale="3" Nullable="false" />
           <Property Name="Stock" Type="Int32" Nullable="false" />
+          <Property Name="PromPuntuacion" Type="Decimal" Precision="3" Scale="1" />
           <NavigationProperty Name="CATEGORIA" Relationship="Self.FK_PRODUCTO_CATEGORIA" FromRole="PRODUCTO" ToRole="CATEGORIA" />
           <NavigationProperty Name="DETALLE_PEDIDO" Relationship="Self.FK_DETALLE_PRODUCTO" FromRole="PRODUCTO" ToRole="DETALLE_PEDIDO" />
           <NavigationProperty Name="IMAGENs" Relationship="Self.FK_IMAGEN_PRODUCTO" FromRole="PRODUCTO" ToRole="IMAGEN" />
+          <NavigationProperty Name="PROMOCION_PRODUCTO" Relationship="Self.FK_PP_Producto" FromRole="PRODUCTO" ToRole="PROMOCION_PRODUCTO" />
           <NavigationProperty Name="VALORACIONs" Relationship="Self.FK_VALORACION_PRODUCTO" FromRole="PRODUCTO" ToRole="VALORACION" />
         </EntityType>
         <EntityType Name="PROMOCION">
           <Key>
             <PropertyRef Name="ID_Promocion" />
           </Key>
-          <Property Name="ID_Promocion" Type="Int32" Nullable="false" />
+          <Property Name="ID_Promocion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre_Prom" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Descrip_Prom" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Porc_Desc" Type="Decimal" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="Porc_Desc" Type="Decimal" Precision="3" Scale="1" Nullable="false" />
           <Property Name="Fecha_Ini" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Fecha_Fin" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Estado" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="DETALLE_PEDIDO" Relationship="Self.FK_DETALLE_PROMOCION" FromRole="PROMOCION" ToRole="DETALLE_PEDIDO" />
+          <NavigationProperty Name="PROMOCION_PRODUCTO" Relationship="Self.FK_PP_Promocion" FromRole="PROMOCION" ToRole="PROMOCION_PRODUCTO" />
+        </EntityType>
+        <EntityType Name="PROMOCION_PRODUCTO">
+          <Key>
+            <PropertyRef Name="ID_PromocionProducto" />
+          </Key>
+          <Property Name="ID_PromocionProducto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_Promocion" Type="Int32" Nullable="false" />
+          <Property Name="ID_Producto" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PRODUCTO" Relationship="Self.FK_PP_Producto" FromRole="PROMOCION_PRODUCTO" ToRole="PRODUCTO" />
+          <NavigationProperty Name="PROMOCION" Relationship="Self.FK_PP_Promocion" FromRole="PROMOCION_PRODUCTO" ToRole="PROMOCION" />
         </EntityType>
         <EntityType Name="ROL">
           <Key>
             <PropertyRef Name="ID_Rol" />
           </Key>
-          <Property Name="ID_Rol" Type="Int32" Nullable="false" />
+          <Property Name="ID_Rol" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="USUARIOs" Relationship="Self.FK_USUARIO_ROL" FromRole="ROL" ToRole="USUARIO" />
@@ -536,10 +595,13 @@
           <Key>
             <PropertyRef Name="ID_Valoracion" />
           </Key>
-          <Property Name="ID_Valoracion" Type="Int32" Nullable="false" />
+          <Property Name="ID_Valoracion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ID_Cliente" Type="Int32" Nullable="false" />
           <Property Name="ID_Producto" Type="Int32" Nullable="false" />
-          <Property Name="Puntuacion" Type="Int32" Nullable="false" />
+          <Property Name="Puntuacion" Type="Decimal" Precision="3" Scale="1" Nullable="false" />
+          <Property Name="Comentario" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Fecha_Creacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Fecha_Modificacion" Type="DateTime" Precision="3" />
           <NavigationProperty Name="PRODUCTO" Relationship="Self.FK_VALORACION_PRODUCTO" FromRole="VALORACION" ToRole="PRODUCTO" />
           <NavigationProperty Name="USUARIO" Relationship="Self.FK_VALORACION_CLIENTE" FromRole="VALORACION" ToRole="USUARIO" />
         </EntityType>
@@ -676,7 +738,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PEDIDO_ENTREGA">
-          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="0..1" />
           <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="USUARIO">
@@ -684,6 +746,18 @@
             </Principal>
             <Dependent Role="PEDIDO">
               <PropertyRef Name="ID_UsEntrega" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PP_Producto">
+          <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="1" />
+          <End Role="PROMOCION_PRODUCTO" Type="Self.PROMOCION_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_Producto" />
+            </Principal>
+            <Dependent Role="PROMOCION_PRODUCTO">
+              <PropertyRef Name="ID_Producto" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -696,6 +770,18 @@
             </Principal>
             <Dependent Role="VALORACION">
               <PropertyRef Name="ID_Producto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PP_Promocion">
+          <End Role="PROMOCION" Type="Self.PROMOCION" Multiplicity="1" />
+          <End Role="PROMOCION_PRODUCTO" Type="Self.PROMOCION_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROMOCION">
+              <PropertyRef Name="ID_Promocion" />
+            </Principal>
+            <Dependent Role="PROMOCION_PRODUCTO">
+              <PropertyRef Name="ID_Promocion" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -733,6 +819,7 @@
           <EntitySet Name="PEDIDOes" EntityType="Self.PEDIDO" />
           <EntitySet Name="PRODUCTOes" EntityType="Self.PRODUCTO" />
           <EntitySet Name="PROMOCIONs" EntityType="Self.PROMOCION" />
+          <EntitySet Name="PROMOCION_PRODUCTO" EntityType="Self.PROMOCION_PRODUCTO" />
           <EntitySet Name="ROLs" EntityType="Self.ROL" />
           <EntitySet Name="USUARIOs" EntityType="Self.USUARIO" />
           <EntitySet Name="VALORACIONs" EntityType="Self.VALORACION" />
@@ -784,9 +871,17 @@
             <End Role="USUARIO" EntitySet="USUARIOs" />
             <End Role="PEDIDO" EntitySet="PEDIDOes" />
           </AssociationSet>
+          <AssociationSet Name="FK_PP_Producto" Association="Self.FK_PP_Producto">
+            <End Role="PRODUCTO" EntitySet="PRODUCTOes" />
+            <End Role="PROMOCION_PRODUCTO" EntitySet="PROMOCION_PRODUCTO" />
+          </AssociationSet>
           <AssociationSet Name="FK_VALORACION_PRODUCTO" Association="Self.FK_VALORACION_PRODUCTO">
             <End Role="PRODUCTO" EntitySet="PRODUCTOes" />
             <End Role="VALORACION" EntitySet="VALORACIONs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PP_Promocion" Association="Self.FK_PP_Promocion">
+            <End Role="PROMOCION" EntitySet="PROMOCIONs" />
+            <End Role="PROMOCION_PRODUCTO" EntitySet="PROMOCION_PRODUCTO" />
           </AssociationSet>
           <AssociationSet Name="FK_USUARIO_ROL" Association="Self.FK_USUARIO_ROL">
             <End Role="ROL" EntitySet="ROLs" />
@@ -890,6 +985,7 @@
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
                 <ScalarProperty Name="Precio" ColumnName="Precio" />
                 <ScalarProperty Name="Stock" ColumnName="Stock" />
+                <ScalarProperty Name="PromPuntuacion" ColumnName="PromPuntuacion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -903,6 +999,15 @@
                 <ScalarProperty Name="Fecha_Ini" ColumnName="Fecha_Ini" />
                 <ScalarProperty Name="Fecha_Fin" ColumnName="Fecha_Fin" />
                 <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PROMOCION_PRODUCTO">
+            <EntityTypeMapping TypeName="DreamCakesModel.PROMOCION_PRODUCTO">
+              <MappingFragment StoreEntitySet="PROMOCION_PRODUCTO">
+                <ScalarProperty Name="ID_PromocionProducto" ColumnName="ID_PromocionProducto" />
+                <ScalarProperty Name="ID_Promocion" ColumnName="ID_Promocion" />
+                <ScalarProperty Name="ID_Producto" ColumnName="ID_Producto" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -937,6 +1042,9 @@
                 <ScalarProperty Name="ID_Cliente" ColumnName="ID_Cliente" />
                 <ScalarProperty Name="ID_Producto" ColumnName="ID_Producto" />
                 <ScalarProperty Name="Puntuacion" ColumnName="Puntuacion" />
+                <ScalarProperty Name="Comentario" ColumnName="Comentario" />
+                <ScalarProperty Name="Fecha_Creacion" ColumnName="Fecha_Creacion" />
+                <ScalarProperty Name="Fecha_Modificacion" ColumnName="Fecha_Modificacion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

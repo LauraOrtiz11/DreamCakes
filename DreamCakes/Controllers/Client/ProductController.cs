@@ -1,4 +1,5 @@
 ﻿using DreamCakes.Dtos.Client;
+using DreamCakes.Utilities;
 using DreamCakes.Services.Client;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -7,6 +8,7 @@ using System.Linq;
 
 namespace DreamCakes.Controllers.Client
 {
+    [RoleAuthorizeUtility(2)]
     public class ProductController : Controller
     {
         public async Task<ActionResult> Catalog(string category = null)
@@ -58,11 +60,13 @@ namespace DreamCakes.Controllers.Client
             {
                 try
                 {
-                    // Obtener el producto
-                    var catalogData = await service.GetCatalogData();
-                    var product = catalogData.Products.FirstOrDefault(p => p.ID_Product == id);
+                    // Obtener ID de usuario de la sesión
+                    int? clientId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
 
-                    if (product == null)
+                    // Obtener el producto con reseñas
+                    var product = await service.GetProductWithReviews(id);
+
+                    if (product == null || product.Response != 1)
                     {
                         return HttpNotFound();
                     }
@@ -76,6 +80,38 @@ namespace DreamCakes.Controllers.Client
                 catch
                 {
                     return View("Error");
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SubmitReview(ReviewRequestDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, message = "Invalid data" });
+            }
+
+            int? clientId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
+
+
+            using (var service = new ProductService())
+            {
+                try
+                {
+                    var result = await service.SubmitProductReview(request, clientId.Value);
+
+                    if (result.Response == 1)
+                    {
+                        return Json(new { success = true, message = "Review submitted successfully" });
+                    }
+
+                    return Json(new { success = false, message = result.Message });
+                }
+                catch
+                {
+                    return Json(new { success = false, message = "Internal error, please try again later" });
                 }
             }
         }

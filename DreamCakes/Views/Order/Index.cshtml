@@ -1,0 +1,400 @@
+﻿@model DreamCakes.Dtos.Client.OrderDto
+@{
+    ViewBag.Title = "Carrito de Compras - Dreams Cake";
+    var cartSummary = new DreamCakes.Dtos.Client.CartSummaryDto();
+    if (Model.Details != null)
+    {
+        cartSummary = new DreamCakes.Services.Client.OrderService().GetCartSummary(Model.Details);
+    }
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="mb-4">Tu Carrito de Compras</h2>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (Model.Details == null || !Model.Details.Any())
+            {
+                <div class="alert alert-info">
+                    Tu carrito está vacío. <a href="@Url.Action("Catalog", "Product")">¡Sigue comprando!</a>
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 45%">Producto</th>
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-end">Precio Unitario</th>
+                                        <th class="text-center">Promoción</th>
+                                        <th class="text-end">Subtotal</th>
+                                        <th class="text-center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cartItems">
+                                    @foreach (var item in Model.Details)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="@item.ProductImageUrl" class="img-thumbnail me-3"
+                                                         style="width: 80px; height: 80px; object-fit: cover;"
+                                                         alt="@item.ProductName" />
+                                                    <div>
+                                                        <h6 class="mb-1">@item.ProductName</h6>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <div class="btn-group btn-group-sm">
+                                                    @using (Html.BeginForm("AddToCart", "Order", FormMethod.Post))
+                                                    {
+                                                        @Html.Hidden("productId", item.ProductId)
+                                                        <button class="btn btn-outline-secondary" name="quantity" value="@(item.Quantity - 1)">
+                                                            <i class="fas fa-minus"></i>
+                                                        </button>
+                                                    }
+                                                    <span class="btn btn-outline-secondary disabled px-3">@item.Quantity</span>
+                                                    @using (Html.BeginForm("AddToCart", "Order", FormMethod.Post))
+                                                    {
+                                                        @Html.Hidden("productId", item.ProductId)
+                                                        <button class="btn btn-outline-secondary" name="quantity" value="@(item.Quantity + 1)">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-end">@item.UnitPrice</td>
+                                            <td class="align-middle text-center">
+                                                @if (item.PromotionId.HasValue)
+                                                {
+                                                    var promotion = new DreamCakes.Repositories.Client.OrderRepository().GetPromotionById(item.PromotionId.Value);
+                                                    if (promotion != null)
+                                                    {
+                                                        <span class="badge bg-success">
+                                                            @promotion.Porc_Desc% OFF
+                                                        </span>
+                                                        <a href="@Url.Action("RemovePromotion", new { productId = item.ProductId })"
+                                                           class="text-danger small ms-1" title="Quitar promoción">
+                                                            <i class="fas fa-times"></i>
+                                                        </a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    using (Html.BeginForm("ApplyPromotion", "Order", FormMethod.Post, new { @class = "d-inline" }))
+                                                    {
+                                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                                        <div class="input-group input-group-sm">
+                                                            <input type="text" name="promotionCode" class="form-control form-control-sm"
+                                                                   placeholder="Código" style="max-width: 100px;" />
+                                                            <button class="btn btn-outline-primary btn-sm" type="submit">
+                                                                <i class="fas fa-tag"></i>
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                }
+                                            </td>
+                                            <td class="align-middle text-end">
+                                                @if (item.PromotionId.HasValue)
+                                                {
+                                                    <span class="text-decoration-line-through text-muted small d-block">
+                                                        @item.OriginalSubtotal
+                                                    </span>
+                                                    <span class="text-success fw-bold">
+                                                        @item.Subtotal
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    @item.Subtotal
+                                                }
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                @using (Html.BeginForm("RemoveFromCart", "Order", FormMethod.Post))
+                                                {
+                                                    @Html.Hidden("productId", item.ProductId)
+                                                    <button class="btn btn-outline-danger btn-sm" type="submit">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Resumen del Pedido</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Details != null && Model.Details.Any())
+                    {
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal (@Model.Details.Sum(d => d.Quantity) items):</span>
+                            <span>@cartSummary.Subtotal</span>
+                        </div>
+
+                        if (cartSummary.DiscountTotal > 0)
+                        {
+                            <div class="d-flex justify-content-between mb-2 text-success">
+                                <span>Descuentos:</span>
+                                <span>-@cartSummary.DiscountTotal</span>
+                            </div>
+                        }
+
+                        <hr />
+
+                        <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
+                            <span>Total:</span>
+                            <span>@cartSummary.Total</span>
+                        </div>
+
+                        <!-- Modal Trigger Buttons -->
+                        <button class="btn btn-primary btn-programar">
+                            <i class="far fa-calendar-alt me-2"></i> Programar Pedido
+                        </button>
+
+                        <button class="btn btn-success btn-comprar">
+                            <i class="fas fa-shopping-bag me-2"></i> Comprar Ahora
+                        </button>
+
+                        <div class="mt-3 text-center">
+                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">
+                                <i class="fas fa-arrow-left me-2"></i> Seguir comprando
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Tu carrito está vacío</p>
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+                                <i class="fas fa-store me-2"></i> Ir a la tienda
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Programar Pedido -->
+<div class="modal fade" id="scheduleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("ScheduleOrder", "Order", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title">Programar Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Dirección de entrega *</label>
+                        @Html.TextBoxFor(m => m.DeliveryAddress, new
+                        {
+                            @class = "form-control",
+                            required = "required",
+                            placeholder = "Ingresa tu dirección completa",
+                            id = "DeliveryAddress"
+                        })
+                        <div class="invalid-feedback address-feedback"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha y hora de entrega *</label>
+                        <input type="datetime-local"
+                               id="DeliveryDate"
+                               name="DeliveryDate"
+                               class="form-control"
+                               required />
+                        <div class="invalid-feedback date-feedback"></div>
+                        <small class="text-muted">Mínimo 2 horas después de ahora</small>
+                    </div>
+                    @Html.HiddenFor(m => m.ClientId)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calendar-check me-2"></i> Programar Pedido
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Comprar Ahora -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("PlaceOrder", "Order", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> Tu pedido será preparado y enviado inmediatamente.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dirección de entrega *</label>
+                        @Html.TextBoxFor(m => m.DeliveryAddress, new
+                        {
+                            @class = "form-control",
+                            required = "required",
+                            placeholder = "Ingresa tu dirección completa",
+                            id = "DeliveryAddress"
+                        })
+                        <div class="invalid-feedback address-feedback"></div>
+                    </div>
+                    @Html.HiddenFor(m => m.ClientId)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check-circle me-2"></i> Confirmar Compra
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Inicialización de los modales de Bootstrap
+            var scheduleModal = new bootstrap.Modal(document.getElementById('scheduleModal'));
+            var checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+
+            // Manejar clic en "Programar Pedido"
+            $(document).on('click', '.btn-programar', function (e) {
+                e.preventDefault();
+
+                // Validar que hay productos en el carrito
+                if ($('#cartItems tr').length === 0) {
+                    showAlert('Tu carrito está vacío', 'warning');
+                    return;
+                }
+
+                // Configurar fecha mínima y sugerida
+                var now = new Date();
+                now.setHours(now.getHours() + 2);
+
+                // Fecha sugerida (mañana al mediodía)
+                var suggestedDate = new Date(now);
+                suggestedDate.setDate(suggestedDate.getDate() + 1);
+                suggestedDate.setHours(12, 0, 0);
+
+                // Formatear fechas
+                var minDate = now.toISOString().slice(0, 16);
+                var suggestedDateStr = suggestedDate.toISOString().slice(0, 16);
+
+                // Aplicar al input
+                $('#scheduleModal input[type="datetime-local"]')
+                    .attr('min', minDate)
+                    .val(suggestedDateStr);
+
+                // Mostrar modal
+                scheduleModal.show();
+            });
+
+            // Manejar clic en "Comprar Ahora"
+            $(document).on('click', '.btn-comprar', function (e) {
+                e.preventDefault();
+
+                // Validar que hay productos en el carrito
+                if ($('#cartItems tr').length === 0) {
+                    showAlert('Tu carrito está vacío', 'warning');
+                    return;
+                }
+
+                // Mostrar modal
+                checkoutModal.show();
+            });
+
+            // Validación de formularios
+            $('form').submit(function (e) {
+                var formId = $(this).attr('id');
+                var address = $(this).find('input[name="DeliveryAddress"]').val().trim();
+
+                // Validación común para ambos formularios
+                if (address === '') {
+                    e.preventDefault();
+                    $(this).find('input[name="DeliveryAddress"]').addClass('is-invalid');
+                    showAlert('Por favor ingresa una dirección de entrega', 'danger');
+                    return false;
+                }
+
+                // Validación adicional para el formulario de programación
+                if (formId === 'scheduleForm') {
+                    var deliveryDate = new Date($(this).find('input[type="datetime-local"]').val());
+                    var minDate = new Date();
+                    minDate.setHours(minDate.getHours() + 2);
+
+                    if (!deliveryDate || deliveryDate < minDate) {
+                        e.preventDefault();
+                        $(this).find('input[type="datetime-local"]').addClass('is-invalid');
+                        showAlert('La fecha debe ser al menos 2 horas después de ahora', 'danger');
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            // Función para mostrar alertas
+            function showAlert(message, type) {
+                // Limpiar alertas anteriores
+                $('.alert-dismissible').alert('close');
+
+                // Crear nueva alerta
+                var alertHtml = `
+                        <div class="alert alert-${type} alert-dismissible fade show" style="position: fixed; top: 20px; right: 20px; z-index: 1100;">
+                            ${message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    `;
+
+                // Agregar al cuerpo del documento
+                $('body').append(alertHtml);
+
+                // Auto-cerrar después de 5 segundos
+                setTimeout(function () {
+                    $('.alert-dismissible').alert('close');
+                }, 5000);
+            }
+        });
+    </script>
+}

@@ -11,6 +11,7 @@ namespace DreamCakes.Dtos.Client
         public DateTime EndDate { get; set; }
         public bool StateProm { get; set; } 
         public string DescriProm { get; set; }
+        public bool IsActive { get; set; }
         public int Response { get; set; }
         public string Message { get; set; }
     }
