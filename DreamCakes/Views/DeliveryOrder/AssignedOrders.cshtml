@@ -1,0 +1,133 @@
+﻿@model List<DreamCakes.Dtos.Delivery.DeliveryAssignedOrderDto>
+
+<div class="container mt-4">
+    <h2>Pedidos Asignados</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="mb-3">
+        <form method="get" class="form-inline">
+            <label class="mr-2">Filtrar por estado:</label>
+            <select name="statusFilter" class="form-control mr-2" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="Pendiente" selected='@(ViewBag.StatusFilter == "Pendiente")'>Pendiente</option>
+                <option value="En proceso" selected='@(ViewBag.StatusFilter == "En proceso")'>En camino</option>
+                <option value="Entregado" selected='@(ViewBag.StatusFilter == "Entregado")'>Entregado</option>
+            </select>
+        </form>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No tienes pedidos asignados actualmente.
+        </div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var order in Model)
+            {
+                <div class="list-group-item mb-2">
+                    <div class="d-flex justify-content-between">
+                        <h5>Pedido #@order.OrderId</h5>
+                        <span class="badge badge-@GetStatusBadgeClass(order.Status)">
+                            @order.Status
+                        </span>
+                    </div>
+                    <p><strong>Cliente:</strong> @order.CustomerName</p>
+                    <p><strong>Dirección:</strong> @order.DeliveryAddress</p>
+                    <p><strong>Hora estimada:</strong> @order.EstimatedDeliveryTime.ToString("g")</p>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="font-weight-bold">Total: @order.TotalAmount.ToString("C")</span>
+                        <div>
+                            <a href="tel:@order.CustomerPhone" class="btn btn-sm btn-outline-primary mr-2">
+                                <i class="fas fa-phone"></i> Contactar
+                            </a>
+                            @Html.ActionLink("Ver detalles", "OrderDetails", new { id = order.OrderId },
+                                new { @class = "btn btn-sm btn-primary" })
+                        </div>
+                    </div>
+
+                    @if (order.Status == "Pendiente" || order.Status == "En proceso")
+                    {
+                        <div class="card-footer mt-3">
+                            <div class="d-flex justify-content-between">
+                                <a href="@Url.Action("AssignedOrders")" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Volver
+                                </a>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                            id="statusDropdown-@order.OrderId" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                        Actualizar Estado
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="statusDropdown-@order.OrderId"
+                                         id="statusOptions-@order.OrderId">
+                                        <!-- Opciones se cargarán vía AJAX -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <script>
+                        $(document).ready(function () {
+                            $.get('@Url.Action("GetStatusOptions", "DeliveryOrderStatus")', function (data) {
+                                var dropdown = $('#statusOptions-@order.OrderId');
+                                dropdown.empty();
+
+                                $.each(data, function (index, item) {
+                                    var link = $('<a class="dropdown-item update-status" href="#" ' +
+                                        'data-status-id="' + item.StatusId + '">' + item.StatusName + '</a>');
+                                    dropdown.append(link);
+                                });
+
+                                dropdown.on('click', '.update-status', function (e) {
+                                    e.preventDefault();
+                                    var newStatusId = $(this).data('status-id');
+
+                                    if (confirm('¿Confirmas que deseas actualizar el estado del pedido?')) {
+                                        $.post('@Url.Action("UpdateStatus", "DeliveryOrderStatus")',
+                                            {
+                                                orderId: @order.OrderId,
+                                                newStatusId: newStatusId
+                                            },
+                                            function (response) {
+                                                if (response.success) {
+                                                    alert(response.message);
+                                                    location.reload();
+                                                } else {
+                                                    alert(response.message);
+                                                }
+                                            });
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@functions {
+    string GetStatusBadgeClass(string status)
+    {
+        switch (status)
+        {
+            case "Pendiente": return "warning";
+            case "En proceso": return "info";
+            case "Entregado": return "success";
+            default: return "secondary";
+        }
+    }
+}

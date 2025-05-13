@@ -44,6 +44,12 @@
                             Catalogo de Productos
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
+                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
+                            Asignación de Pedidos 
+                        </a>
+                    </li>
                 }
                 else if (userRole == 2)
                 {
@@ -62,14 +68,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("AssignDelivery", "DeliveryOrder")">
                             <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                            Asignar 
+                            Asignar
                         </a>
                     </li>
                 }
                 else if (userRole == 3)
                 {
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Entregas", "Delivery")">
+                        <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
                             Entregas
                         </a>
                     </li>

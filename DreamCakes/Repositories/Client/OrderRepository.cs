@@ -3,6 +3,8 @@ using DreamCakes.Repositories.Models;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Data.Entity.Infrastructure;
+
 using System.Collections.Generic;
 
 namespace DreamCakes.Repositories.Client
@@ -110,84 +112,96 @@ namespace DreamCakes.Repositories.Client
                 })
                 .ToList();
         }
-
-        public int CreateOrder(OrderDto orderDto)
+        public PEDIDO GetOrderWithDetails(int orderId)
+        {
+            return _context.PEDIDOes
+                .Include(o => o.ESTADO)
+                .Include(o => o.USUARIO) // Client
+                .Include(o => o.DETALLE_PEDIDO.Select(d => d.PRODUCTO))
+                .FirstOrDefault(o => o.ID_Pedido == orderId);
+        }
+        public int CreateOrder(OrderDto order)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    // Validar que no se esté asignando repartidor al crear el pedido
-                    if (orderDto.DeliveryUserId.HasValue)
-                    {
-                        throw new InvalidOperationException("No se puede asignar repartidor al crear el pedido");
-                    }
+                    // Validate products and calculate totals
+                    decimal total = 0;
+                    var orderDetails = new List<DETALLE_PEDIDO>();
 
-                    // Aplicar promociones y calcular subtotales
-                    foreach (var detail in orderDto.Details)
+                    foreach (var detail in order.Details)
                     {
+                        var product = _context.PRODUCTOes.Find(detail.ProductId);
+                        if (product == null)
+                            throw new Exception($"Product ID {detail.ProductId} not found");
+
+                        if (product.Stock < detail.Quantity)
+                            throw new Exception($"Insufficient stock for product {product.Nombre}");
+
+                        decimal subtotal = detail.UnitPrice * detail.Quantity;
+
+                        // Apply promotion if exists
                         if (detail.PromotionId.HasValue)
                         {
-                            // Validar que la promoción aplica al producto
-                            if (!ValidateProductPromotion(detail.ProductId, detail.PromotionId.Value))
-                            {
-                                throw new Exception($"La promoción no aplica al producto ID {detail.ProductId}");
-                            }
+                            var promotion = _context.PROMOCIONs
+                                .Include(p => p.PROMOCION_PRODUCTO)
+                                .FirstOrDefault(p => p.ID_Promocion == detail.PromotionId
+                                                  && p.Estado
+                                                  && p.PROMOCION_PRODUCTO.Any(pp => pp.ID_Producto == detail.ProductId)
+                                                  && DateTime.Now >= p.Fecha_Ini
+                                                  && DateTime.Now <= p.Fecha_Fin);
 
-                            // Obtener el porcentaje de descuento
-                            var promotion = _context.PROMOCIONs.Find(detail.PromotionId.Value);
-                            if (promotion == null || !promotion.Estado ||
-                                DateTime.Now < promotion.Fecha_Ini ||
-                                DateTime.Now > promotion.Fecha_Fin)
+                            if (promotion != null)
                             {
-                                throw new Exception("Promoción no válida o fuera de vigencia");
+                                subtotal = detail.UnitPrice * detail.Quantity * (100 - promotion.Porc_Desc) / 100;
                             }
-
-                            // Calcular subtotal con descuento
-                            detail.Subtotal = detail.UnitPrice * detail.Quantity *
-                                            (100 - promotion.Porc_Desc) / 100;
                         }
-                        else
+
+                        total += subtotal;
+
+                        orderDetails.Add(new DETALLE_PEDIDO
                         {
-                            // Calcular subtotal sin descuento
-                            detail.Subtotal = detail.UnitPrice * detail.Quantity;
-                        }
+                            ID_Producto = detail.ProductId,
+                            ID_Promocion = detail.PromotionId,
+                            Cantidad = detail.Quantity,
+                            PrecioUni = detail.UnitPrice,
+                            Subtotal = subtotal
+                        });
                     }
 
-                    // Calcular el total sumando todos los subtotales
-                    var total = orderDto.Details.Sum(d => d.Subtotal);
-
-                    // Crear entidad de pedido
-                    var order = new PEDIDO
+                    // Create main order
+                    var newOrder = new PEDIDO
                     {
-                        ID_Cliente = orderDto.ClientId,
-                        ID_UsEntrega = null, // Siempre NULL al crear
-                        ID_Estado = orderDto.StatusId,
-                        Fecha_Pedido = orderDto.OrderDate,
-                        Tip_Pedido = orderDto.OrderType,
-                        Direccion_Ent = orderDto.DeliveryAddress,
-                        Fecha_Entrega = orderDto.DeliveryDate,
+                        ID_Cliente = order.ClientId,
+                        ID_Estado = order.StatusId,
+                        Fecha_Pedido = DateTime.Now,
+                        Tip_Pedido = order.OrderType,
+                        Direccion_Ent = order.DeliveryAddress,
+                        Fecha_Entrega = order.DeliveryDate,
                         Total = total,
-                        DETALLE_PEDIDO = orderDto.Details.Select(d => new DETALLE_PEDIDO
-                        {
-                            ID_Producto = d.ProductId,
-                            ID_Promocion = d.PromotionId,
-                            Cantidad = d.Quantity,
-                            PrecioUni = d.UnitPrice,
-                            Subtotal = d.Subtotal
-                        }).ToList()
+                        DETALLE_PEDIDO = orderDetails
                     };
 
-                    _context.PEDIDOes.Add(order);
+                    _context.PEDIDOes.Add(newOrder);
                     _context.SaveChanges();
 
+                    // Update product stocks
+                    foreach (var detail in order.Details)
+                    {
+                        var product = _context.PRODUCTOes.Find(detail.ProductId);
+                        product.Stock -= detail.Quantity;
+                    }
+
+                    _context.SaveChanges();
                     transaction.Commit();
-                    return order.ID_Pedido;
+
+                    return newOrder.ID_Pedido;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
-                    throw new Exception($"Error al crear el pedido: {ex.Message}");
+                    throw;
                 }
             }
         }

@@ -144,10 +144,17 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\Admin\AdminAssignedOrderController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\Client\OrderController.cs" />
     <Compile Include="Controllers\Client\ProductController.cs" />
+    <Compile Include="Controllers\Delivery\DeliveryOrderController.cs" />
+    <Compile Include="Controllers\Delivery\DeliveryOrderStatusController.cs" />
+    <Compile Include="Dtos\Admin\AdminAssignOrderDto.cs" />
+    <Compile Include="Dtos\Admin\AdminDeliveryUserDto.cs" />
     <Compile Include="Dtos\Admin\AdminImageDto.cs" />
+    <Compile Include="Dtos\Admin\AdminOrderAssignmentViewDto.cs" />
+    <Compile Include="Dtos\Admin\AdminUnassignedOrderDto.cs" />
     <Compile Include="Dtos\Admin\PromotionDto.cs" />
     <Compile Include="Dtos\Client\CatalogResponseDto.cs" />
     <Compile Include="Dtos\Client\CategoryDto.cs" />
@@ -158,7 +165,6 @@
     <Compile Include="Dtos\Admin\AdminProductDto.cs" />
     <Compile Include="Dtos\Admin\AdminCategoryDto.cs" />
     <Compile Include="Dtos\Client\ImageDto.cs" />
-    <Compile Include="Dtos\Client\OrderDetailWithPromotionDto.cs" />
     <Compile Include="Dtos\Client\OrderDto.cs" />
     <Compile Include="Dtos\Client\ProductDetailsDto.cs" />
     <Compile Include="Dtos\Client\ProductDto.cs" />
@@ -169,6 +175,11 @@
     <Compile Include="Dtos\Client\RatingResponseDto.cs" />
     <Compile Include="Dtos\Client\ReviewDto.cs" />
     <Compile Include="Dtos\Client\ReviewRequestDto.cs" />
+    <Compile Include="Dtos\Delivery\DeliveryAssignedOrderDto.cs" />
+    <Compile Include="Dtos\Delivery\DeliveryOrderDetailDto.cs" />
+    <Compile Include="Dtos\Delivery\DeliveryOrderItemDto.cs" />
+    <Compile Include="Dtos\Delivery\DeliveryOrderStatusDto.cs" />
+    <Compile Include="Dtos\Delivery\DeliveryOrderStatusUpdateDto.cs" />
     <Compile Include="Dtos\ProfileDto.cs" />
     <Compile Include="Dtos\Client\PromotionDto.cs" />
     <Compile Include="Controllers\Admin\PromotionController.cs" />
@@ -179,6 +190,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Admin\AdminAssignedOrderRepository.cs" />
     <Compile Include="Repositories\AuthRepository.cs" />
     <Compile Include="Repositories\Admin\AdminCategoryRepository.cs" />
     <Compile Include="Repositories\Admin\AdminImageRepository.cs" />
@@ -186,6 +198,10 @@
     <Compile Include="Repositories\Admin\AdminProductRepository.cs" />
     <Compile Include="Repositories\Client\ProductRepository.cs" />
     <Compile Include="Repositories\Admin\PromotionRepository.cs" />
+    <Compile Include="Repositories\Delivery\DeliveryOrderStatusRepository.cs" />
+    <Compile Include="Repositories\Delivery\DeliveryOrderRepository.cs" />
+    <Compile Include="Services\Admin\AdminAssignedOrderService.cs" />
+    <Compile Include="Services\Delivery\DeliveryOrderService.cs" />
     <Compile Include="Repositories\Models\CATEGORIA.cs">
       <DependentUpon>DreamCakes.tt</DependentUpon>
     </Compile>
@@ -247,6 +263,8 @@
     <Compile Include="Services\Admin\AdminProductService.cs" />
     <Compile Include="Services\Client\OrderService.cs" />
     <Compile Include="Services\Client\ProductService.cs" />
+    <Compile Include="Services\Delivery\DeliveryOrderStatusService.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Utilities\AuthErrorsUtility.cs" />
     <Compile Include="Services\Admin\PromocionService.cs" />
@@ -344,16 +362,13 @@
     <Content Include="Views\Product\_ProductDetailsModal.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Order\OrderConfirmation.cshtml" />
-    <Content Include="Views\DeliveryOrder\AssignedOrders.cshtml" />
-    <Content Include="Views\DeliveryOrder\AssignDelivery.cshtml" />
     <Content Include="Views\Order\_CartSummary.cshtml" />
+    <Content Include="Views\AdminAssignedOrder\AssignOrders.cshtml" />
+    <Content Include="Views\DeliveryOrder\AssignedOrders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\Delivery\" />
-    <Folder Include="Dtos\Delivery\" />
-    <Folder Include="Repositories\Delivery\" />
-    <Folder Include="Services\Delivery\" />
+    <Folder Include="Views\DeliveryOrderStatus\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

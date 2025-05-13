@@ -43,6 +43,12 @@ namespace DreamCakes.Dtos.Client
         public int? OrderId { get; set; }
         public PromotionDto Promotion { get; set; }
         public OrderDto Order { get; set; }
+     
+        public DateTime OrderDate { get; set; }
+        public DateTime DeliveryDate { get; set; }
+        public decimal Total { get; set; }
+
+     
     }
 
     public class CartSummaryDto

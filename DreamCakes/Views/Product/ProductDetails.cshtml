@@ -90,10 +90,8 @@
                 <div class="quantity-selector mb-4">
                     <label class="form-label"><strong>Cantidad:</strong></label>
                     <div class="input-group" style="width: 140px;">
-                        <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">-</button>
                         <input type="number" id="productQuantity" class="form-control text-center"
                                min="1" max="@Model.Stock" value="1">
-                        <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">+</button>
                     </div>
                     <small class="text-muted">Disponible: @Model.Stock unidades</small>
                 </div>

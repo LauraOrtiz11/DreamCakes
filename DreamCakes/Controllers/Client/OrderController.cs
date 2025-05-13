@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Linq;
+using DreamCakes.Utilities;
 
 
 
@@ -36,26 +37,34 @@ namespace DreamCakes.Controllers
         [HttpPost]
         public ActionResult ApplyPromotion(int productId, string promotionCode)
         {
-            var result = _orderService.ValidatePromotionForProduct(promotionCode, productId);
+            try
+            {
+                var result = _orderService.ValidatePromotionForProduct(promotionCode, productId);
 
-            if (result.Success)
-            {
-                TempData["SuccessMessage"] = result.Message;
-                // Actualizar el carrito con la promoción
-                var cart = GetCurrentCart();
-                var item = cart.FirstOrDefault(i => i.ProductId == productId);
-                if (item != null)
+                if (result.Success)
                 {
-                    item.PromotionId = result.Promotion.ID_Prom;
-                    // Recalcular subtotal con descuento
-                    item.Subtotal = item.UnitPrice * item.Quantity *
-                                   (100 - result.Promotion.DiscountPer) / 100;
+                    TempData["SuccessMessage"] = result.Message;
+
+                    // Actualizar el carrito con la promoción
+                    var cart = GetCurrentCart();
+                    var item = cart.FirstOrDefault(i => i.ProductId == productId);
+                    if (item != null)
+                    {
+                        item.PromotionId = result.Promotion.ID_Prom;
+                        // Recalcular subtotal con descuento
+                        item.Subtotal = item.UnitPrice * item.Quantity *
+                                       (100 - result.Promotion.DiscountPer) / 100;
+                    }
+                    Session["Cart"] = cart;
                 }
-                Session["Cart"] = cart;
+                else
+                {
+                    TempData["ErrorMessage"] = result.Message;
+                }
             }
-            else
+            catch (Exception)
             {
-                TempData["ErrorMessage"] = result.Message;
+                TempData["ErrorMessage"] = "Ocurrió un error al aplicar la promoción.";
             }
 
             return RedirectToAction("Index");
@@ -64,19 +73,27 @@ namespace DreamCakes.Controllers
         [HttpPost]
         public ActionResult RemovePromotion(int productId)
         {
-            var cart = GetCurrentCart();
-            var item = cart.FirstOrDefault(i => i.ProductId == productId);
-            if (item != null)
+            try
             {
-                item.PromotionId = null;
-                // Recalcular subtotal sin descuento
-                item.Subtotal = item.UnitPrice * item.Quantity;
-                TempData["SuccessMessage"] = "Promoción removida correctamente";
+                var cart = GetCurrentCart();
+                var item = cart.FirstOrDefault(i => i.ProductId == productId);
+                if (item != null)
+                {
+                    item.PromotionId = null;
+                    // Recalcular subtotal sin descuento
+                    item.Subtotal = item.UnitPrice * item.Quantity;
+                    TempData["SuccessMessage"] = "Promoción removida correctamente";
+                }
+                Session["Cart"] = cart;
             }
-            Session["Cart"] = cart;
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Ocurrió un error al remover la promoción.";
+            }
 
             return RedirectToAction("Index");
         }
+
 
         [HttpPost]
         public ActionResult AddToCart(int productId, int quantity)
@@ -130,22 +147,48 @@ namespace DreamCakes.Controllers
         [HttpPost]
         public ActionResult PlaceOrder(OrderDto order)
         {
-            order.Details = GetCurrentCart();
-            order.OrderDate = DateTime.Now;
-            order.StatusId = 3; // Pendiente
-            order.OrderType = "Inmediato";
-            order.DeliveryUserId = null; // Asegurar que sea null
-
-            var result = _orderService.CreateOrder(order);
-
-            if (result.Success)
+            try
             {
-                Session["Cart"] = null;
-                return RedirectToAction("OrderConfirmation", new { orderId = result.OrderId });
-            }
+                // Obtener el ID del cliente desde la sesión
+                var clientId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
 
-            TempData["ErrorMessage"] = result.Message;
-            return RedirectToAction("Index");
+                if (clientId == null)
+                {
+                    TempData["ErrorMessage"] = "Debe iniciar sesión para realizar un pedido";
+                    return RedirectToAction("Login", "Account");
+                }
+
+                // Configurar los datos del pedido
+                order.Details = GetCurrentCart();
+                order.ClientId = clientId.Value; // Asignar el ID del cliente
+                order.OrderDate = DateTime.Now;
+                order.StatusId = 3; // Pendiente
+                order.OrderType = "Inmediato";
+                order.DeliveryUserId = null;
+
+                // Validar que el carrito no esté vacío
+                if (order.Details == null || !order.Details.Any())
+                {
+                    TempData["ErrorMessage"] = "El carrito está vacío";
+                    return RedirectToAction("Index");
+                }
+
+                var result = _orderService.CreateOrder(order);
+
+                if (result.Success)
+                {
+                    Session["Cart"] = null;
+                    return RedirectToAction("OrderConfirmation", new { orderId = result.OrderId });
+                }
+
+                TempData["ErrorMessage"] = result.Message;
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al procesar el pedido: {ex.Message}";
+                return RedirectToAction("Index");
+            }
         }
         [HttpGet]
         public ActionResult GetCartCount()
@@ -154,41 +197,78 @@ namespace DreamCakes.Controllers
             return Json(new { count = cart.Sum(item => item.Quantity) }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
+        
         public ActionResult ScheduleOrder(OrderDto order)
         {
-            order.Details = GetCurrentCart();
-            order.OrderType = "Programado";
-            order.StatusId = 3; // Pendiente
-            order.OrderDate = DateTime.Now;
-            order.DeliveryUserId = null; // Asegurar que sea null
-
-            if (order.DeliveryDate < DateTime.Now.AddHours(2))
+            try
             {
-                TempData["ErrorMessage"] = "La fecha de entrega debe ser al menos 2 horas después del momento actual";
+                // Obtener el ID del cliente desde la sesión
+                var clientId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
+
+                if (clientId == null)
+                {
+                    TempData["ErrorMessage"] = "Debe iniciar sesión para programar un pedido";
+                    return RedirectToAction("Login", "Account");
+                }
+
+                // Configurar los datos del pedido
+                order.Details = GetCurrentCart();
+                order.ClientId = clientId.Value; // Asignar el ID del cliente
+                order.OrderType = "Programado";
+                order.StatusId = 3; // Pendiente
+                order.OrderDate = DateTime.Now;
+                order.DeliveryUserId = null;
+
+                // Validaciones
+                if (order.DeliveryDate < DateTime.Now.AddHours(2))
+                {
+                    TempData["ErrorMessage"] = "La fecha de entrega debe ser al menos 2 horas después del momento actual";
+                    return RedirectToAction("Index");
+                }
+
+                if (order.Details == null || !order.Details.Any())
+                {
+                    TempData["ErrorMessage"] = "El carrito está vacío";
+                    return RedirectToAction("Index");
+                }
+
+                var result = _orderService.CreateOrder(order);
+
+                if (result.Success)
+                {
+                    Session["Cart"] = null;
+                    return RedirectToAction("OrderConfirmation", new { orderId = result.OrderId });
+                }
+
+                TempData["ErrorMessage"] = result.Message;
                 return RedirectToAction("Index");
             }
-
-            var result = _orderService.CreateOrder(order);
-
-            if (result.Success)
+            catch (Exception ex)
             {
-                Session["Cart"] = null;
-                return RedirectToAction("OrderConfirmation", new { orderId = result.OrderId });
+                TempData["ErrorMessage"] = $"Error al programar el pedido: {ex.Message}";
+                return RedirectToAction("Index");
             }
-
-            TempData["ErrorMessage"] = result.Message;
-            return RedirectToAction("Index");
         }
 
         public ActionResult OrderConfirmation(int orderId)
         {
-            var order = _orderService.GetOrderById(orderId);
-            if (order == null)
+            try
             {
+                var order = _orderService.GetOrderById(orderId);
+                if (order == null)
+                {
+                    TempData["ErrorMessage"] = "Order not found";
+                    return RedirectToAction("Index");
+                }
+
+
+                return View(order);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error loading order: {ex.Message}";
                 return RedirectToAction("Index");
             }
-
-            return View(order);
         }
 
         [ChildActionOnly]

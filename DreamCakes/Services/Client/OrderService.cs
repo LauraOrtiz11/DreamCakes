@@ -201,16 +201,17 @@ namespace DreamCakes.Services.Client
         {
             try
             {
-                // Validar que el carrito no esté vacío
+                // Validaciones básicas
                 if (order.Details == null || !order.Details.Any())
                 {
                     return new OrderResponseDto
                     {
                         Success = false,
-                        Message = "El carrito está vacío",
+                        Message = "Cart is empty",
                         ErrorLocation = "OrderService.CreateOrder"
                     };
                 }
+
 
                 // Validar dirección para pedidos con entrega
                 if (string.IsNullOrWhiteSpace(order.DeliveryAddress))
@@ -262,12 +263,15 @@ namespace DreamCakes.Services.Client
                 // Crear la orden
                 var orderId = _orderRepository.CreateOrder(order);
 
+                // Retornar solo datos básicos (sin relaciones)
                 return new OrderResponseDto
                 {
                     Success = true,
-                    Message = "Orden creada exitosamente",
+                    Message = "Order created successfully",
                     OrderId = orderId,
-                    Order = order
+                    OrderDate = order.OrderDate,
+                    DeliveryDate = order.DeliveryDate,
+                    Total = order.Details.Sum(d => d.Subtotal)
                 };
             }
             catch (Exception ex)
