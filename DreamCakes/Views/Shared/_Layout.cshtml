@@ -33,6 +33,12 @@
                 @if (userRole == 1)
                 {
                     <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
+                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                            Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
                             <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
                             Categorias

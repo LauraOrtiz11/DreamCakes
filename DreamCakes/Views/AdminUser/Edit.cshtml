@@ -1,0 +1,47 @@
+﻿@model DreamCakes.Dtos.Admin.AdminUserDto
+
+@{
+    ViewBag.Title = "Editar Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Editar Usuario</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.UserID)
+
+    <div class="form-group">
+        @Html.Label("Nombre del Usuario")
+        @Html.TextBoxFor(model => model.UserFirstName, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Estado del Usuario")
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.UserStatusID, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", max = "1" } })
+            @Html.ValidationMessageFor(model => model.UserStatusID, "", new { @class = "text-danger" })
+            <p class="text-muted small">
+                0 = Inactivo<br />
+                1 = Activo
+            </p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Rol del Usuario")
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.UserRoleID, new { htmlAttributes = new { @class = "form-control", type = "number", min = "1", max = "3" } })
+            @Html.ValidationMessageFor(model => model.UserRoleID, "", new { @class = "text-danger" })
+            <p class="text-muted small">
+                1 = Administrador<br />
+                2 = Cliente<br />
+                3 = Domiciliario
+            </p>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
+}
