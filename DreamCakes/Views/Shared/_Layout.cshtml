@@ -33,23 +33,39 @@
                 @if (userRole == 1)
                 {
                     <li class="nav-item">
+
+                        <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
+                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                            Gestión Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
+                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                            Gestión Categorias
+                        </a>
+                    </li>
+                    <li class="nav-item">
+
                         <a class="nav-link" href="@Url.Action("Index", "Promotions")">
                             <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Promociones
+                            Gestión Promociones
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
                             <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                            Catalogo de Productos
+                            Gestión Productos
                         </a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
                             <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
                             Asignación de Pedidos 
                         </a>
                     </li>
+
                 }
                 else if (userRole == 2)
                 {
@@ -59,18 +75,8 @@
                             Comprar
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
-                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                            Domiciliario
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AssignDelivery", "DeliveryOrder")">
-                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                            Asignar
-                        </a>
-                    </li>
+
+                    
                 }
                 else if (userRole == 3)
                 {

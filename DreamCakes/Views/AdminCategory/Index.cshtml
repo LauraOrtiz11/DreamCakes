@@ -1,0 +1,35 @@
+﻿@model List<DreamCakes.Dtos.Admin.AdminCategoryDto>
+
+@{
+    ViewBag.Title = "Category List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Lista de Categorias</h2>
+
+<p>
+    @Html.ActionLink("Crear Nueva Categoria", "Create")
+</p>
+
+<table class="table">
+    <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.CatName</td>
+            <td>@item.CatDescription</td>
+            <td>@item.CatIsActive</td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.ID_Category }) |
+                @Html.ActionLink("Detalles", "Details", new { id = item.ID_Category }) |
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.ID_Category })
+            </td>
+        </tr>
+    }
+</table>

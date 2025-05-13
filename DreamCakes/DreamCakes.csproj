@@ -145,6 +145,8 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Admin\AdminAssignedOrderController.cs" />
+    <Compile Include="Controllers\Admin\AdminCategoryController.cs" />
+    <Compile Include="Controllers\Admin\AdminUserController.cs" 
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\Client\OrderController.cs" />
     <Compile Include="Controllers\Client\ProductController.cs" />
@@ -153,8 +155,11 @@
     <Compile Include="Dtos\Admin\AdminAssignOrderDto.cs" />
     <Compile Include="Dtos\Admin\AdminDeliveryUserDto.cs" />
     <Compile Include="Dtos\Admin\AdminImageDto.cs" />
+
     <Compile Include="Dtos\Admin\AdminOrderAssignmentViewDto.cs" />
     <Compile Include="Dtos\Admin\AdminUnassignedOrderDto.cs" />
+    <Compile Include="Dtos\Admin\AdminUserDto.cs" />
+
     <Compile Include="Dtos\Admin\PromotionDto.cs" />
     <Compile Include="Dtos\Client\CatalogResponseDto.cs" />
     <Compile Include="Dtos\Client\CategoryDto.cs" />
@@ -191,6 +196,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Admin\AdminAssignedOrderRepository.cs" />
+    <Compile Include="Repositories\Admin\AdminUserRepository.cs" />
     <Compile Include="Repositories\AuthRepository.cs" />
     <Compile Include="Repositories\Admin\AdminCategoryRepository.cs" />
     <Compile Include="Repositories\Admin\AdminImageRepository.cs" />
@@ -257,6 +263,7 @@
       <DependentUpon>DreamCakes.tt</DependentUpon>
     </Compile>
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Services\Admin\AdminUserService.cs" />
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\Admin\AdminCategoryService.cs" />
     <Compile Include="Services\Admin\AdminImageService.cs" />
@@ -365,6 +372,15 @@
     <Content Include="Views\Order\_CartSummary.cshtml" />
     <Content Include="Views\AdminAssignedOrder\AssignOrders.cshtml" />
     <Content Include="Views\DeliveryOrder\AssignedOrders.cshtml" />
+    <Content Include="Views\AdminCategory\Index.cshtml" />
+    <Content Include="Views\AdminCategory\Create.cshtml" />
+    <Content Include="Views\AdminCategory\Edit.cshtml" />
+    <Content Include="Views\AdminCategory\Details.cshtml" />
+    <Content Include="Views\AdminCategory\Delete.cshtml" />
+    <Content Include="Views\AdminUser\Index.cshtml" />
+    <Content Include="Views\AdminUser\Edit.cshtml" />
+    <Content Include="Views\AdminUser\Delete.cshtml" />
+    <Content Include="Views\AdminUser\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

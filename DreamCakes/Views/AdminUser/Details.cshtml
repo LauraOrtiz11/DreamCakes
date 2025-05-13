@@ -1,0 +1,39 @@
+﻿@model DreamCakes.Dtos.Admin.AdminUserDto
+
+@{
+    ViewBag.Title = "Detalles del Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalles del Usuario</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>Nombres</dt>
+        <dd>@Model.UserFirstName</dd>
+
+        <dt>Apellidos</dt>
+        <dd>@Model.UserLastName</dd>
+
+        <dt>Teléfono</dt>
+        <dd>@Model.UserPhone</dd>
+
+        <dt>Dirección</dt>
+        <dd>@Model.UserAddress</dd>
+
+        <dt>Email</dt>
+        <dd>@Model.UserEmail</dd>
+
+        <dt>Estado</dt>
+        <dd>@Model.UserStatusName</dd>
+
+        <dt>Rol</dt>
+        <dd>@Model.UserRoleName</dd>
+
+    </dl>
+</div>
+
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.UserID }, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-secondary" })
+</p>
