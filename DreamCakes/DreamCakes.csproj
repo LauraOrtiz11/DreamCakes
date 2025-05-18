@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+ï»¿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -144,6 +144,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Admin\AdminAssignedOrderController.cs" />
     <Compile Include="Controllers\Admin\AdminCategoryController.cs" />
     <Compile Include="Controllers\Admin\AdminUserController.cs" />
@@ -155,11 +156,9 @@
     <Compile Include="Dtos\Admin\AdminAssignOrderDto.cs" />
     <Compile Include="Dtos\Admin\AdminDeliveryUserDto.cs" />
     <Compile Include="Dtos\Admin\AdminImageDto.cs" />
-
     <Compile Include="Dtos\Admin\AdminOrderAssignmentViewDto.cs" />
     <Compile Include="Dtos\Admin\AdminUnassignedOrderDto.cs" />
     <Compile Include="Dtos\Admin\AdminUserDto.cs" />
-
     <Compile Include="Dtos\Admin\PromotionDto.cs" />
     <Compile Include="Dtos\Client\CatalogResponseDto.cs" />
     <Compile Include="Dtos\Client\CategoryDto.cs" />
@@ -276,6 +275,7 @@
     <Compile Include="Utilities\AuthErrorsUtility.cs" />
     <Compile Include="Services\Admin\PromocionService.cs" />
     <Compile Include="Utilities\CookieUtility.cs" />
+    <Compile Include="Utilities\EmailManager.cs" />
     <Compile Include="Utilities\EncryptUtility.cs" />
     <Compile Include="Utilities\FileHelperUtility.cs" />
     <Compile Include="Utilities\RoleAuthorizeUtility.cs" />
@@ -295,6 +295,7 @@
     <Content Include="Content\Icons\Inventory.svg" />
     <Content Include="Content\Icons\Profile.svg" />
     <Content Include="Content\Icons\Promotion.svg" />
+    <Content Include="Content\Images\DreamCakes.jpg" />
     <Content Include="Content\Images\image 1.png" />
     <Content Include="Content\Images\Postre 1.jpg" />
     <Content Include="Content\Images\Postre 2.jpg" />
@@ -381,6 +382,8 @@
     <Content Include="Views\AdminUser\Edit.cshtml" />
     <Content Include="Views\AdminUser\Delete.cshtml" />
     <Content Include="Views\AdminUser\Details.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -432,7 +435,7 @@
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauraciï¿½n de paquetes NuGet para descargarlos. Para obtener mï¿½s informaciï¿½n, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>

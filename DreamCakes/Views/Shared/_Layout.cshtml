@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
 <body>
-    <!-- Navbar dinámico según rol  -->
+    <!-- Navbar dinámico según rol -->
     <header>
         <nav class="navbar-custom">
             <div class="navbar-container">
@@ -22,76 +22,70 @@
 
                 @if (isAuthenticated)
                 {
-            <ul class="navbar-menu">
-                <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("Index", "Home")">
-                        <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
-                        Inicio
-                    </a>
-                </li>
+                    <ul class="navbar-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Home")">
+                                <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
+                                Inicio
+                            </a>
+                        </li>
 
-                @if (userRole == 1)
-                {
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Usuarios
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Categorias
-                        </a>
-                    </li>
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="@Url.Action("Index", "Promotions")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Promociones
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
-                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                            Gestión Productos
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
-                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                            Asignación de Pedidos 
-                        </a>
-                    </li>
-
-                }
-                else if (userRole == 2)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Catalog", "Product")">
-                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                            Comprar
-                        </a>
-                    </li>
-
-                    
-                }
-                else if (userRole == 3)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
-                            Entregas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Historial", "Delivery")">
-                            Historial
-                        </a>
-                    </li>
-                }
-            </ul>
+                        @if (userRole == 1)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
+                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                                    Gestión Usuarios
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
+                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                                    Gestión Categorias
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "Promotions")">
+                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                                    Gestión Promociones
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
+                                    <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
+                                    Gestión Productos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
+                                    <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
+                                    Asignación de Pedidos
+                                </a>
+                            </li>
+                        }
+                        else if (userRole == 2)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Catalog", "Product")">
+                                    <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                                    Comprar
+                                </a>
+                            </li>
+                        }
+                        else if (userRole == 3)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
+                                    Entregas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Historial", "Delivery")">
+                                    Historial
+                                </a>
+                            </li>
+                        }
+                    </ul>
 
                     <div class="navbar-actions">
                         <a href="@Url.Action("Index", "Profile")">
@@ -107,8 +101,15 @@
                 }
                 else
                 {
-                    @Html.Partial("~/Views/Auth/Register.cshtml")
-                    @Html.Partial("~/Views/Auth/Login.cshtml")
+                    if (
+                        ViewContext.RouteData.Values["Action"].ToString() == "Index" &&
+                        ViewContext.RouteData.Values["Controller"].ToString() == "Home"
+                    )
+                    {
+                        @Html.Partial("~/Views/Auth/Register.cshtml")
+                        @Html.Partial("~/Views/Auth/Login.cshtml")
+                    }
+
                     <div class="navbar-actions">
                         <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
                         <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
@@ -137,22 +138,19 @@
         $(document).ready(function () {
             @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
             {
-                if (TempData["ShowModal"]?.ToString() == "login")
-                {
-                    <text>
+                <text>
+                    var showModal = '@TempData["ShowModal"]';
+                    if (showModal === "login") {
                         setTimeout(function () { $('#loginModal').modal('show'); }, 300);
-                    </text>
-                }
-                else if (TempData["ShowModal"]?.ToString() == "register")
-                {
-                    <text>
+                    } else if (showModal === "register") {
                         setTimeout(function () { $('#registerModal').modal('show'); }, 300);
-                    </text>
-                }
+                    }
+                </text>
             }
         });
     </script>
 
+    <!-- Limpiar formularios al cerrar -->
     <script>
         $(document).ready(function () {
             function cleanModals() {

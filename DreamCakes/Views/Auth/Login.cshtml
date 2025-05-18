@@ -14,37 +14,37 @@
             <div class="modal-body">
                 @if (TempData["ErrorMessage"] != null)
                 {
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>}
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
+                    </div>}
                 @if (TempData["SuccessMessage"] != null)
                 {
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>}
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>}
 
                 @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { id = "loginForm" }))
                 {
-    @Html.AntiForgeryToken()
+                    @Html.AntiForgeryToken()
 
                     <div class=".form-group-Reg floating-label">
                         @Html.TextBoxFor(m => m.Email, new
-                        {
-                            @class = "form-control floating-input login-input",
-                            placeholder = " ",
-                            id = "LoginEmail"
-                        })
+                   {
+                       @class = "form-control floating-input login-input",
+                       placeholder = " ",
+                       id = "LoginEmail"
+                   })
                         @Html.LabelFor(m => m.Email, "Correo", htmlAttributes: new { @class = "floating-text" })
                         <div id="loginEmailError" class="text-danger login-error" style="display: none;"></div>
                     </div>
                     <div class=".form-group-Reg floating-label">
                         @Html.PasswordFor(m => m.Password, new
-                        {
-                            @class = "form-control floating-input login-input",
-                            placeholder = " ",
-                            id = "LoginPassword"
-                        })
-                        @Html.LabelFor(m => m.Password, "Contraseña",  htmlAttributes: new { @class = "floating-text" })
+                   {
+                       @class = "form-control floating-input login-input",
+                       placeholder = " ",
+                       id = "LoginPassword"
+                   })
+                        @Html.LabelFor(m => m.Password, "Contraseña", htmlAttributes: new { @class = "floating-text" })
                         <div id="loginPasswordError" class="text-danger login-error" style="display: none;"></div>
                     </div>
 
@@ -57,6 +57,15 @@
                     <div class="modal-footer">
                         <button type="submit" class="btn-gray">Iniciar Sesión</button>
                     </div>
+
+                    <div style="text-align: right; margin-top: 10px;">
+                        <a href="@Url.Action("ForgotPassword", "Account")" style="color: #6a1b9a; text-decoration: none; font-size: 14px;">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
+
+
+
                 }
             </div>
         </div>
