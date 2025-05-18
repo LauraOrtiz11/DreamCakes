@@ -139,6 +139,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Admin\AdminAssignedOrderController.cs" />
     <Compile Include="Controllers\Admin\AdminCategoryController.cs" />
     <Compile Include="Controllers\Admin\AdminUserController.cs" />
@@ -285,6 +286,7 @@
     <Compile Include="Services\Admin\PromocionService.cs" />
     <Compile Include="Utilities\CookieUtility.cs" />
     <Compile Include="Utilities\DeliveryReportGenerator.cs" />
+    <Compile Include="Utilities\EmailManager.cs" />
     <Compile Include="Utilities\EncryptUtility.cs" />
     <Compile Include="Utilities\FileHelperUtility.cs" />
     <Compile Include="Utilities\RoleAuthorizeUtility.cs" />
@@ -304,6 +306,7 @@
     <Content Include="Content\Icons\Inventory.svg" />
     <Content Include="Content\Icons\Profile.svg" />
     <Content Include="Content\Icons\Promotion.svg" />
+    <Content Include="Content\Images\DreamCakes.jpg" />
     <Content Include="Content\Images\image 1.png" />
     <Content Include="Content\Images\Logo.jpeg" />
     <Content Include="favicon.ico" />
@@ -401,6 +404,8 @@
     <Content Include="Views\DeliveryPayment\RegisterPayment.cshtml" />
     <Content Include="Views\DeliveryPayment\_PaymentReceiptPartial.cshtml" />
     <Content Include="Views\DeliveryPayment\PaymentConfirmation.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -10,7 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- Navbar dinámico según rol  -->
+    <!-- Navbar dinámico según rol -->
     <header>
         <nav class="navbar-custom">
             <div class="navbar-container">
@@ -48,6 +48,7 @@
                             </li>
                             <li class="nav-item">
 
+
                                 <a class="nav-link" href="@Url.Action("Index", "Promotions")">
                                     <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
                                     Gestión Promociones
@@ -77,7 +78,6 @@
                                 </a>
                             </li>
 
-
                         }
                         else if (userRole == 3)
                         {
@@ -87,12 +87,14 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+
                                 <a class="nav-link" href="@Url.Action("Index", "DeliveryHistory")">
                                     Historial
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("RegisterPayment", "DeliveryPayment")">
+
                                     Historial
                                 </a>
                             </li>
@@ -113,8 +115,15 @@
                 }
                 else
                 {
-                    @Html.Partial("~/Views/Auth/Register.cshtml")
-                    @Html.Partial("~/Views/Auth/Login.cshtml")
+                    if (
+                        ViewContext.RouteData.Values["Action"].ToString() == "Index" &&
+                        ViewContext.RouteData.Values["Controller"].ToString() == "Home"
+                    )
+                    {
+                        @Html.Partial("~/Views/Auth/Register.cshtml")
+                        @Html.Partial("~/Views/Auth/Login.cshtml")
+                    }
+
                     <div class="navbar-actions">
                         <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
                         <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
@@ -143,22 +152,19 @@
         $(document).ready(function () {
             @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
             {
-                if (TempData["ShowModal"]?.ToString() == "login")
-                {
-                    <text>
+                <text>
+                    var showModal = '@TempData["ShowModal"]';
+                    if (showModal === "login") {
                         setTimeout(function () { $('#loginModal').modal('show'); }, 300);
-                    </text>
-                }
-                else if (TempData["ShowModal"]?.ToString() == "register")
-                {
-                    <text>
+                    } else if (showModal === "register") {
                         setTimeout(function () { $('#registerModal').modal('show'); }, 300);
-                    </text>
-                }
+                    }
+                </text>
             }
         });
     </script>
 
+    <!-- Limpiar formularios al cerrar -->
     <script>
         $(document).ready(function () {
             function cleanModals() {
