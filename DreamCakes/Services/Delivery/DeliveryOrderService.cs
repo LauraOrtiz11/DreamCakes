@@ -15,7 +15,16 @@ namespace DreamCakes.Services.Delivery
         {
             _repository = new DeliveryOrderRepository();
         }
+        public bool IsOrderFullyPaid(int orderId)
+        {
+            return _repository.IsOrderFullyPaid(orderId);
+        }
+        
 
+        public decimal GetAmountPaid(int orderId)
+        {
+            return _repository.GetAmountPaid(orderId);
+        }
         public DeliveryOrderListResponse GetAssignedOrders(int deliveryUserId, string statusFilter = null)
         {
             try

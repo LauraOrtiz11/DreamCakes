@@ -46,6 +46,10 @@
             </div>
         </div>
     </div>
+    <h4 class="mt-4">Promociones Vinculadas</h4>
+    <div id="promotionSection">
+        <p class="text-muted">Cargando promociones...</p>
+    </div>
 
     <div class="mt-4">
         <a href="@Url.Action("Edit", new { id = Model.ID_Product })" class="btn btn-primary">
@@ -56,3 +60,36 @@
         </a>
     </div>
 </div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            loadPromotions();
+
+            window.removePromotion = function (productId, promotionId) {
+                if (confirm('¿Está seguro que desea eliminar esta promoción del producto?')) {
+                    $.post('@Url.Action("RemovePromotion", "AdminProduct")', {
+                        productId: productId,
+                        promotionId: promotionId
+                    }, function (response) {
+                        if (response.success) {
+                            loadPromotions(); // Recargar tabla sin recargar toda la página
+                        } else {
+                            alert(response.message || 'Error al eliminar la promoción');
+                        }
+                    }).fail(function () {
+                        alert('Error al conectar con el servidor.');
+                    });
+                }
+            }
+
+            function loadPromotions() {
+                $.get('@Url.Action("GetPromotionsPartial", "AdminProduct", new { id = Model.ID_Product })', function (html) {
+                    $("#promotionSection").html(html);
+                }).fail(function () {
+                    $("#promotionSection").html('<p class="text-danger">Error al cargar promociones.</p>');
+                });
+            }
+        });
+    </script>
+}
+

@@ -15,5 +15,6 @@ namespace DreamCakes.Dtos.Admin
         public int ProdStock { get; set; }
         public string CategoryName { get; set; }
         public List<AdminImageDto> Images { get; set; } = new List<AdminImageDto>();
+        public AdminProductPromotionDto ProductPromotion { get; set; } = new AdminProductPromotionDto();
     }
 }

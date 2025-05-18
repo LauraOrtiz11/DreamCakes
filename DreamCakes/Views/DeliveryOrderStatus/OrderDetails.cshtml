@@ -1,0 +1,147 @@
+﻿@model DreamCakes.Dtos.Delivery.DeliveryOrderDetailDto
+@{
+    var availableStatuses = ViewBag.AvailableStatuses as List<DreamCakes.Dtos.Delivery.DeliveryOrderStatusDto>;
+}
+
+<div id="toast-container" class="toast-top-right"></div>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3>Detalles del Pedido #@Model.OrderId</h3>
+            <span class="badge badge-light">@Model.Status</span>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Información del Cliente</h5>
+                    <p><strong>Nombre:</strong> @Model.CustomerName</p>
+                    <p><strong>Dirección de entrega:</strong> @Model.DeliveryAddress</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Información del Pedido</h5>
+                    <p><strong>Fecha:</strong> @Model.OrderDate.ToString("g")</p>
+                    <p><strong>Hora estimada:</strong> @Model.EstimatedDelivery.ToString("g")</p>
+                    <p><strong>Total:</strong> @Model.TotalAmount.ToString("C")</p>
+                </div>
+            </div>
+
+            <h5 class="mt-4">Productos</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.UnitPrice.ToString("C")</td>
+                            <td>@item.Subtotal.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <a href="@Url.Action("AssignedOrders", "AdminAssignedOrder")" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+
+                @if (availableStatuses != null && availableStatuses.Any())
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button"
+                                id="statusDropdown" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            Actualizar Estado
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="statusDropdown">
+                            @foreach (var status in availableStatuses)
+                            {
+                                <a class="dropdown-item update-status" href="#"
+                                   data-status-id="@status.StatusId"
+                                   data-status-name="@status.StatusName">
+                                    @status.StatusName
+                                </a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.update-status').click(function(e) {
+                e.preventDefault();
+                var newStatusId = $(this).data('status-id');
+                var statusName = $(this).text().trim();
+
+                if (confirm(`¿Confirmas cambiar el estado a "${statusName}"?`)) {
+                    $.ajax({
+                        url: '@Url.Action("UpdateStatus", "DeliveryOrderStatus")',
+                        type: 'POST',
+                        data: {
+                            orderId: @Model.OrderId,
+                            newStatusId: newStatusId,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Actualizar el badge de estado visualmente
+                                $('#currentStatusBadge')
+                                    .removeClass('badge-warning badge-info badge-success')
+                                    .addClass(getStatusBadgeClass(response.newStatusId))
+                                    .text(response.newStatus);
+
+                                // Mostrar notificación Toastr
+                                toastr.success(response.message, 'Éxito', {
+                                    timeOut: 3000,
+                                    positionClass: 'toast-top-right'
+                                });
+
+                                // Deshabilitar el dropdown temporalmente
+                                $('#statusDropdown').prop('disabled', true);
+                                setTimeout(function() {
+                                    $('#statusDropdown').prop('disabled', false);
+                                }, 2000);
+                            } else {
+                                toastr.error(response.message, 'Error', {
+                                    timeOut: 5000,
+                                    positionClass: 'toast-top-right'
+                                });
+                            }
+                        },
+                        error: function() {
+                            toastr.error('Error al comunicarse con el servidor', 'Error', {
+                                timeOut: 5000,
+                                positionClass: 'toast-top-right'
+                            });
+                        }
+                    });
+                }
+            });
+
+            // Función para determinar la clase CSS del badge según el estado
+            function getStatusBadgeClass(statusId) {
+                switch(statusId) {
+                    case 3: return 'badge-warning'; // Preparado
+                    case 4: return 'badge-info';     // En camino
+                    case 5: return 'badge-success';  // Entregado
+                    default: return 'badge-secondary';
+                }
+            }
+        });
+    </script>
+}

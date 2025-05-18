@@ -1,0 +1,129 @@
+﻿@model List<DreamCakes.Dtos.Delivery.DeliveryHistoryDto>
+
+<div class="container mt-4">
+    <h2>Historial de Pedidos Entregados</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <!-- Filtro por fechas -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Filtrar por fecha</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="form-inline">
+                <div class="form-group mr-3">
+                    <label for="startDate" class="mr-2">Desde:</label>
+                    <input type="date" class="form-control" id="startDate" name="startDate"
+                           value="@ViewBag.StartDate">
+                </div>
+                <div class="form-group mr-3">
+                    <label for="endDate" class="mr-2">Hasta:</label>
+                    <input type="date" class="form-control" id="endDate" name="endDate"
+                           value="@ViewBag.EndDate">
+                </div>
+                <button type="submit" class="btn btn-primary mr-2">
+                    <i class="fas fa-filter"></i> Filtrar
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Limpiar
+                </a>
+            </form>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No se encontraron pedidos entregados en el período seleccionado.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Pedido #</th>
+                        <th>Cliente</th>
+                        <th>Fecha Entrega</th>
+                        <th>Dirección</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@order.OrderId</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.DeliveryDate.ToString("g")</td>
+                            <td>@order.DeliveryAddress</td>
+                            <td>@order.TotalAmount.ToString("C")</td>
+                            <td>
+                                <button class="btn btn-sm btn-info view-details"
+                                        data-order-id="@order.OrderId">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="details-row" id="details-@order.OrderId" style="display: none;">
+                            <td colspan="6">
+                                <h5>Productos:</h5>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in order.Items)
+                                        {
+                                            <tr>
+                                                <td>@item.ProductName</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.UnitPrice.ToString("C")</td>
+                                                <td>@item.Subtotal.ToString("C")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Mostrar/ocultar detalles del pedido
+            $('.view-details').click(function() {
+                var orderId = $(this).data('order-id');
+                $('#details-' + orderId).toggle();
+
+                // Cambiar ícono
+                var icon = $(this).find('i');
+                if (icon.hasClass('fa-eye')) {
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                    $(this).removeClass('btn-info').addClass('btn-secondary');
+                } else {
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                    $(this).removeClass('btn-secondary').addClass('btn-info');
+                }
+            });
+        });
+    </script>
+}

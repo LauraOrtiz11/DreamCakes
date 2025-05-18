@@ -29,7 +29,33 @@ namespace DreamCakes.Services.Admin
         {
             return _productRepository.GetProductById(productId);
         }
+        public AdminProductPromotionDto GetProductPromotionInfo(int productId)
+        {
+            return new AdminProductPromotionDto
+            {
+                ProductId = productId,
+                AvailablePromotions = _productRepository.GetActivePromotions(),
+                CurrentPromotions = _productRepository.GetPromotionsForProduct(productId)
+            };
+        }
 
+        public bool RemovePromotionFromProduct(int productId, int promotionId)
+        {
+            try
+            {
+                return _productRepository.RemoveProductFromPromotion(productId, promotionId);
+            }
+            catch
+            {
+                // Logear error si es necesario
+                return false;
+            }
+        }
+        public bool AddPromotionToProduct(int productId, int promotionId)
+        {
+  
+            return _productRepository.AddProductToPromotion(productId, promotionId);
+        }
         // Crea un nuevo producto sin imágenes asociadas.
         public int CreateProductWithoutImages(AdminProductDto productDto)
         {

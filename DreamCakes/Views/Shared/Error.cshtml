@@ -1,14 +1,23 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width" />
-    <title>Error</title>
-</head>
-<body>
-    <hgroup>
-        <h1>Error.</h1>
-        <h2>Error al procesar la solicitud.</h2>
-    </hgroup>
-</body>
-</html>
+﻿@{
+    ViewBag.Title = "Error del servidor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h1>500 - Error del servidor</h1>
+    <p>Ocurrió un error inesperado. Por favor intenta nuevamente más tarde.</p>
+
+    @if (Request.IsLocal)
+    {
+        <div class="error-details">
+            <h3>Detalles del error:</h3>
+            <p>@Model.Exception.Message</p>
+            <pre>@Model.Exception.StackTrace</pre>
+        </div>
+    }
+
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+        Volver al inicio
+    </a>
+</div>

@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Linq;
 using DreamCakes.Utilities;
+using System.Diagnostics;
 
 
 
 namespace DreamCakes.Controllers
 {
-    [Authorize]
+    [RoleAuthorizeUtility(2)]
     public class OrderController : Controller
     {
         private readonly OrderService _orderService;

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 </head>
 <body>
     <!-- Navbar dinámico según rol  -->
@@ -22,76 +23,81 @@
 
                 @if (isAuthenticated)
                 {
-            <ul class="navbar-menu">
-                <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("Index", "Home")">
-                        <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
-                        Inicio
-                    </a>
-                </li>
+                    <ul class="navbar-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Home")">
+                                <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
+                                Inicio
+                            </a>
+                        </li>
 
-                @if (userRole == 1)
-                {
-                    <li class="nav-item">
+                        @if (userRole == 1)
+                        {
+                            <li class="nav-item">
 
-                        <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Usuarios
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Categorias
-                        </a>
-                    </li>
-                    <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
+                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                                    Gestión Usuarios
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
+                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                                    Gestión Categorias
+                                </a>
+                            </li>
+                            <li class="nav-item">
 
-                        <a class="nav-link" href="@Url.Action("Index", "Promotions")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Promociones
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
-                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                            Gestión Productos
-                        </a>
-                    </li>
+                                <a class="nav-link" href="@Url.Action("Index", "Promotions")">
+                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                                    Gestión Promociones
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
+                                    <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
+                                    Gestión Productos
+                                </a>
+                            </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
-                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                            Asignación de Pedidos 
-                        </a>
-                    </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
+                                    <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
+                                    Asignación de Pedidos
+                                </a>
+                            </li>
 
-                }
-                else if (userRole == 2)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Catalog", "Product")">
-                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                            Comprar
-                        </a>
-                    </li>
+                        }
+                        else if (userRole == 2)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Catalog", "Product")">
+                                    <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                                    Comprar
+                                </a>
+                            </li>
 
-                    
-                }
-                else if (userRole == 3)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
-                            Entregas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Historial", "Delivery")">
-                            Historial
-                        </a>
-                    </li>
-                }
-            </ul>
+
+                        }
+                        else if (userRole == 3)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
+                                    Entregas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "DeliveryHistory")">
+                                    Historial
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("RegisterPayment", "DeliveryPayment")">
+                                    Historial
+                                </a>
+                            </li>
+                        }
+                    </ul>
 
                     <div class="navbar-actions">
                         <a href="@Url.Action("Index", "Profile")">
@@ -174,5 +180,17 @@
     </script>
 
     @RenderSection("scripts", required: false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000"
+        };
+    </script>
 </body>
 </html>

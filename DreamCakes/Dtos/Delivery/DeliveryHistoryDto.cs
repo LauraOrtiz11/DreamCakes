@@ -5,15 +5,14 @@ using System.Web;
 
 namespace DreamCakes.Dtos.Delivery
 {
-    public class DeliveryAssignedOrderDto
+    public class DeliveryHistoryDto
     {
         public int OrderId { get; set; }
         public string CustomerName { get; set; }
-        public string CustomerPhone { get; set; }
+        public DateTime DeliveryDate { get; set; }
         public string DeliveryAddress { get; set; }
-        public string Status { get; set; }
-        public DateTime EstimatedDeliveryTime { get; set; }
         public decimal TotalAmount { get; set; }
-        public bool HasPartialPayment { get; set; }
+        public string Status { get; set; }
+        public List<DeliveryOrderItemDto> Items { get; set; }
     }
 }

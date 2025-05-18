@@ -9,6 +9,7 @@ using DreamCakes.Dtos.Delivery;
 
 namespace DreamCakes.Controllers.Delivery
 {
+    [RoleAuthorizeUtility(3)]
     public class DeliveryOrderStatusController : Controller
     {
         private readonly DeliveryOrderStatusService _service;
@@ -16,6 +17,34 @@ namespace DreamCakes.Controllers.Delivery
         public DeliveryOrderStatusController()
         {
             _service = new DeliveryOrderStatusService();
+        }
+
+        [HttpGet]
+        public ActionResult OrderDetails(int orderId)
+        {
+            try
+            {
+                var currentUserId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
+                if (currentUserId == null) return RedirectToAction("Login", "Account");
+
+                // Obtener detalles del pedido a través del servicio
+                var orderDetails = _service.GetOrderDetails(orderId);
+                if (orderDetails == null) return HttpNotFound();
+
+                // Verificar permisos (domiciliario asignado o admin)
+
+                // Obtener estados disponibles a través del servicio
+                var availableStatuses = _service.GetAvailableStatuses();
+                ViewBag.AvailableStatuses = availableStatuses;
+
+                return View(orderDetails);
+            }
+            catch (Exception ex)
+            {
+                
+                TempData["ErrorMessage"] = "Error al cargar los detalles del pedido";
+                return RedirectToAction("AssignedOrders", "AdminAssignedOrder");
+            }
         }
 
         [HttpPost]
@@ -41,7 +70,9 @@ namespace DreamCakes.Controllers.Delivery
                 return Json(new
                 {
                     success = response.Success,
-                    message = response.Message
+                    message = response.Message,
+                    
+                    newStatusId = newStatusId
                 });
             }
             catch (Exception)

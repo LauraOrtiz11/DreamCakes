@@ -1,0 +1,55 @@
+﻿@if (TempData["SuccessMessage"] != null)
+{
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3>Comprobante de Pago</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+
+                <div class="text-center mb-4">
+                    <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                    <h4 class="mt-3">Pago Registrado Exitosamente</h4>
+                </div>
+
+                <div class="text-center">
+                    <p>Se ha generado el comprobante de pago correctamente.</p>
+                    <a href="@Url.Action("DownloadReceipt", new { paymentId = ViewBag.PaymentId })"
+                       class="btn btn-primary" target="_blank">
+                        <i class="fas fa-file-pdf"></i> Ver Comprobante
+                    </a>
+                    <button onclick="window.print()" class="btn btn-info">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
+                    <a href="@Url.Action("AssignedOrders", "DeliveryOrder")" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver a Pedidos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (TempData["WarningMessage"] != null)
+{
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h3>Pago Parcial Registrado</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    @TempData["WarningMessage"]
+                </div>
+
+                <div class="text-center">
+                    <a href="@Url.Action("AssignedOrders", "DeliveryOrder")" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Volver a Pedidos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

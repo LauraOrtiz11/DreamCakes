@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace DreamCakes.Controllers.Delivery
 {
+    [RoleAuthorizeUtility(3)]
     public class DeliveryOrderController : Controller
     {
         private readonly DeliveryOrderService _service;
