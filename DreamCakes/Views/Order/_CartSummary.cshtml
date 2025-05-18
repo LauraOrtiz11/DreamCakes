@@ -5,14 +5,14 @@
         <h6 class="card-title">Resumen</h6>
         <div class="d-flex justify-content-between mb-2">
             <span>Subtotal:</span>
-            <span>@Model.Subtotal.ToString("C")</span>
+            <span>@Model.Subtotal</span>
         </div>
 
         @if (Model.DiscountTotal > 0)
         {
             <div class="d-flex justify-content-between mb-2 text-success">
                 <span>Descuento:</span>
-                <span>-@Model.DiscountTotal.ToString("C")</span>
+                <span>-@Model.DiscountTotal</span>
             </div>
         }
 
@@ -20,7 +20,7 @@
 
         <div class="d-flex justify-content-between fw-bold">
             <span>Total:</span>
-            <span>@Model.Total.ToString("C")</span>
+            <span>@Model.Total</span>
         </div>
 
         <a href="@Url.Action("Index", "Order")" class="btn btn-primary w-100 mt-3">

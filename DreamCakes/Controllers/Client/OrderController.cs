@@ -160,9 +160,11 @@ namespace DreamCakes.Controllers
                 }
 
                 // Configurar los datos del pedido
+                
                 order.Details = GetCurrentCart();
                 order.ClientId = clientId.Value; // Asignar el ID del cliente
                 order.OrderDate = DateTime.Now;
+                order.DeliveryDate = DateTime.Now; // <--- Asignación necesaria
                 order.StatusId = 3; // Pendiente
                 order.OrderType = "Inmediato";
                 order.DeliveryUserId = null;

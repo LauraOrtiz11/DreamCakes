@@ -19,7 +19,7 @@ namespace DreamCakes.Utilities
                 document.Open();
 
                 // Logo de la empresa
-                var logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content", "images", "image 1.png");
+                var logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content", "images", "Logo.jepg");
                 if (File.Exists(logoPath))
                 {
                     var logo = Image.GetInstance(logoPath);
@@ -38,8 +38,8 @@ namespace DreamCakes.Utilities
                 // Información de la empresa
                 var companyInfo = new Paragraph();
                 companyInfo.Add(new Chunk("Dream Cakes\n", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)));
-                companyInfo.Add(new Chunk("NIT: 123456789-0\n", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-                companyInfo.Add(new Chunk("Teléfono: (123) 456-7890\n", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+                companyInfo.Add(new Chunk("Correo: dcakesnot@gmail.com\n", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+                companyInfo.Add(new Chunk("Teléfono: 323 3189 906\n", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
                 companyInfo.Add(new Chunk("Fecha: " + DateTime.Now.ToString("g") + "\n\n", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
                 document.Add(companyInfo);
 

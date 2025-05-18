@@ -305,6 +305,7 @@
     <Content Include="Content\Icons\Profile.svg" />
     <Content Include="Content\Icons\Promotion.svg" />
     <Content Include="Content\Images\image 1.png" />
+    <Content Include="Content\Images\Logo.jpeg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
