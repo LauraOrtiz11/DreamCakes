@@ -30,91 +30,65 @@
     }
     else
     {
-        <div class="list-group">
-            @foreach (var order in Model)
-            {
-                <div class="list-group-item mb-2">
-                    <div class="d-flex justify-content-between">
-                        <h5>Pedido #@order.OrderId</h5>
-                        <span class="badge badge-@GetStatusBadgeClass(order.Status)">
-                            @order.Status
-                        </span>
-                    </div>
-                    <p><strong>Cliente:</strong> @order.CustomerName</p>
-                    <p><strong>Dirección:</strong> @order.DeliveryAddress</p>
-                    <p><strong>Hora estimada:</strong> @order.EstimatedDeliveryTime.ToString("g")</p>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="font-weight-bold">Total: @order.TotalAmount.ToString("C")</span>
-                        <div>
-                            <a href="tel:@order.CustomerPhone" class="btn btn-sm btn-outline-primary mr-2">
-                                <i class="fas fa-phone"></i> Contactar
-                            </a>
-                            @Html.ActionLink("Ver detalles", "OrderDetails", new { id = order.OrderId },
-                                new { @class = "btn btn-sm btn-primary" })
-                        </div>
-                    </div>
-
-                    @if (order.Status == "Pendiente" || order.Status == "En proceso")
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Pedido #</th>
+                        <th>Cliente</th>
+                        <th>Dirección</th>
+                        <th>Hora estimada</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
                     {
-                        <div class="card-footer mt-3">
-                            <div class="d-flex justify-content-between">
-                                <a href="@Url.Action("AssignedOrders")" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left"></i> Volver
-                                </a>
-
-                                <div class="dropdown">
-                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                            id="statusDropdown-@order.OrderId" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                        Actualizar Estado
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="statusDropdown-@order.OrderId"
-                                         id="statusOptions-@order.OrderId">
-                                        <!-- Opciones se cargarán vía AJAX -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
-                    <script>
-                        $(document).ready(function () {
-                            $.get('@Url.Action("GetStatusOptions", "DeliveryOrderStatus")', function (data) {
-                                var dropdown = $('#statusOptions-@order.OrderId');
-                                dropdown.empty();
-
-                                $.each(data, function (index, item) {
-                                    var link = $('<a class="dropdown-item update-status" href="#" ' +
-                                        'data-status-id="' + item.StatusId + '">' + item.StatusName + '</a>');
-                                    dropdown.append(link);
-                                });
-
-                                dropdown.on('click', '.update-status', function (e) {
-                                    e.preventDefault();
-                                    var newStatusId = $(this).data('status-id');
-
-                                    if (confirm('¿Confirmas que deseas actualizar el estado del pedido?')) {
-                                        $.post('@Url.Action("UpdateStatus", "DeliveryOrderStatus")',
-                                            {
-                                                orderId: @order.OrderId,
-                                                newStatusId: newStatusId
-                                            },
-                                            function (response) {
-                                                if (response.success) {
-                                                    alert(response.message);
-                                                    location.reload();
-                                                } else {
-                                                    alert(response.message);
-                                                }
-                                            });
+                        <tr>
+                            <td>@order.OrderId</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.DeliveryAddress</td>
+                            <td>@order.EstimatedDeliveryTime.ToString("g")</td>
+                            <td>@order.TotalAmount.ToString("C")</td>
+                            <td>
+                                <span class="badge badge-@GetStatusBadgeClass(order.Status)">
+                                    @order.Status
+                                </span>
+                                @if (order.HasPartialPayment)
+                                {
+                                    <span class="badge badge-warning ml-1">Pago Parcial</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="tel:@order.CustomerPhone" class="btn btn-sm btn-outline-primary mr-1" title="Contactar">
+                                        <i class="fas fa-phone"></i>
+                                    </a>
+                                    @if (order.Status == "Entregado" && !order.HasPartialPayment)
+                                    {
+                                        <a href="@Url.Action("RegisterPayment", "DeliveryPayment", new { orderId = order.OrderId })"
+                                           class="btn btn-success btn-sm">
+                                            <i class="fas fa-money-bill-wave"></i> Registrar Pago
+                                        </a>
                                     }
-                                });
-                            });
-                        });
-                    </script>
-                </div>
-            }
+                                    else if (order.HasPartialPayment)
+                                    {
+                                        <a href="@Url.Action("RegisterPayment", "DeliveryPayment", new { orderId = order.OrderId })"
+                                           class="btn btn-warning btn-sm">
+                                            <i class="fas fa-money-bill-wave"></i> Completar Pago
+                                        </a>
+                                    }
+                                    @Html.ActionLink("Detalles", "OrderDetails", "DeliveryOrderStatus",
+                                        new { orderId = order.OrderId },
+                                        new { @class = "btn btn-sm btn-primary" })
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     }
 </div>

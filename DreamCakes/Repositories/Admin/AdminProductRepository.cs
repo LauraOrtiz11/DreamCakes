@@ -19,6 +19,78 @@ namespace DreamCakes.Repositories.Admin
             _imageRepository = new AdminImageRepository();
         }
 
+        public List<PromotionDto> GetActivePromotions()
+        {
+            var promotions = new List<PromotionDto>();
+
+            using (var context = new DreamCakesEntities())
+            {
+                var result = context.Database.SqlQuery<PromotionDto>(
+                    "EXEC sp_GetActivePromotions");
+
+                promotions = result.ToList();
+            }
+
+            return promotions;
+        }
+
+        public List<PromotionDto> GetPromotionsForProduct(int productId)
+        {
+            var promotions = new List<PromotionDto>();
+
+            using (var context = new DreamCakesEntities())
+            {
+                promotions = context.PROMOCION_PRODUCTO
+                    .Where(pp => pp.ID_Producto == productId)
+                    .Join(context.PROMOCIONs,
+                        pp => pp.ID_Promocion,
+                        p => p.ID_Promocion,
+                        (pp, p) => new PromotionDto
+                        {
+                            ID_Prom = p.ID_Promocion,
+                            NameProm = p.Nombre_Prom,
+                            DiscountPer = p.Porc_Desc,
+                            StartDate = p.Fecha_Ini,
+                            EndDate = p.Fecha_Fin,
+                            StateProm = p.Estado,
+                            DescriProm = p.Descrip_Prom
+                        })
+                    .ToList();
+            }
+
+            return promotions;
+        }
+
+        public bool AddProductToPromotion(int productId, int promotionId)
+        {
+            try
+            {
+                using (var context = new DreamCakesEntities())
+                {
+                    // Check if relationship already exists
+                    var exists = context.PROMOCION_PRODUCTO
+                        .Any(pp => pp.ID_Producto == productId && pp.ID_Promocion == promotionId);
+
+                    if (!exists)
+                    {
+                        var newRelation = new PROMOCION_PRODUCTO
+                        {
+                            ID_Producto = productId,
+                            ID_Promocion = promotionId
+                        };
+
+                        context.PROMOCION_PRODUCTO.Add(newRelation);
+                        context.SaveChanges();
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
         // Inicia una transacción de base de datos manualmente.
         public DbContextTransaction BeginTransaction()
         {
@@ -73,6 +145,18 @@ namespace DreamCakes.Repositories.Admin
                 }).FirstOrDefault();
         }
 
+        public bool RemoveProductFromPromotion(int productId, int promotionId)
+        {
+            
+                var relation = _context.PROMOCION_PRODUCTO
+                    .FirstOrDefault(pp => pp.ID_Producto == productId && pp.ID_Promocion == promotionId);
+
+                if (relation == null) return false;
+
+                _context.PROMOCION_PRODUCTO.Remove(relation);
+                return _context.SaveChanges() > 0;
+            
+        }
         // Obtiene un producto con sus imágenes para fines de eliminación.
         public AdminProductDto GetProductByIdForDeletion(int productId)
         {

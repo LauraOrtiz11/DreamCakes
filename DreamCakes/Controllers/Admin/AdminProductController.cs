@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Web;
 using DreamCakes.Utilities;
 using System.Linq;
+using System.Diagnostics;
+
 
 namespace DreamCakes.Controllers.Admin
 {
@@ -47,6 +49,7 @@ namespace DreamCakes.Controllers.Admin
             {
                 var product = _productService.GetProductById(id);
                 if (product == null) return HttpNotFound();
+                
                 return View(product);
             }
             catch (Exception)
@@ -145,7 +148,8 @@ namespace DreamCakes.Controllers.Admin
             {
                 var product = _productService.GetProductById(id);
                 if (product == null) return HttpNotFound();
-
+                // Cargar promociones disponibles y aplicadas
+                product.ProductPromotion = _productService.GetProductPromotionInfo(id);
                 ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                 return View(product);
             }
@@ -211,6 +215,49 @@ namespace DreamCakes.Controllers.Admin
             }
         }
 
+        [HttpPost]
+        public ActionResult AddPromotion(AdminProductPromotionDto model)
+        {
+            try
+            {
+
+                var success = _productService.AddPromotionToProduct(model.ProductId, model.PromotionId);
+
+                if (success)
+                {
+                    TempData["SuccessMessage"] = "La promoción se ha vinculado al producto exitosamente.";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "La promoción ya estaba vinculada a este producto o ocurrió un error.";
+                }
+
+                return RedirectToAction("Edit", new { id = model.ProductId });
+            }
+            catch (Exception)
+            {
+                // Log error
+                TempData["ErrorMessage"] = "Ocurrió un error al vincular la promoción. Por favor intente nuevamente.";
+                return RedirectToAction("Edit", new { id = model.ProductId });
+            }
+        }
+        // Método para mostrar las promociones vinculadas (parcial)
+        public ActionResult GetPromotionsPartial(int id)
+        {
+            try
+            {
+                var product = _productService.GetProductById(id);
+                if (product == null) return HttpNotFound();
+
+                product.ProductPromotion = _productService.GetProductPromotionInfo(id);
+                return PartialView("_ProductPromotionsPartial", product);
+            }
+            catch (Exception ex)
+            {
+                return PartialView("_ErrorPartial", "Error al cargar promociones");
+            }
+        }
+
         // Elimina una imagen específica asociada a un producto. Retorna el resultado como JSON.
         [HttpPost]
         public ActionResult DeleteImage(int productId, string imageUrl)
@@ -223,6 +270,32 @@ namespace DreamCakes.Controllers.Admin
             catch (Exception)
             {
                 return Json(new { success = false, error = "Error deleting image" });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult RemovePromotion(int productId, int promotionId)
+        {
+            try
+            {
+                
+                var result = _productService.RemovePromotionFromProduct(productId, promotionId);
+
+                if (result)
+                {
+                    return Json(new { success = true });
+                }
+
+                return Json(new { success = false, message = "La relación no existe o ya fue eliminada." });
+            }
+            catch (Exception ex)
+            {
+                // Log error (ex)
+                return Json(new
+                {
+                    success = false,
+                    message = "Ocurrió un error al eliminar la promoción."
+                });
             }
         }
     }

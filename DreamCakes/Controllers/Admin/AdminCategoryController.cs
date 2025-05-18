@@ -5,9 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using DreamCakes.Dtos.Admin;
 using DreamCakes.Services.Admin;
+using DreamCakes.Utilities;
 
 namespace DreamCakes.Controllers.Admin
 {
+    [RoleAuthorizeUtility(1)]
     public class AdminCategoryController : Controller
     {
         private readonly AdminCategoryService _categoryService = new AdminCategoryService();

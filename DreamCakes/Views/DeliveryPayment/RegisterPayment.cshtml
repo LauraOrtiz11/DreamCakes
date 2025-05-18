@@ -1,0 +1,175 @@
+﻿@model DreamCakes.Dtos.Delivery.DeliveryPaymentDetailsDto
+@{
+    var amountPaid = ViewBag.AmountPaid as decimal? ?? 0;
+    var remainingAmount = ViewBag.RemainingAmount as decimal? ?? Model.TotalAmount;
+
+    // Mostrar en pantalla con coma decimal, sin separadores de miles
+    var formattedPaid = amountPaid.ToString("0.00", new System.Globalization.CultureInfo("es-CO"));          // Ej: 5000,00
+    var formattedRemaining = remainingAmount.ToString("0.00", new System.Globalization.CultureInfo("es-CO")); // Ej: 3000,00
+    var formattedTotal = Model.TotalAmount.ToString("0.00", new System.Globalization.CultureInfo("es-CO"));   // Ej: 8000,00
+
+    // Para JS, usar punto decimal (formato InvariantCulture)
+    var jsRemainingAmount = remainingAmount.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture); // Ej: 3000.00
+    var jsTotalAmount = Model.TotalAmount.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);   // Ej: 8000.00
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3>
+                <i class="fas fa-money-bill-wave"></i> Registrar Pago - Pedido #@Model.OrderId
+            </h3>
+            <span class="badge badge-light">
+                Estado: @Model.Status
+                @if (amountPaid > 0)
+                {
+                    <span class="badge badge-warning ml-2">Pago Parcial</span>
+                }
+            </span>
+        </div>
+
+        <div class="card-body">
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+                </div>
+            }
+            @if (TempData["WarningMessage"] != null)
+            {
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> @TempData["WarningMessage"]
+                </div>
+            }
+
+            @using (Html.BeginForm("RegisterPayment", "DeliveryPayment", FormMethod.Post,
+                   new { @class = "form-horizontal", role = "form", id = "paymentForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.Hidden("OrderId", Model.OrderId)
+                @Html.Hidden("PaymentMethod", 1) <!-- 1 = Efectivo -->
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-user"></i> Información del Cliente</h5>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Nombre:</label>
+                            <p>@Model.CustomerName</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Dirección:</label>
+                            <p>@Model.DeliveryAddress</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-receipt"></i> Información del Pago</h5>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Total Pedido:</label>
+                            <p>@formattedTotal</p>
+                        </div>
+
+                        @if (amountPaid > 0)
+                        {
+                            <div class="form-group">
+                                <label class="font-weight-bold">Monto Ya Pagado:</label>
+                                <p class="text-success">@formattedPaid</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Saldo Pendiente:</label>
+                                <p class="text-danger font-weight-bold">@formattedRemaining</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="AmountReceived" class="font-weight-bold">
+                        <i class="fas fa-money-bill-wave"></i> Monto Recibido:
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input type="text" class="form-control money-input" id="AmountReceived"
+                               name="AmountReceived" required
+                               placeholder="Ej: 5000,00"
+                               inputmode="decimal"
+                               data-val="true"
+                               data-val-required="El monto recibido es requerido"
+                               data-val-range="El monto debe estar entre 0,01 y @formattedRemaining.Replace('.', ',')"
+                               data-val-range-min="0,01"
+                               data-val-range-max="@jsRemainingAmount.ToString().Replace('.', ',')">
+                    </div>
+
+
+                    @Html.ValidationMessage("AmountReceived", "", new { @class = "text-danger" })
+                    <small class="form-text text-muted">Ingrese el monto recibido en efectivo</small>
+                </div>
+                <input type="checkbox" id="IsFullPayment" name="IsFullPayment" hidden />
+
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="IsFullPayment"
+                           name="IsFullPayment" @(remainingAmount == Model.TotalAmount ? "checked" : "")>
+                    <label class="form-check-label font-weight-bold" for="IsFullPayment">Pago completo</label>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-check-circle"></i> @(amountPaid > 0 ? "Registrar Pago Adicional" : "Confirmar Pago")
+                    </button>
+                    <a href="@Url.Action("AssignedOrders", "DeliveryOrder")" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var total = parseFloat('50.00') || 0;
+            var remaining = parseFloat('50.00') || total;
+
+            $('form').submit(function (e) {
+                var inputVal = $('#AmountReceived').val().trim();
+
+                // Convertir a número eliminando puntos de miles y usando coma decimal
+                var numericValue = parseFloat(inputVal.replace(/\./g, '').replace(',', '.')) || 0;
+
+                if (numericValue <= 0) {
+                    alert('El monto recibido debe ser mayor a cero');
+                    e.preventDefault();
+                    return false;
+                }
+
+                if (numericValue > remaining) {
+                    alert('El monto recibido no puede ser mayor al monto pendiente');
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Reescribir el valor con coma decimal (sin puntos de miles)
+                $('#AmountReceived').val(numericValue.toFixed(2).toString().replace('.', ','));
+
+                // Actualizar el checkbox de pago completo
+                $('#IsFullPayment').prop('checked', numericValue >= remaining);
+
+                return true;
+            });
+
+            $('#AmountReceived').on('input', function () {
+                var inputVal = $(this).val().trim();
+                var numericValue = parseFloat(inputVal.replace(/\./g, '').replace(',', '.')) || 0;
+
+                $('#IsFullPayment').prop('checked', numericValue >= remaining);
+            });
+            
+            
+            
+           
+
+        });
+    </script>   
+}

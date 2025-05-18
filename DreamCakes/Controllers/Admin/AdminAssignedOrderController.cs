@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using DreamCakes.Services.Admin;
 using DreamCakes.Dtos.Admin;
+using DreamCakes.Utilities;
 
 namespace DreamCakes.Controllers.Admin
 {
+    [RoleAuthorizeUtility(1)]
     public class AdminAssignedOrderController : Controller
     {
         private readonly AdminAssignedOrderService _service;

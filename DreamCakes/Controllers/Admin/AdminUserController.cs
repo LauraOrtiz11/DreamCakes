@@ -1,9 +1,11 @@
 ﻿using DreamCakes.Dtos.Admin;
 using DreamCakes.Services.Admin;
 using System.Web.Mvc;
+using DreamCakes.Utilities;
 
 namespace DreamCakes.Controllers.Admin
 {
+    [RoleAuthorizeUtility(1)]
     public class AdminUserController : Controller
     {
         private readonly AdminUserService _service = new AdminUserService();

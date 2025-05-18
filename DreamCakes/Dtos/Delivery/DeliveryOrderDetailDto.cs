@@ -9,5 +9,10 @@ namespace DreamCakes.Dtos.Delivery
     {
         public List<DeliveryOrderItemDto> Items { get; set; }
         public string AdditionalNotes { get; set; }
+        public DateTime OrderDate { get; set; }
+        public DateTime EstimatedDelivery { get; set; }
+        public int StatusId { get; set; }
+        public int? DeliveryUserId { get; set; }
+       
     }
 }

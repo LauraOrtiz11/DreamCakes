@@ -58,7 +58,10 @@ namespace DreamCakes.Services.Delivery
                 };
             }
         }
-
+        public DeliveryOrderDetailDto GetOrderDetails(int orderId)
+        {
+            return _repository.GetOrderDetails(orderId);
+        }
         public List<DeliveryOrderStatusDto> GetAvailableStatuses()
         {
             return _repository.GetAvailableStatuses();

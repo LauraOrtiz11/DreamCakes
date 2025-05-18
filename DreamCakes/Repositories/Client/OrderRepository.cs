@@ -2,20 +2,29 @@
 using DreamCakes.Repositories.Models;
 using System;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Data.Entity.Infrastructure;
-
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.Entity.Core.EntityClient;
 
 namespace DreamCakes.Repositories.Client
 {
     public class OrderRepository
-    { private readonly DreamCakesEntities _context;
+    { 
+        private readonly DreamCakesEntities _context;
+        private readonly string _connectionString;
 
         public OrderRepository()
         {
             _context = new DreamCakesEntities();
+            var entityConnectionString = ConfigurationManager.ConnectionStrings["DreamCakesEntities"].ConnectionString;
+            var entityBuilder = new EntityConnectionStringBuilder(entityConnectionString);
+            _connectionString = entityBuilder.ProviderConnectionString;
         }
+    
+    
        
 
         public ProductDto GetProductById(int productId)
@@ -122,86 +131,145 @@ namespace DreamCakes.Repositories.Client
         }
         public int CreateOrder(OrderDto order)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var connection = new SqlConnection(_connectionString))
             {
-                try
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
                 {
-                    // Validate products and calculate totals
-                    decimal total = 0;
-                    var orderDetails = new List<DETALLE_PEDIDO>();
-
-                    foreach (var detail in order.Details)
+                    try
                     {
-                        var product = _context.PRODUCTOes.Find(detail.ProductId);
-                        if (product == null)
-                            throw new Exception($"Product ID {detail.ProductId} not found");
-
-                        if (product.Stock < detail.Quantity)
-                            throw new Exception($"Insufficient stock for product {product.Nombre}");
-
-                        decimal subtotal = detail.UnitPrice * detail.Quantity;
-
-                        // Apply promotion if exists
-                        if (detail.PromotionId.HasValue)
+                        // 1. Validar productos y calcular totales
+                        decimal total = 0;
+                        foreach (var detail in order.Details)
                         {
-                            var promotion = _context.PROMOCIONs
-                                .Include(p => p.PROMOCION_PRODUCTO)
-                                .FirstOrDefault(p => p.ID_Promocion == detail.PromotionId
-                                                  && p.Estado
-                                                  && p.PROMOCION_PRODUCTO.Any(pp => pp.ID_Producto == detail.ProductId)
-                                                  && DateTime.Now >= p.Fecha_Ini
-                                                  && DateTime.Now <= p.Fecha_Fin);
-
-                            if (promotion != null)
+                            // Verificar stock
+                            var stockQuery = "SELECT Stock FROM PRODUCTO WHERE ID_Producto = @ProductId";
+                            using (var command = new SqlCommand(stockQuery, connection, transaction))
                             {
-                                subtotal = detail.UnitPrice * detail.Quantity * (100 - promotion.Porc_Desc) / 100;
+                                command.Parameters.AddWithValue("@ProductId", detail.ProductId);
+                                var currentStock = (int)command.ExecuteScalar();
+
+                                if (currentStock < detail.Quantity)
+                                    throw new Exception($"Insufficient stock for product ID {detail.ProductId}");
+                            }
+
+                            // Calcular subtotal
+                            decimal subtotal = detail.UnitPrice * detail.Quantity;
+
+                            // Aplicar promoción si existe
+                            if (detail.PromotionId.HasValue)
+                            {
+                                var promoQuery = @"
+                                    SELECT p.Porc_Desc 
+                                    FROM PROMOCION p
+                                    INNER JOIN PROMOCION_PRODUCTO pp ON p.ID_Promocion = pp.ID_Promocion
+                                    WHERE p.ID_Promocion = @PromotionId
+                                    AND pp.ID_Producto = @ProductId
+                                    AND p.Estado = 1
+                                    AND GETDATE() BETWEEN p.Fecha_Ini AND p.Fecha_Fin";
+
+                                using (var command = new SqlCommand(promoQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@PromotionId", detail.PromotionId.Value);
+                                    command.Parameters.AddWithValue("@ProductId", detail.ProductId);
+
+                                    var discount = command.ExecuteScalar();
+                                    if (discount != null)
+                                    {
+                                        decimal discountPercent = Convert.ToDecimal(discount);
+                                        subtotal = detail.UnitPrice * detail.Quantity * (100 - discountPercent) / 100;
+                                    }
+                                }
+                            }
+
+                            total += subtotal;
+                        }
+
+                        // 2. Crear el pedido principal
+                        var insertOrderQuery = @"
+                            INSERT INTO PEDIDO (ID_Cliente, ID_Estado, Fecha_Pedido, Tip_Pedido, Direccion_Ent, Fecha_Entrega, Total)
+                            VALUES (@ClientId, @StatusId, @OrderDate, @OrderType, @DeliveryAddress, @DeliveryDate, @Total);
+                            SELECT SCOPE_IDENTITY();";
+
+                        int orderId;
+                        using (var command = new SqlCommand(insertOrderQuery, connection, transaction))
+                        {
+                            command.Parameters.AddWithValue("@ClientId", order.ClientId);
+                            command.Parameters.AddWithValue("@StatusId", order.StatusId);
+                            command.Parameters.AddWithValue("@OrderDate", DateTime.Now);
+                            command.Parameters.AddWithValue("@OrderType", order.OrderType);
+                            command.Parameters.AddWithValue("@DeliveryAddress", order.DeliveryAddress);
+                            command.Parameters.AddWithValue("@DeliveryDate", order.DeliveryDate);
+                            command.Parameters.AddWithValue("@Total", total);
+
+                            orderId = Convert.ToInt32(command.ExecuteScalar());
+                        }
+
+                        // 3. Insertar detalles del pedido
+                        foreach (var detail in order.Details)
+                        {
+                            decimal subtotal = detail.UnitPrice * detail.Quantity;
+
+                            if (detail.PromotionId.HasValue)
+                            {
+                                // Recalcular subtotal con descuento si es necesario
+                                var promoQuery = @"
+                                    SELECT p.Porc_Desc 
+                                    FROM PROMOCION p
+                                    INNER JOIN PROMOCION_PRODUCTO pp ON p.ID_Promocion = pp.ID_Promocion
+                                    WHERE p.ID_Promocion = @PromotionId
+                                    AND pp.ID_Producto = @ProductId
+                                    AND p.Estado = 1
+                                    AND GETDATE() BETWEEN p.Fecha_Ini AND p.Fecha_Fin";
+
+                                using (var command = new SqlCommand(promoQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@PromotionId", detail.PromotionId.Value);
+                                    command.Parameters.AddWithValue("@ProductId", detail.ProductId);
+
+                                    var discount = command.ExecuteScalar();
+                                    if (discount != null)
+                                    {
+                                        decimal discountPercent = Convert.ToDecimal(discount);
+                                        subtotal = detail.UnitPrice * detail.Quantity * (100 - discountPercent) / 100;
+                                    }
+                                }
+                            }
+
+                            var insertDetailQuery = @"
+                                INSERT INTO DETALLE_PEDIDO (ID_Pedido, ID_Producto, ID_Promocion, Cantidad, PrecioUni, Subtotal)
+                                VALUES (@OrderId, @ProductId, @PromotionId, @Quantity, @UnitPrice, @Subtotal)";
+
+                            using (var command = new SqlCommand(insertDetailQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@OrderId", orderId);
+                                command.Parameters.AddWithValue("@ProductId", detail.ProductId);
+                                command.Parameters.AddWithValue("@PromotionId", detail.PromotionId ?? (object)DBNull.Value);
+                                command.Parameters.AddWithValue("@Quantity", detail.Quantity);
+                                command.Parameters.AddWithValue("@UnitPrice", detail.UnitPrice);
+                                command.Parameters.AddWithValue("@Subtotal", subtotal);
+
+                                command.ExecuteNonQuery();
+                            }
+
+                            // 4. Actualizar stock de productos
+                            var updateStockQuery = "UPDATE PRODUCTO SET Stock = Stock - @Quantity WHERE ID_Producto = @ProductId";
+                            using (var command = new SqlCommand(updateStockQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@Quantity", detail.Quantity);
+                                command.Parameters.AddWithValue("@ProductId", detail.ProductId);
+                                command.ExecuteNonQuery();
                             }
                         }
 
-                        total += subtotal;
-
-                        orderDetails.Add(new DETALLE_PEDIDO
-                        {
-                            ID_Producto = detail.ProductId,
-                            ID_Promocion = detail.PromotionId,
-                            Cantidad = detail.Quantity,
-                            PrecioUni = detail.UnitPrice,
-                            Subtotal = subtotal
-                        });
+                        transaction.Commit();
+                        return orderId;
                     }
-
-                    // Create main order
-                    var newOrder = new PEDIDO
+                    catch (Exception ex)
                     {
-                        ID_Cliente = order.ClientId,
-                        ID_Estado = order.StatusId,
-                        Fecha_Pedido = DateTime.Now,
-                        Tip_Pedido = order.OrderType,
-                        Direccion_Ent = order.DeliveryAddress,
-                        Fecha_Entrega = order.DeliveryDate,
-                        Total = total,
-                        DETALLE_PEDIDO = orderDetails
-                    };
-
-                    _context.PEDIDOes.Add(newOrder);
-                    _context.SaveChanges();
-
-                    // Update product stocks
-                    foreach (var detail in order.Details)
-                    {
-                        var product = _context.PRODUCTOes.Find(detail.ProductId);
-                        product.Stock -= detail.Quantity;
+                        transaction.Rollback();
+                        throw new Exception("Error creating order: " + ex.Message, ex);
                     }
-
-                    _context.SaveChanges();
-                    transaction.Commit();
-
-                    return newOrder.ID_Pedido;
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
                 }
             }
         }

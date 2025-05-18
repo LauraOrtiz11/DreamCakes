@@ -222,12 +222,13 @@
                     <div class="mb-3">
                         <label class="form-label">Dirección de entrega *</label>
                         @Html.TextBoxFor(m => m.DeliveryAddress, new
-                        {
-                            @class = "form-control",
-                            required = "required",
-                            placeholder = "Ingresa tu dirección completa",
-                            id = "DeliveryAddress"
-                        })
+                   {
+                       @class = "form-control",
+                       required = "required",
+                       placeholder = "Ingresa tu dirección completa",
+                       id = "DeliveryAddress",
+                            name = "DeliveryAddress"
+                   })
                         <div class="invalid-feedback address-feedback"></div>
                     </div>
                     <div class="mb-3">
@@ -270,12 +271,13 @@
                     <div class="mb-3">
                         <label class="form-label">Dirección de entrega *</label>
                         @Html.TextBoxFor(m => m.DeliveryAddress, new
-                        {
-                            @class = "form-control",
-                            required = "required",
-                            placeholder = "Ingresa tu dirección completa",
-                            id = "DeliveryAddress"
-                        })
+                   {
+                       @class = "form-control",
+                       required = "required",
+                       placeholder = "Ingresa tu dirección completa",
+                       id = "DeliveryAddress",
+                            name = "DeliveryAddress"
+                   })
                         <div class="invalid-feedback address-feedback"></div>
                     </div>
                     @Html.HiddenFor(m => m.ClientId)

@@ -12,8 +12,9 @@
         <div class="alert alert-danger">
             @ViewBag.ErrorMessage
         </div>
-    }S
+    }
 
+    <!-- Formulario principal: Editar Producto -->
     @using (Html.BeginForm("Edit", "AdminProduct", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
@@ -45,22 +46,13 @@
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.ProdPrice, "Precio")
-                    @Html.TextBoxFor(model => model.ProdPrice, new
-               {
-                   @class = "form-control",
-                  
-               })
+                    @Html.TextBoxFor(model => model.ProdPrice, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ProdPrice, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.ProdStock, "ProdStock")
-                    @Html.TextBoxFor(model => model.ProdStock, new
-               {
-                   @class = "form-control",
-                   type = "number",
-                   min = "0"
-               })
+                    @Html.TextBoxFor(model => model.ProdStock, new { @class = "form-control", type = "number", min = "0" })
                     @Html.ValidationMessageFor(model => model.ProdStock, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -111,7 +103,81 @@
                 <i class="fas fa-times"></i> Cancelar
             </a>
         </div>
-    }
+    } <!-- Fin del formulario principal -->
+    <!-- Promociones Vinculadas -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h4>Promociones Vinculadas</h4>
+
+            @if (Model.ProductPromotion.CurrentPromotions.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descuento</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var promo in Model.ProductPromotion.CurrentPromotions)
+                            {
+                                <tr>
+                                    <td>@promo.NameProm</td>
+                                    <td>@promo.DiscountPer.ToString("0.0")%</td>
+                                    <td>@promo.StartDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@promo.EndDate.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm" onclick="removePromotion(@Model.ID_Product, @promo.ID_Prom)">
+                                            <i class="fas fa-trash"></i> Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">Este producto no tiene promociones vinculadas.</p>
+            }
+
+            <!-- Formulario separado para vincular promoción -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Vincular a Promoción</h5>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("AddPromotion", "AdminProduct", FormMethod.Post))
+                    {
+                        @Html.Hidden("ProductId", Model.ID_Product)
+
+                        <div class="form-group">
+                            <label>Seleccionar Promoción</label>
+                            <select name="PromotionId" class="form-control" required>
+                                <option value="">-- Seleccione una promoción --</option>
+                                @foreach (var promo in Model.ProductPromotion.AvailablePromotions)
+                                {
+                                    <option value="@promo.ID_Prom">
+                                        @promo.NameProm - @promo.DiscountPer.ToString("0.0")%
+                                        (Del @promo.StartDate.ToString("dd/MM/yyyy") al @promo.EndDate.ToString("dd/MM/yyyy"))
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-link"></i> Vincular Promoción
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -123,20 +189,37 @@
                 $.post('@Url.Action("DeleteImage", "Product")', {
                     productId: productId,
                     imageUrl: imageUrl
-                }, function(data) {
+                }, function (data) {
                     if (data.success) {
                         location.reload();
                     } else {
                         alert(data.error || 'Error al eliminar la imagen');
                     }
-                }).fail(function() {
+                }).fail(function () {
+                    alert('Error de conexión con el servidor');
+                });
+            }
+        }
+
+        function removePromotion(productId, promotionId) {
+            if (confirm('¿Está seguro que desea eliminar esta promoción del producto?')) {
+                $.post('@Url.Action("RemovePromotion", "AdminProduct")', {
+                    productId: productId,
+                    promotionId: promotionId
+                }, function (data) {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Error al eliminar la promoción');
+                    }
+                }).fail(function () {
                     alert('Error de conexión con el servidor');
                 });
             }
         }
 
         // Vista previa para nuevas imágenes
-        $('#newImages').change(function() {
+        $('#newImages').change(function () {
             $('#newImagesPreview').empty();
             var files = this.files;
 
@@ -146,7 +229,7 @@
                     if (file.type.match('image.*')) {
                         var reader = new FileReader();
 
-                        reader.onload = function(e) {
+                        reader.onload = function (e) {
                             $('#newImagesPreview').append(
                                 '<div class="mr-2 mb-2" style="width: 100px; height: 100px; overflow: hidden; border: 1px solid #ddd;">' +
                                 '<img src="' + e.target.result + '" style="width: 100%; height: 100%; object-fit: cover;" />' +
