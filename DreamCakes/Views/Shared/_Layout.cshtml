@@ -23,83 +23,86 @@
 
                 @if (isAuthenticated)
                 {
-                    <ul class="navbar-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Home")">
-                                <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
-                                Inicio
-                            </a>
-                        </li>
+            <ul class="navbar-menu">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Home")">
+                        <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
+                        Inicio
+                    </a>
+                </li>
 
-                        @if (userRole == 1)
-                        {
-                            <li class="nav-item">
+                @if (userRole == 1)
+                {
+                    <li class="nav-item">
 
-                                <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
-                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                                    Gestión Usuarios
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
-                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                                    Gestión Categorias
-                                </a>
-                            </li>
-                            <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
+                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                            Gestión Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
+                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                            Gestión Categorias
+                        </a>
+                    </li>
+                    <li class="nav-item">
 
 
-                                <a class="nav-link" href="@Url.Action("Index", "Promotions")">
-                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                                    Gestión Promociones
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
-                                    <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                                    Gestión Productos
-                                </a>
-                            </li>
+                        <a class="nav-link" href="@Url.Action("Index", "Promotions")">
+                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                            Gestión Promociones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
+                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
+                            Gestión Productos
+                        </a>
+                    </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
-                                    <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                                    Asignación de Pedidos
-                                </a>
-                            </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
+                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
+                            Asignación de Pedidos
+                        </a>
+                    </li>
 
-                        }
-                        else if (userRole == 2)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Catalog", "Product")">
-                                    <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                                    Comprar
-                                </a>
-                            </li>
+                }
+                else if (userRole == 2)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Catalog", "Product")">
+                            <img src="@Url.Content("~/Content/icons/CategoryM.svg")" width="28" height="20" alt="Buy" />
+                            Catalogo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Order")">
+                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                            Comprar
+                        </a>
+                    </li>
 
-                        }
-                        else if (userRole == 3)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
-                                    Entregas
-                                </a>
-                            </li>
-                            <li class="nav-item">
+                }
+                else if (userRole == 3)
+                {
+                    <li class="nav-item">
 
-                                <a class="nav-link" href="@Url.Action("Index", "DeliveryHistory")">
-                                    Historial
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("RegisterPayment", "DeliveryPayment")">
+                        <a class="nav-link" href="@Url.Action("Index", "DeliveryHistory")">
+                            <img src="@Url.Content("~/Content/icons/List.svg")" width="28" height="20" alt="List" />
+                            Historial de Pedidos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
+                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                            Pedidos Asignados
+                        </a>
+                    </li>
 
-                                    Historial
-                                </a>
-                            </li>
-                        }
-                    </ul>
+                }
+            </ul>
 
                     <div class="navbar-actions">
                         <a href="@Url.Action("Index", "Profile")">
@@ -145,6 +148,7 @@
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Mostrar modales si hay mensajes -->

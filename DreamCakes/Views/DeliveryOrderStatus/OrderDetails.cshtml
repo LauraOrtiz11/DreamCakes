@@ -4,30 +4,30 @@
 }
 
 <div id="toast-container" class="toast-top-right"></div>
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h3>Detalles del Pedido #@Model.OrderId</h3>
-            <span class="badge badge-light">@Model.Status</span>
+<div class="pc-container mt-4">
+    <div class="pc-card">
+        <div class="pc-card-header">
+            <h3 class="pc-title">Detalles del Pedido #@Model.OrderId</h3>
+            <span id="currentStatusBadge" class="pc-badge pc-badge-light">@Model.Status</span>
         </div>
 
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Información del Cliente</h5>
+        <div class="pc-card-body">
+            <div class="pc-row">
+                <div class="pc-col">
+                    <h5 class="pc-subtitle">Información del Cliente</h5>
                     <p><strong>Nombre:</strong> @Model.CustomerName</p>
                     <p><strong>Dirección de entrega:</strong> @Model.DeliveryAddress</p>
                 </div>
-                <div class="col-md-6">
-                    <h5>Información del Pedido</h5>
+                <div class="pc-col">
+                    <h5 class="pc-subtitle">Información del Pedido</h5>
                     <p><strong>Fecha:</strong> @Model.OrderDate.ToString("g")</p>
                     <p><strong>Hora estimada:</strong> @Model.EstimatedDelivery.ToString("g")</p>
                     <p><strong>Total:</strong> @Model.TotalAmount.ToString("C")</p>
                 </div>
             </div>
 
-            <h5 class="mt-4">Productos</h5>
-            <table class="table">
+            <h5 class="pc-products-title mt-4">Productos</h5>
+            <table class="pc-table">
                 <thead>
                     <tr>
                         <th>Producto</th>
@@ -49,24 +49,24 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer">
-            <div class="d-flex justify-content-between">
-                <a href="@Url.Action("AssignedOrders", "AdminAssignedOrder")" class="btn btn-secondary">
+        <div class="pc-card-footer">
+            <div class="pc-footer-actions">
+                <a href="@Url.Action("AssignedOrders", "DeliveryOrder")" class="pc-btn pc-btn-secondary">
                     <i class="fas fa-arrow-left"></i> Volver
                 </a>
 
                 @if (availableStatuses != null && availableStatuses.Any())
                 {
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button"
+                    <div class="pc-dropdown">
+                        <button class="pc-btn pc-btn-primary pc-dropdown-toggle" type="button"
                                 id="statusDropdown" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                             Actualizar Estado
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="statusDropdown">
+                        <div class="pc-dropdown-menu" aria-labelledby="statusDropdown">
                             @foreach (var status in availableStatuses)
                             {
-                                <a class="dropdown-item update-status" href="#"
+                                <a class="pc-dropdown-item pc-update-status" href="#"
                                    data-status-id="@status.StatusId"
                                    data-status-name="@status.StatusName">
                                     @status.StatusName
@@ -83,7 +83,7 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            $('.update-status').click(function(e) {
+            $('.pc-update-status').click(function(e) {
                 e.preventDefault();
                 var newStatusId = $(this).data('status-id');
                 var statusName = $(this).text().trim();
@@ -101,7 +101,7 @@
                             if (response.success) {
                                 // Actualizar el badge de estado visualmente
                                 $('#currentStatusBadge')
-                                    .removeClass('badge-warning badge-info badge-success')
+                                    .removeClass('pc-badge-warning pc-badge-info pc-badge-success')
                                     .addClass(getStatusBadgeClass(response.newStatusId))
                                     .text(response.newStatus);
 
@@ -136,10 +136,10 @@
             // Función para determinar la clase CSS del badge según el estado
             function getStatusBadgeClass(statusId) {
                 switch(statusId) {
-                    case 3: return 'badge-warning'; // Preparado
-                    case 4: return 'badge-info';     // En camino
-                    case 5: return 'badge-success';  // Entregado
-                    default: return 'badge-secondary';
+                    case 3: return 'pc-badge-warning'; // Preparado
+                    case 4: return 'pc-badge-info';     // En camino
+                    case 5: return 'pc-badge-success';  // Entregado
+                    default: return 'pc-badge-secondary';
                 }
             }
         });

@@ -19,11 +19,13 @@ namespace DreamCakes.Repositories.Admin
         public List<AdminUnassignedOrderDto> GetUnassignedOrders()
         {
             return _context.PEDIDOes
-                .Where(p => p.ID_UsEntrega == null && p.ID_Estado == 3) // Pendientes sin asignar
+
+                .Where(p => p.ID_UsEntrega == null && p.ID_Estado == 3)
                 .Select(p => new AdminUnassignedOrderDto
                 {
                     OrderId = p.ID_Pedido,
                     CustomerName = p.USUARIO.Nombres + " " + p.USUARIO.Apellidos,
+                    CustomerPhone = p.USUARIO.Telefono,
                     DeliveryAddress = p.Direccion_Ent,
                     OrderDate = p.Fecha_Pedido,
                     EstimatedDelivery = p.Fecha_Entrega,

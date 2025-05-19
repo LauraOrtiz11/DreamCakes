@@ -15,7 +15,7 @@
 
             @if (TempData["SuccessMessage"] != null)
             {
-                <div class="alert alert-success alert-dismissible fade show">
+                <div class="alert alert-success alert-dismissible fade show cr-alert-temporary">
                     @TempData["SuccessMessage"]
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -23,7 +23,7 @@
 
             @if (TempData["ErrorMessage"] != null)
             {
-                <div class="alert alert-danger alert-dismissible fade show">
+                <div class="alert alert-danger alert-dismissible fade show cr-alert-temporary">
                     @TempData["ErrorMessage"]
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -62,7 +62,6 @@
                                                          alt="@item.ProductName" />
                                                     <div>
                                                         <h6 class="mb-1">@item.ProductName</h6>
-                                                        
                                                     </div>
                                                 </div>
                                             </td>
@@ -179,16 +178,22 @@
                         </div>
 
                         <!-- Modal Trigger Buttons -->
-                        <button class="btn btn-primary btn-programar">
+                <div class="mt-4 text-center">
+                    <!-- Contenedor centrado con margen superior -->
+                    <div class="d-flex justify-content-center gap-3">
+                        <!-- Flexbox para centrar con espacio entre botones -->
+                        <button class="btn btn-primary cr-btn-primary btn-programar btn-sm py-2 px-3">
                             <i class="far fa-calendar-alt me-2"></i> Programar Pedido
                         </button>
 
-                        <button class="btn btn-success btn-comprar">
+                        <button class="btn btn-success cr-btn-primary btn-comprar btn-sm py-2 px-3">
                             <i class="fas fa-shopping-bag me-2"></i> Comprar Ahora
                         </button>
+                    </div>
+                </div>
 
                         <div class="mt-3 text-center">
-                            <a href="@Url.Action("Index", "Home")" class="text-decoration-none">
+                            <a href="@Url.Action("Catalog", "Product")" class="text-decoration-none">
                                 <i class="fas fa-arrow-left me-2"></i> Seguir comprando
                             </a>
                         </div>
@@ -208,8 +213,9 @@
         </div>
     </div>
 </div>
+
 <!-- Modal Programar Pedido -->
-<div class="modal fade" id="scheduleModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade cr-modal" id="scheduleModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             @using (Html.BeginForm("ScheduleOrder", "Order", FormMethod.Post))
@@ -219,33 +225,33 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <img src="~/content/images/calendar.jpeg" class="cr-calendar-img" alt="Calendario">
+
                     <div class="mb-3">
-                        <label class="form-label">Dirección de entrega *</label>
+                        <label class="form-label cr-form-label">Dirección de entrega *</label>
                         @Html.TextBoxFor(m => m.DeliveryAddress, new
-                   {
-                       @class = "form-control",
-                       required = "required",
-                       placeholder = "Ingresa tu dirección completa",
-                       id = "DeliveryAddress",
-                            name = "DeliveryAddress"
-                   })
-                        <div class="invalid-feedback address-feedback"></div>
+                        {
+                            @class = "form-control cr-form-control",
+                            required = "required",
+                            placeholder = "Ingresa tu dirección completa"
+                        })
+                        <div class="invalid-feedback cr-invalid-feedback address-feedback"></div>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label">Fecha y hora de entrega *</label>
+                        <label class="form-label cr-form-label">Fecha y hora de entrega *</label>
                         <input type="datetime-local"
-                               id="DeliveryDate"
-                               name="DeliveryDate"
-                               class="form-control"
+                               class="form-control cr-form-control"
                                required />
-                        <div class="invalid-feedback date-feedback"></div>
-                        <small class="text-muted">Mínimo 2 horas después de ahora</small>
+                        <small class="text-muted cr-help-text">Mínimo 2 horas después de ahora</small>
+                        <div class="invalid-feedback cr-invalid-feedback date-feedback"></div>
                     </div>
+
                     @Html.HiddenFor(m => m.ClientId)
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="button" class="btn btn-secondary cr-btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary cr-btn-primary">
                         <i class="fas fa-calendar-check me-2"></i> Programar Pedido
                     </button>
                 </div>
@@ -255,7 +261,7 @@
 </div>
 
 <!-- Modal Comprar Ahora -->
-<div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade cr-modal" id="checkoutModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             @using (Html.BeginForm("PlaceOrder", "Order", FormMethod.Post))
@@ -268,23 +274,23 @@
                     <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i> Tu pedido será preparado y enviado inmediatamente.
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label">Dirección de entrega *</label>
+                        <label class="form-label cr-form-label">Dirección de entrega *</label>
                         @Html.TextBoxFor(m => m.DeliveryAddress, new
-                   {
-                       @class = "form-control",
-                       required = "required",
-                       placeholder = "Ingresa tu dirección completa",
-                       id = "DeliveryAddress",
-                            name = "DeliveryAddress"
-                   })
-                        <div class="invalid-feedback address-feedback"></div>
+                        {
+                            @class = "form-control cr-form-control",
+                            required = "required",
+                            placeholder = "Ingresa tu dirección completa"
+                        })
+                        <div class="invalid-feedback cr-invalid-feedback address-feedback"></div>
                     </div>
+
                     @Html.HiddenFor(m => m.ClientId)
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">
+                    <button type="button" class="btn btn-secondary cr-btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success cr-btn-primary">
                         <i class="fas fa-check-circle me-2"></i> Confirmar Compra
                     </button>
                 </div>
@@ -293,42 +299,211 @@
     </div>
 </div>
 
+<style>
+    /* ---------------------------- */
+    /* ESTILOS MEJORADOS PARA MODALES */
+    /* ---------------------------- */
+
+    .cr-modal {
+        border-radius: 15px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+        .cr-modal .modal-header {
+            color: #333;
+            border-bottom: none;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .cr-modal .modal-title {
+            font-weight: 600;
+        }
+
+        .cr-modal .btn-close {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            background-size: 1.25rem;
+            opacity: 0.8;
+            filter: invert(1);
+            transition: all 0.3s ease;
+        }
+
+            .cr-modal .btn-close:hover {
+                opacity: 1;
+                transform: rotate(90deg);
+            }
+
+        .cr-modal .modal-body {
+            
+            background-color: var(--gray);
+        }
+
+        .cr-modal .modal-footer {
+            background-color: var(--gray);
+            border-top: none;
+            padding: 1rem;
+            justify-content: center;
+        }
+
+    .cr-btn-primary {
+        background-color: var(--purple);
+        color: white;
+        border-radius: 50px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+        .cr-btn-primary:hover {
+           
+            background-color: var(--light-purple);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 52, 112, 0.3);
+        }
+
+    .cr-btn-secondary {
+        background-color: var(--dark-gray);
+        color: var(--text);
+        border-radius: 50px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+        .cr-btn-secondary:hover {
+            background-color: #c9c9c9;
+            transform: translateY(-2px);
+        }
+
+    .cr-form-control {
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--dark-gray);
+        transition: all 0.3s ease;
+    }
+
+        .cr-form-control:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 0.25rem rgba(72, 52, 112, 0.25);
+        }
+
+    .cr-form-label {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .cr-calendar-img {
+        width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+    }
+
+    .cr-help-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 0.5rem;
+    }
+
+    .cr-invalid-feedback {
+        color: var(--wine);
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+
+    .cr-alert-temporary {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1100;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    /* Ajustes específicos para los botones del resumen */
+    .cr-btn-primary.btn-sm {
+        padding: 0.5rem 1.5rem !important;
+        font-size: 0.875rem;
+        min-width: 150px; /* Ancho mínimo para consistencia */
+    }
+
+    /* Contenedor de botones */
+    .cr-buttons-container {
+        margin: 1.5rem 0;
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem; /* Espacio entre botones */
+    }
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Inicialización de los modales de Bootstrap
+            // Inicialización de los modales de Bootstrap con eventos mejorados
             var scheduleModal = new bootstrap.Modal(document.getElementById('scheduleModal'));
             var checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+
+            // Configurar eventos de cierre para los modales
+            function setupModalCloseEvents(modalInstance) {
+                // Cerrar al hacer clic en el botón de cerrar
+                modalInstance._element.querySelector('.btn-close').addEventListener('click', function () {
+                    modalInstance.hide();
+                });
+
+                // Cerrar al hacer clic en el botón cancelar
+                var cancelBtn = modalInstance._element.querySelector('.btn-secondary');
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', function () {
+                        modalInstance.hide();
+                    });
+                }
+            }
+
+            // Aplicar eventos a ambos modales
+            setupModalCloseEvents(scheduleModal);
+            setupModalCloseEvents(checkoutModal);
 
             // Manejar clic en "Programar Pedido"
             $(document).on('click', '.btn-programar', function (e) {
                 e.preventDefault();
 
-                // Validar que hay productos en el carrito
                 if ($('#cartItems tr').length === 0) {
                     showAlert('Tu carrito está vacío', 'warning');
                     return;
                 }
 
-                // Configurar fecha mínima y sugerida
                 var now = new Date();
                 now.setHours(now.getHours() + 2);
 
-                // Fecha sugerida (mañana al mediodía)
                 var suggestedDate = new Date(now);
                 suggestedDate.setDate(suggestedDate.getDate() + 1);
                 suggestedDate.setHours(12, 0, 0);
 
-                // Formatear fechas
                 var minDate = now.toISOString().slice(0, 16);
                 var suggestedDateStr = suggestedDate.toISOString().slice(0, 16);
 
-                // Aplicar al input
                 $('#scheduleModal input[type="datetime-local"]')
                     .attr('min', minDate)
                     .val(suggestedDateStr);
 
-                // Mostrar modal
                 scheduleModal.show();
             });
 
@@ -336,13 +511,11 @@
             $(document).on('click', '.btn-comprar', function (e) {
                 e.preventDefault();
 
-                // Validar que hay productos en el carrito
                 if ($('#cartItems tr').length === 0) {
                     showAlert('Tu carrito está vacío', 'warning');
                     return;
                 }
 
-                // Mostrar modal
                 checkoutModal.show();
             });
 
@@ -351,7 +524,9 @@
                 var formId = $(this).attr('id');
                 var address = $(this).find('input[name="DeliveryAddress"]').val().trim();
 
-                // Validación común para ambos formularios
+                // Resetear estados de validación
+                $(this).find('.is-invalid').removeClass('is-invalid');
+
                 if (address === '') {
                     e.preventDefault();
                     $(this).find('input[name="DeliveryAddress"]').addClass('is-invalid');
@@ -359,7 +534,6 @@
                     return false;
                 }
 
-                // Validación adicional para el formulario de programación
                 if (formId === 'scheduleForm') {
                     var deliveryDate = new Date($(this).find('input[type="datetime-local"]').val());
                     var minDate = new Date();
@@ -376,27 +550,43 @@
                 return true;
             });
 
-            // Función para mostrar alertas
+            // Función mejorada para mostrar alertas temporales
             function showAlert(message, type) {
-                // Limpiar alertas anteriores
-                $('.alert-dismissible').alert('close');
+                // Cerrar alertas anteriores
+                $('.cr-alert-temporary').alert('close');
 
                 // Crear nueva alerta
+                var alertId = 'alert-' + Date.now();
                 var alertHtml = `
-                        <div class="alert alert-${type} alert-dismissible fade show" style="position: fixed; top: 20px; right: 20px; z-index: 1100;">
+                        <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show cr-alert-temporary" role="alert">
                             ${message}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     `;
 
                 // Agregar al cuerpo del documento
                 $('body').append(alertHtml);
 
+                // Configurar evento de cierre para el botón
+                $('#' + alertId + ' .btn-close').on('click', function () {
+                    $('#' + alertId).alert('close');
+                });
+
                 // Auto-cerrar después de 5 segundos
                 setTimeout(function () {
-                    $('.alert-dismissible').alert('close');
+                    $('#' + alertId).alert('close');
                 }, 5000);
+
+                // Eliminar del DOM después de cerrar
+                $('#' + alertId).on('closed.bs.alert', function () {
+                    $(this).remove();
+                });
             }
+
+            // Limpiar validación al abrir modales
+            $('#scheduleModal, #checkoutModal').on('show.bs.modal', function () {
+                $(this).find('.is-invalid').removeClass('is-invalid');
+            });
         });
     </script>
 }

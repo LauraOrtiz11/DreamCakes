@@ -1,19 +1,24 @@
 ﻿@model List<DreamCakes.Dtos.Delivery.DeliveryAssignedOrderDto>
-
+@{
+    ViewBag.Title = "Pedidos Asignados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <div class="container mt-4">
-    <h2>Pedidos Asignados</h2>
+    <h2 class="dc-title">Pedidos Asignados</h2>
 
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger">
+        <div class="dcp-alert dcp-alert-danger">
             @TempData["ErrorMessage"]
         </div>
     }
 
+
+
     <div class="mb-3">
-        <form method="get" class="form-inline">
+        <form method="get" class="dc-form">
             <label class="mr-2">Filtrar por estado:</label>
-            <select name="statusFilter" class="form-control mr-2" onchange="this.form.submit()">
+            <select name="statusFilter" class="dc-form-group" onchange="this.form.submit()">
                 <option value="">Todos</option>
                 <option value="Pendiente" selected='@(ViewBag.StatusFilter == "Pendiente")'>Pendiente</option>
                 <option value="En proceso" selected='@(ViewBag.StatusFilter == "En proceso")'>En camino</option>
@@ -24,15 +29,15 @@
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info">
+        <div class="dcp-alert dcp-alert-info">
             No tienes pedidos asignados actualmente.
         </div>
     }
     else
     {
         <div class="table-responsive">
-            <table class="table table-striped">
-                <thead class="thead-dark">
+            <table class="table dcp-table">
+                <thead>
                     <tr>
                         <th>Pedido #</th>
                         <th>Cliente</th>
@@ -53,42 +58,45 @@
                             <td>@order.EstimatedDeliveryTime.ToString("g")</td>
                             <td>@order.TotalAmount.ToString("C")</td>
                             <td>
-                                <span class="badge badge-@GetStatusBadgeClass(order.Status)">
+                                <span class="dcp-badge dcp-badge-@GetStatusBadgeClass(order.Status)">
                                     @order.Status
                                 </span>
                                 @if (order.HasPartialPayment)
                                 {
-                                    <span class="badge badge-warning ml-1">Pago Parcial</span>
+                                    <span class="dcp-badge dcp-badge-warning ml-1">Pago Parcial</span>
                                 }
                             </td>
                             <td>
-                                <div class="btn-group" role="group">
-                                    <a href="tel:@order.CustomerPhone" class="btn btn-sm btn-outline-primary mr-1" title="Contactar">
-                                        <i class="fas fa-phone"></i>
+                                <div class="dcp-actions">
+                                    <a href="tel:@order.CustomerPhone" class="dcp-btn dcp-btn-phone" title="Contactar">
+                                        Contactar
                                     </a>
+
                                     @if (order.Status == "Entregado" && !order.HasPartialPayment)
                                     {
                                         <a href="@Url.Action("RegisterPayment", "DeliveryPayment", new { orderId = order.OrderId })"
-                                           class="btn btn-success btn-sm">
-                                            <i class="fas fa-money-bill-wave"></i> Registrar Pago
+                                           class="dcp-btn dcp-btn-pago">
+                                            Registrar Pago
                                         </a>
                                     }
                                     else if (order.HasPartialPayment)
                                     {
                                         <a href="@Url.Action("RegisterPayment", "DeliveryPayment", new { orderId = order.OrderId })"
-                                           class="btn btn-warning btn-sm">
-                                            <i class="fas fa-money-bill-wave"></i> Completar Pago
+                                           class="dcp-btn dcp-btn-pago-parcial">
+                                            Completar Pago
                                         </a>
                                     }
+
                                     @Html.ActionLink("Detalles", "OrderDetails", "DeliveryOrderStatus",
                                         new { orderId = order.OrderId },
-                                        new { @class = "btn btn-sm btn-primary" })
+                                        new { @class = "dcp-btn dcp-btn-detalles" })
                                 </div>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+
         </div>
     }
 </div>

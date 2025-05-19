@@ -1,33 +1,83 @@
 ﻿@model DreamCakes.Dtos.Admin.PromotionDto
 
 @{
-    ViewBag.Title = "Detalles de Promoción";
+    ViewBag.Title = "Promotion Details";
 }
 
-<h2>Detalles de Promoción</h2>
+<h2 class="title">Promotion Details</h2>
 
-<div>
-    <dl class="dl-horizontal">
-        <dt>Nombre:</dt>
+<div class="details-container">
+    <dl class="details-list">
+        <dt>Name:</dt>
         <dd>@Model.NameProm</dd>
 
-        <dt>Descuento:</dt>
+        <dt>Discount:</dt>
         <dd>@Model.DiscountPer %</dd>
 
-        <dt>Fecha Inicio:</dt>
+        <dt>Start Date:</dt>
         <dd>@Model.StartDate.ToShortDateString()</dd>
 
-        <dt>Fecha Fin:</dt>
+        <dt>End Date:</dt>
         <dd>@Model.EndDate.ToShortDateString()</dd>
 
-        <dt>Estado:</dt>
-        <dd>@(Model.StateProm ? "Activa" : "Inactiva")</dd>
+        <dt>Status:</dt>
+        <dd>@(Model.StateProm ? "Active" : "Inactive")</dd>
 
-        <dt>Descripción: </dt>
+        <dt>Description:</dt>
         <dd>@Model.DescriProm</dd>
     </dl>
 </div>
 
-<p>
-    @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-secondary" })
+<p class="back-button">
+    @Html.ActionLink("Back to list", "Index", null, new { @class = "btn-back" })
 </p>
+
+<style>
+    .title {
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .details-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 30px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .details-list dt {
+        font-weight: bold;
+        margin-top: 15px;
+        color: #444;
+    }
+
+    .details-list dd {
+        margin-left: 0;
+        margin-bottom: 10px;
+        padding-left: 10px;
+        color: #555;
+    }
+
+    .back-button {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .btn-back {
+        display: inline-block;
+        background-color: #6c757d;
+        color: white;
+        padding: 10px 18px;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+</style>
