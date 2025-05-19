@@ -13,26 +13,21 @@ namespace DreamCakes.Controllers.Delivery
     public class DeliveryPaymentController : Controller
     {
         private readonly DeliveryPaymentService _service;
-        private readonly DeliveryOrderService _orderService;
+        
 
         public DeliveryPaymentController()
         {
             _service = new DeliveryPaymentService();
-            _orderService = new DeliveryOrderService();
         }
 
         [HttpGet]
         public ActionResult RegisterPayment(int orderId)
         {
-
             var currentUserId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
             if (currentUserId == null) return RedirectToAction("Login", "Account");
 
             // Verificar si el pedido ya está pagado completamente
-            var isFullyPaid = _orderService.IsOrderFullyPaid(orderId);
-            System.Diagnostics.Debug.WriteLine($"IsFullPayment: {isFullyPaid}");
-
-            if (isFullyPaid)
+            if (_service.IsOrderFullyPaid(orderId))
             {
                 TempData["ErrorMessage"] = "Este pedido ya ha sido pagado completamente";
                 return RedirectToAction("AssignedOrders");
@@ -45,57 +40,116 @@ namespace DreamCakes.Controllers.Delivery
                 return RedirectToAction("AssignedOrders");
             }
 
-            // Obtener monto ya pagado si existe pago parcial
-            var amountPaid = _orderService.GetAmountPaid(orderId);
+            // Obtener monto ya pagado
+            var amountPaid = _service.GetAmountPaid(orderId);
             ViewBag.AmountPaid = amountPaid;
             ViewBag.RemainingAmount = paymentDetails.TotalAmount - amountPaid;
 
             return View(paymentDetails);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RegisterPayment(DeliveryPaymentRegisterDto model)
         {
             var currentUserId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
-            if (currentUserId == null) return RedirectToAction("Index", "Home");
+            if (currentUserId == null) return RedirectToAction("Login", "Account");
 
-            model.DeliveryUserId = currentUserId.Value;
-
-            if (!ModelState.IsValid)
+            try
             {
-                var details = _service.GetOrderPaymentDetails(model.OrderId, model.DeliveryUserId);
-                return View(details);
+                model.DeliveryUserId = currentUserId.Value;
+
+                // Convertir el monto a formato decimal correcto
+                model.AmountReceived = decimal.Parse(
+                    model.AmountReceived.ToString().Replace(".", "").Replace(",", "."),
+                    System.Globalization.CultureInfo.InvariantCulture
+                );
+
+                // Verificar estado actual del pedido
+                var orderDetails = _service.GetOrderPaymentDetails(model.OrderId, model.DeliveryUserId);
+                if (orderDetails == null)
+                {
+                    TempData["ErrorMessage"] = "El pedido no existe o no tienes permisos";
+                    return RedirectToAction("AssignedOrders", "DeliveryOrder");
+                }
+
+                // Calcular saldo pendiente
+                var amountPaid = _service.GetAmountPaid(model.OrderId);
+                var remaining = orderDetails.TotalAmount - amountPaid;
+
+                // Validar que el pedido aún no esté pagado completamente
+                if (remaining <= 0)
+                {
+                    TempData["ErrorMessage"] = "Este pedido ya ha sido pagado completamente";
+                    return RedirectToAction("AssignedOrders", "DeliveryOrder");
+                }
+
+                // Procesar el pago
+                var result = _service.RegisterPayment(model);
+
+                if (!result.Success)
+                {
+                    TempData["ErrorMessage"] = result.Message;
+                    return View(_service.GetOrderPaymentDetails(model.OrderId, model.DeliveryUserId));
+                }
+
+                // Preparar mensajes para la vista
+                if (result.PendingAmount > 0)
+                {
+                    TempData["WarningMessage"] = $"Pago parcial registrado. Saldo pendiente: {result.PendingAmount.ToString("C", new System.Globalization.CultureInfo("es-CO"))}";
+                }
+                else
+                {
+                    TempData["SuccessMessage"] = "Pago completado exitosamente. Saldo pendiente: $0.00";
+                }
+
+                // Redireccionar con parámetros
+                TempData["PaymentId"] = result.PaymentId;
+                TempData["OrderId"] = model.OrderId;
+                TempData["IsFullPayment"] = result.PendingAmount == 0;
+
+                return RedirectToAction("PaymentConfirmation");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error procesando el pago: " + ex.Message;
+                return View(_service.GetOrderPaymentDetails(model.OrderId, model.DeliveryUserId));
+            }
+        }
+
+        [HttpGet]
+        public ActionResult PaymentConfirmation()
+        {
+            var currentUserId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
+            if (currentUserId == null) return RedirectToAction("Login", "Account");
+
+            // Obtener parámetros de TempData
+            var paymentId = TempData["PaymentId"] as int?;
+            var orderId = TempData["OrderId"] as int?;
+            var isFullPayment = TempData["IsFullPayment"] as bool? ?? false;
+
+            if (!paymentId.HasValue || !orderId.HasValue)
+            {
+                TempData["ErrorMessage"] = "Sesión de pago no encontrada";
+                return RedirectToAction("AssignedOrders", "DeliveryOrder");
             }
 
-
-            var result = _service.RegisterPayment(model);
-
-            if (!result.Success)
+            // Obtener detalles del pedido
+            var model = _service.GetOrderPaymentDetails(orderId.Value, currentUserId.Value);
+            if (model == null)
             {
-                TempData["ErrorMessage"] = result.Message;
-                var details = _service.GetOrderPaymentDetails(model.OrderId, model.DeliveryUserId);
-                return View(details);
+                TempData["ErrorMessage"] = "No se encontró el pedido";
+                return RedirectToAction("AssignedOrders", "DeliveryOrder");
             }
 
-            if (result.PendingAmount > 0)
-            {
-                TempData["WarningMessage"] = $"{result.Message}. Saldo pendiente: {result.PendingAmount.ToString("C", new System.Globalization.CultureInfo("es-CO"))}";
-            }
-            else
-            {
-                TempData["SuccessMessage"] = $"{result.Message}. Pago completado exitosamente.";
-            }
+            // Calcular saldo pendiente
+            var pendingAmount = isFullPayment ? 0 : (model.TotalAmount - _service.GetAmountReceived(paymentId.Value));
 
-            // Guardar el ID de pago para generar el comprobante
-            TempData["PaymentId"] = result.PaymentId;
-            TempData["IsFullPayment"] = result.PendingAmount == 0;
+            // Preparar ViewBag
+            ViewBag.PaymentId = paymentId.Value;
+            ViewBag.IsFullPayment = isFullPayment;
+            ViewBag.PendingAmount = pendingAmount;
 
-            return RedirectToAction("PaymentConfirmation", new
-            {
-                orderId = model.OrderId,
-                isFullPayment = result.PendingAmount == 0
-            });
+            return View(model);
         }
 
         [HttpGet]
@@ -111,31 +165,6 @@ namespace DreamCakes.Controllers.Delivery
             return File(receipt, "application/pdf", $"ComprobantePago_{paymentId}.pdf");
         }
 
-        [HttpGet]
-        public ActionResult PaymentConfirmation(int orderId, bool isFullPayment)
-        {
-            var currentUserId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
-            if (currentUserId == null) return RedirectToAction("Login", "Account");
-
-            var paymentId = TempData["PaymentId"] as int?;
-            if (!paymentId.HasValue)
-            {
-                TempData["ErrorMessage"] = "No se encontró información del pago";
-                return RedirectToAction("AssignedOrders", "DeliveryOrder");
-            }
-
-            var model = _service.GetOrderPaymentDetails(orderId, currentUserId.Value);
-            if (model == null)
-            {
-                TempData["ErrorMessage"] = "No se encontró el pedido";
-                return RedirectToAction("AssignedOrders", "DeliveryOrder");
-            }
-
-            ViewBag.PaymentId = paymentId.Value;
-            ViewBag.IsFullPayment = isFullPayment;
-            ViewBag.PendingAmount = model.TotalAmount - _service.GetAmountReceived(paymentId.Value);
-
-            return View(model);
-        }
+        
     }
 }

@@ -60,10 +60,6 @@ namespace DreamCakes.Repositories.Admin
                 if (user == null) return false;
 
                 user.Nombres = dto.UserFirstName;
-                user.Apellidos = dto.UserLastName;
-                user.Telefono = dto.UserPhone;
-                user.Direccion = dto.UserAddress;
-                user.Email = dto.UserEmail;
                 user.ID_Estado = dto.UserStatusID;
                 user.ID_Rol = dto.UserRoleID;
 

@@ -3,10 +3,10 @@
     ViewBag.Title = "Asignación de Pedidos - Dreams Cake";
 }
 
-<div class="container py-5">
+<div id="as-order-assignment" class="container py-5">
     <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0"><i class="fas fa-truck mr-2"></i>Asignación de Pedidos</h4>
+        <div class="card-header">
+            <h4><i class="fas fa-truck icon"></i>Asignación de Pedidos</h4>
         </div>
 
         <div class="card-body">
@@ -41,8 +41,8 @@
             else
             {
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="thead-light">
+                    <table class="table orders-table">
+                        <thead>
                             <tr>
                                 <th># Pedido</th>
                                 <th>Cliente</th>
@@ -64,11 +64,11 @@
                                     <td>@order.EstimatedDelivery.ToString("g")</td>
                                     <td>@order.TotalAmount.ToString("C")</td>
                                     <td colspan="2">
-                                        @using (Html.BeginForm("AssignOrder", "AdminAssignedOrder", FormMethod.Post, new { @class = "form-inline d-flex align-items-center" }))
+                                        @using (Html.BeginForm("AssignOrder", "AdminAssignedOrder", FormMethod.Post, new { @class = "assign-form" }))
                                         {
                                             @Html.Hidden("OrderId", order.OrderId)
 
-                                            <select name="DeliveryUserId" class="form-control form-control-sm mr-2" required style="min-width: 200px;">
+                                            <select name="DeliveryUserId" class="form-control form-control-sm select-delivery" required>
                                                 <option value="">Seleccionar...</option>
                                                 @if (Model.DeliveryUsers != null)
                                                 {
@@ -79,8 +79,8 @@
                                                 }
                                             </select>
 
-                                            <button type="submit" class="btn btn-sm btn-primary">
-                                                <i class="fas fa-user-check mr-1"></i> Asignar
+                                            <button type="submit" class="btn btn-sm btn-primary assign-btn">
+                                                <i class="fas fa-user-check"></i> Asignar
                                             </button>
                                         }
                                     </td>
@@ -93,3 +93,122 @@
         </div>
     </div>
 </div>
+
+<style>
+    #as-order-assignment {
+        max-width: 1100px;
+        margin: auto;
+        
+    }
+
+    #as-order-assignment .card {
+        border-radius: 14px;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+        background: white;
+    }
+
+    #as-order-assignment .card-header {
+        background: #483470; /* purple */
+        color: #F8F9FA; /* light gray */
+        padding: 18px 30px;
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #as-order-assignment .card-header .icon {
+        font-size: 24px;
+    }
+
+    #as-order-assignment .card-body {
+        padding: 30px;
+    }
+
+    /* Alerts */
+    #as-order-assignment .alert {
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    /* Table */
+    #as-order-assignment .orders-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        font-size: 14.5px;
+        color: #333333;
+    }
+
+    #as-order-assignment .orders-table thead tr {
+        background: #483470; /* purple */
+        color: #F8F9FA;
+        text-align: left;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    #as-order-assignment .orders-table th,
+    #as-order-assignment .orders-table td {
+        padding: 12px 18px;
+        vertical-align: middle;
+    }
+
+    #as-order-assignment .orders-table tbody tr {
+        background: #F8F9FA; /* light gray */
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: background-color 0.3s ease;
+    }
+
+
+
+    /* Form inside table */
+    #as-order-assignment .assign-form {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    #as-order-assignment .select-delivery {
+        min-width: 200px;
+        border-radius: 8px;
+        border: 1px solid #D9D9D9;
+        padding: 4px 10px;
+        font-size: 14px;
+    }
+
+    #as-order-assignment .select-delivery:focus {
+        outline: none;
+        border-color: #483470;
+        box-shadow: 0 0 8px #5a2d82;
+    }
+
+    #as-order-assignment .assign-btn {
+        background-color: #9B2020; /* wine */
+        color: white;
+        border: none;
+        padding: 6px 16px;
+        font-weight: 700;
+        border-radius: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: background-color 0.3s ease;
+    }
+
+    #as-order-assignment .assign-btn i {
+        font-size: 14px;
+    }
+
+    #as-order-assignment .assign-btn:hover {
+        background-color: #b1a3a3; /* lighter wine */
+    }
+
+   
+</style>

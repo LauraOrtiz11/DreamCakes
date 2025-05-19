@@ -15,7 +15,12 @@ namespace DreamCakes.Controllers.Admin
             var users = _service.GetAllUsers();
             return View(users);
         }
-
+        public ActionResult Details(int id)
+        {
+            var user = _service.GetUserById(id);
+            if (user == null) return HttpNotFound();
+            return View(user);
+        }
         public ActionResult Edit(int id)
         {
             var user = _service.GetUserById(id);

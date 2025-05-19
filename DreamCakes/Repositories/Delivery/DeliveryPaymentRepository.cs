@@ -57,17 +57,25 @@ namespace DreamCakes.Repositories.Delivery
                         ID_Pedido = paymentDto.OrderId,
                         Monto = paymentDto.AmountReceived,
                         Fecha_Pago = DateTime.Now,
-                        ID_Metodo = 1, // 1=Efectivo, etc.
-                        ID_Estado = paymentDto.IsFullPayment ? 7 : 8 // 7=Pagado, 8=Parcial
+                        ID_Metodo = 1, // e.g., 1 = Cash
+                        ID_Estado = 8  // 7=Pagado, 8=Parcial
                     };
 
                     _context.PAGOes.Add(payment);
                     _context.SaveChanges();
 
-                    // Si es pago completo, marcar pedido como pagado
-                    if (paymentDto.IsFullPayment)
+                    
+                    var totalPaid = _context.PAGOes
+                        .Where(p => p.ID_Pedido == paymentDto.OrderId)
+                        .Sum(p => p.Monto);
+
+                    bool isFullyPaid = totalPaid >= order.Total;
+
+                    // Update status if order is now fully paid
+                    if (isFullyPaid)
                     {
-                        order.ID_Estado = 7; //
+                        order.ID_Estado = 7; 
+                        payment.ID_Estado = 7; 
                         _context.SaveChanges();
                     }
 
@@ -90,7 +98,23 @@ namespace DreamCakes.Repositories.Delivery
                 }
             }
         }
+        public decimal GetAmountPaid(int orderId)
+        {
+            return _context.PAGOes
+                .Where(p => p.ID_Pedido == orderId)
+                .Sum(p => (decimal?)p.Monto) ?? 0m;
+        }
 
+        public bool IsOrderFullyPaid(int orderId)
+        {
+            var totalPaid = GetAmountPaid(orderId);
+            var orderTotal = _context.PEDIDOes
+                .Where(p => p.ID_Pedido == orderId)
+                .Select(p => (decimal?)p.Total)
+                .FirstOrDefault() ?? 0m;
+
+            return totalPaid >= orderTotal;
+        }
         public decimal GetAmountReceived(int paymentId)
         {
             return _context.PAGOes

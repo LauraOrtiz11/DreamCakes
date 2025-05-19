@@ -19,7 +19,7 @@ namespace DreamCakes.Utilities
                 document.Open();
 
                 // Logo de la empresa
-                var logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content", "images", "Logo.jepg");
+                var logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content", "Images","Logo.jpeg");
                 if (File.Exists(logoPath))
                 {
                     var logo = Image.GetInstance(logoPath);

@@ -302,11 +302,16 @@
     <Content Include="Content\Icons\CategoryM.svg" />
     <Content Include="Content\Icons\Delete.svg" />
     <Content Include="Content\Icons\Edit.svg" />
+    <Content Include="Content\Icons\Eye.svg" />
     <Content Include="Content\Icons\Home.svg" />
     <Content Include="Content\Icons\Inventory.svg" />
+    <Content Include="Content\Icons\List.svg" />
+    <Content Include="Content\Icons\Phone.svg" />
     <Content Include="Content\Icons\Profile.svg" />
     <Content Include="Content\Icons\Promotion.svg" />
+    <Content Include="Content\Icons\Pay.svg" />
     <Content Include="Content\Images\DreamCakes.jpg" />
+    <Content Include="Content\Images\Calendar.jpeg" />
     <Content Include="Content\Images\image 1.png" />
     <Content Include="Content\Images\Logo.jpeg" />
     <Content Include="favicon.ico" />
@@ -402,7 +407,6 @@
     <Content Include="Views\DeliveryOrderStatus\OrderDetails.cshtml" />
     <Content Include="Views\DeliveryHistory\Index.cshtml" />
     <Content Include="Views\DeliveryPayment\RegisterPayment.cshtml" />
-    <Content Include="Views\DeliveryPayment\_PaymentReceiptPartial.cshtml" />
     <Content Include="Views\DeliveryPayment\PaymentConfirmation.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />

@@ -9,6 +9,7 @@ namespace DreamCakes.Dtos.Admin
     {
         public int OrderId { get; set; }
         public string CustomerName { get; set; }
+        public string CustomerPhone { get; set; }
         public string DeliveryAddress { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime EstimatedDelivery { get; set; }

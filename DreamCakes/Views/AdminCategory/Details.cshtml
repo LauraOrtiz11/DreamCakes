@@ -1,27 +1,124 @@
 ﻿@model DreamCakes.Dtos.Admin.AdminCategoryDto
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalles Categoría";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Detalles</h2>
+<div class="dp-details-container">
+    <h2 class="dp-details-title">Detalles de la Categoría</h2>
 
-<div>
-    <h4>Categoria</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>@Html.DisplayNameFor(model => model.CatName)</dt>
-        <dd>@Html.DisplayFor(model => model.CatName)</dd>
+    <div class="dp-details-card">
+        <dl class="dp-details-list">
+            <dt>@Html.DisplayNameFor(m => m.CatName)</dt>
+            <dd>@Html.DisplayFor(m => m.CatName)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.CatDescription)</dt>
-        <dd>@Html.DisplayFor(model => model.CatDescription)</dd>
+            <dt>@Html.DisplayNameFor(m => m.CatDescription)</dt>
+            <dd>@Html.DisplayFor(m => m.CatDescription)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.CatIsActive)</dt>
-        <dd>@Html.DisplayFor(model => model.CatIsActive)</dd>
-    </dl>
+            <dt>@Html.DisplayNameFor(m => m.CatIsActive)</dt>
+            <dd>@(Model.CatIsActive ? "Activo" : "Inactivo")</dd>
+        </dl>
+    </div>
+
+    <div class="dp-details-actions">
+        @Html.ActionLink("Editar", "Edit", new { id = Model.ID_Category }, new { @class = "dp-btn dp-btn-edit" })
+        @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "dp-btn dp-btn-back" })
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.ID_Category }) |
-    @Html.ActionLink("Volver a la lista", "Index")
-</p>
+
+<style>
+    :root {
+        --purple: #5a3e9f;
+        --light-purple: #7c61cc;
+        --gray-light: #f9f9f9;
+        --text-color: #333;
+        --rounded-border: 6px;
+    }
+
+    .dp-details-container {
+        max-width: 600px;
+        margin: 3rem auto;
+        padding: 2rem 2.5rem;
+        background-color: var(--gray-light);
+        border-radius: var(--rounded-border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-color);
+        user-select: none;
+    }
+
+    .dp-details-title {
+        text-align: center;
+        color: var(--purple);
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .dp-details-card {
+        background: white;
+        padding: 1.5rem 2rem;
+        border-radius: var(--rounded-border);
+        box-shadow: inset 0 0 5px #ddd;
+    }
+
+    .dp-details-list {
+        margin: 0;
+    }
+
+        .dp-details-list dt {
+            font-weight: 700;
+            color: var(--purple);
+            margin-top: 1rem;
+        }
+
+        .dp-details-list dd {
+            margin-left: 1rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+        }
+
+    .dp-details-actions {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .dp-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.4rem;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: var(--rounded-border);
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+        user-select: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .dp-btn-edit {
+        background-color: var(--purple);
+        color: white;
+    }
+
+        .dp-btn-edit:hover {
+            background-color: var(--light-purple);
+        }
+
+    .dp-btn-back {
+        background-color: transparent;
+        color: var(--purple);
+        border: 2px solid var(--purple);
+    }
+
+        .dp-btn-back:hover {
+            background-color: var(--purple);
+            color: white;
+            text-decoration: none;
+        }
+</style>
