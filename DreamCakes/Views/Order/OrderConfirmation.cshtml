@@ -1,0 +1,46 @@
+﻿@model DreamCakes.Dtos.Client.OrderDto
+@{
+    ViewBag.Title = "Confirmación de Pedido - Dreams Cake";
+}
+
+<div class="container py-5 text-center">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-body p-5">
+            <div class="mb-4">
+                <i class="fas fa-check-circle text-success fa-5x"></i>
+            </div>
+            <h2 class="mb-3">¡Pedido Confirmado!</h2>
+            <p class="lead">Gracias por tu compra en Dreams Cake</p>
+
+            <div class="card border-0 bg-light mt-4 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Detalles del Pedido</h5>
+                    <p class="card-text">
+                        <strong>Número de Pedido:</strong> #@Model.ID_Order<br>
+                        <strong>Fecha:</strong> @Model.OrderDate.ToString("f")<br>
+                        <strong>Tipo:</strong> @Model.OrderType<br>
+                        @if (Model.OrderType == "Programado")
+                        {
+                            <strong>Entrega Programada:</strong> @Model.DeliveryDate.ToString("f")<br>
+                        }
+                        <strong>Total:</strong> @Model.Total.ToString("C")
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-muted mb-4">
+                Hemos enviado los detalles de tu pedido a tu correo electrónico.
+                Puedes ver el estado de tu pedido en tu <a href="@Url.Action("Index", "Account")">cuenta</a>.
+            </p>
+
+            <div class="d-grid gap-2 d-md-block">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary me-md-2">
+                    <i class="fas fa-store me-2"></i> Seguir Comprando
+                </a>
+                <a href="@Url.Action("Index", "Account")" class="btn btn-outline-secondary">
+                    <i class="fas fa-user me-2"></i> Mi Cuenta
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

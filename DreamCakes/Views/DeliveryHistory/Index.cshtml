@@ -1,0 +1,123 @@
+﻿@model List<DreamCakes.Dtos.Delivery.DeliveryHistoryDto>
+
+<div class="dc-container">
+    <h2 class="dc-title">Historial de Pedidos</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="dc-alert-error">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="dc-card">
+        <div class="dc-card-header">
+            <h5>Filtrar por fecha</h5>
+        </div>
+        <div class="dc-card-body">
+            <form method="get" class="dc-form">
+                <div class="dc-form-group">
+                    <label for="startDate">Desde:</label>
+                    <input type="date" id="startDate" name="startDate" value="@ViewBag.StartDate">
+                </div>
+                <div class="dc-form-group">
+                    <label for="endDate">Hasta:</label>
+                    <input type="date" id="endDate" name="endDate" value="@ViewBag.EndDate">
+                </div>
+                <button type="submit" class="dc-btn dc-btn-primary">
+                    <i class="content-icon-filter"></i> Filtrar
+                </button>
+                <a href="@Url.Action("Index")" class="dc-btn dc-btn-secondary">
+                    <i class="content-icon-cancel"></i> Limpiar
+                </a>
+            </form>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="dc-alert-info">
+            No se encontraron pedidos entregados en el período seleccionado.
+        </div>
+    }
+    else
+    {
+        <div class="dc-table-wrapper">
+            <table class="dc-table">
+                <thead>
+                    <tr>
+                        <th># Pedido</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Dirección</th>
+                        <th>Total</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@order.OrderId</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.DeliveryDate.ToString("g")</td>
+                            <td>@order.DeliveryAddress</td>
+                            <td>@order.TotalAmount.ToString("C")</td>
+                            <td>
+                                <button class="dc-btn-icon-eye view-details" data-order-id="@order.OrderId">
+                                    Visualizar
+                                </button>
+
+                            </td>
+                        </tr>
+                        <tr class="dc-details-row" id="details-@order.OrderId" style="display: none;">
+                            <td colspan="6">
+                                <h5>Productos:</h5>
+                                <table class="dc-inner-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in order.Items)
+                                        {
+                                            <tr>
+                                                <td>@item.ProductName</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.UnitPrice.ToString("C")</td>
+                                                <td>@item.Subtotal.ToString("C")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.view-details').click(function () {
+                const orderId = $(this).data('order-id');
+                const detailsRow = $('#details-' + orderId);
+                detailsRow.toggle();
+
+                // Cambiar clase del botón para mostrar/ocultar el ícono correspondiente
+                if ($(this).hasClass('dc-btn-icon-eye')) {
+                    $(this).removeClass('dc-btn-icon-eye').addClass('dc-btn-icon-eye-slash');
+                } else {
+                    $(this).removeClass('dc-btn-icon-eye-slash').addClass('dc-btn-icon-eye');
+                }
+            });
+        });
+    </script>
+}

@@ -1,43 +1,206 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title - Dream Cakes</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Nombre de la aplicación", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Mi aplicación ASP.NET</p>
-        </footer>
-    </div>
+    <!-- Navbar dinámico según rol -->
+    <header>
+        <nav class="navbar-custom">
+            <div class="navbar-container">
+                <a class="navbar-brand" href="@Url.Action("Index", "Home")">Dream Cakes</a>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+                @{
+                    var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
+                    var userRole = isAuthenticated ? Session["ID_Rol"] as int? : null;
+                }
+
+                @if (isAuthenticated)
+                {
+            <ul class="navbar-menu">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Home")">
+                        <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
+                        Inicio
+                    </a>
+                </li>
+
+                @if (userRole == 1)
+                {
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
+                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                            Gestión Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
+                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                            Gestión Categorias
+                        </a>
+                    </li>
+                    <li class="nav-item">
+
+
+                        <a class="nav-link" href="@Url.Action("Index", "Promotions")">
+                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                            Gestión Promociones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
+                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
+                            Gestión Productos
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
+                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
+                            Asignación de Pedidos
+                        </a>
+                    </li>
+
+                }
+                else if (userRole == 2)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Catalog", "Product")">
+                            <img src="@Url.Content("~/Content/icons/CategoryM.svg")" width="28" height="20" alt="Buy" />
+                            Catalogo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Order")">
+                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                            Comprar
+                        </a>
+                    </li>
+
+                }
+                else if (userRole == 3)
+                {
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="@Url.Action("Index", "DeliveryHistory")">
+                            <img src="@Url.Content("~/Content/icons/List.svg")" width="28" height="20" alt="List" />
+                            Historial de Pedidos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
+                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                            Pedidos Asignados
+                        </a>
+                    </li>
+
+                }
+            </ul>
+
+                    <div class="navbar-actions">
+                        <a href="@Url.Action("Index", "Profile")">
+                            <img src="@Url.Content("~/Content/icons/Profile.svg")" width="28" height="20" alt="Mi Perfil" />
+                        </a>
+                    </div>
+
+                    <div class="navbar-actions">
+                        <a href="@Url.Action("Logout", "Auth")" class="btn-wine">
+                            Cerrar Sesión
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    if (
+                        ViewContext.RouteData.Values["Action"].ToString() == "Index" &&
+                        ViewContext.RouteData.Values["Controller"].ToString() == "Home"
+                    )
+                    {
+                        @Html.Partial("~/Views/Auth/Register.cshtml")
+                        @Html.Partial("~/Views/Auth/Login.cshtml")
+                    }
+
+                    <div class="navbar-actions">
+                        <a href="#" class="btn-wine" data-toggle="modal" data-target="#registerModal">Registrarse</a>
+                        <a href="#" class="btn-gray" data-toggle="modal" data-target="#loginModal">Iniciar Sesión</a>
+                    </div>
+                }
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        &copy; @DateTime.Now.Year - Todos los derechos reservados Dream Cakes.
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Mostrar modales si hay mensajes -->
+    <script>
+        $(document).ready(function () {
+            @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
+            {
+                <text>
+                    var showModal = '@TempData["ShowModal"]';
+                    if (showModal === "login") {
+                        setTimeout(function () { $('#loginModal').modal('show'); }, 300);
+                    } else if (showModal === "register") {
+                        setTimeout(function () { $('#registerModal').modal('show'); }, 300);
+                    }
+                </text>
+            }
+        });
+    </script>
+
+    <!-- Limpiar formularios al cerrar -->
+    <script>
+        $(document).ready(function () {
+            function cleanModals() {
+                $('.modal form')[0].reset();
+                $('.text-danger, .alert').hide();
+                $.post('@Url.Action("ClearTempMessages", "Cleanup")');
+            }
+
+            $('.modal').on('hidden.bs.modal', cleanModals);
+            $('.modal .close').click(cleanModals);
+
+            @if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
+            {
+                <text>
+                    $('#@TempData["ShowModal"]Modal').modal('show');
+                </text>
+            }
+        });
+    </script>
+
     @RenderSection("scripts", required: false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000"
+        };
+    </script>
 </body>
 </html>

@@ -1,0 +1,70 @@
+﻿@model DreamCakes.Dtos.ProfileDto
+
+@{ ViewBag.Title = "Mi Perfil"; }
+<div class="profile-wrapper">
+    <div class="profile-container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="profile-info-card rounded">
+                    <div class="profile-info-header">
+                        Información Personal
+                    </div>
+
+                    <div class="profile-info-body">
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success text-center">
+                                @TempData["SuccessMessage"]
+                            </div>
+                        }
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.ID_User)
+                            @Html.HiddenFor(model => model.ID_Role)
+                            @Html.HiddenFor(model => model.ProfileImage)
+
+                            <div class="profile-form-group">
+                                <label class="profile-form-label">Nombres</label>
+                                @Html.TextBoxFor(model => model.UserNames, new { @class = "form-control profile-form-input" })
+                                @Html.ValidationMessageFor(model => model.UserNames, "", new { @class = "profile-error" })
+                            </div>
+
+                            <div class="profile-form-group">
+                                <label class="profile-form-label">Apellidos</label>
+                                @Html.TextBoxFor(model => model.UserSecNames, new { @class = "form-control profile-form-input" })
+                                @Html.ValidationMessageFor(model => model.UserSecNames, "", new { @class = "profile-error" })
+                            </div>
+
+                            <div class="profile-form-group">
+                                <label class="profile-form-label">Email</label>
+                                @Html.TextBoxFor(model => model.Email, new
+                                {
+                                    @class = "form-control profile-form-input profile-readonly",
+                                    @readonly = "readonly"
+                                })
+                            </div>
+
+                            <div class="profile-form-group">
+                                <label class="profile-form-label">Teléfono</label>
+                                @Html.TextBoxFor(model => model.PhoneNum, new { @class = "form-control profile-form-input" })
+                                @Html.ValidationMessageFor(model => model.PhoneNum, "", new { @class = "profile-error" })
+                            </div>
+
+                            <div class="profile-form-group">
+                                <label class="profile-form-label">Dirección</label>
+                                @Html.TextBoxFor(model => model.Address, new { @class = "form-control profile-form-input" })
+                                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "profile-error" })
+                            </div>
+
+                            <div class="profile-form-actions">
+                                <button type="submit" class="btn btn-wine">Guardar Cambios</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

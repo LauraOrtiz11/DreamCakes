@@ -1,0 +1,115 @@
+﻿@model List<DreamCakes.Dtos.Delivery.DeliveryAssignedOrderDto>
+@{
+    ViewBag.Title = "Pedidos Asignados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-4">
+    <h2 class="dc-title">Pedidos Asignados</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="dcp-alert dcp-alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+
+
+    <div class="mb-3">
+        <form method="get" class="dc-form">
+            <label class="mr-2">Filtrar por estado:</label>
+            <select name="statusFilter" class="dc-form-group" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="Pendiente" selected='@(ViewBag.StatusFilter == "Pendiente")'>Pendiente</option>
+                <option value="En proceso" selected='@(ViewBag.StatusFilter == "En proceso")'>En camino</option>
+                <option value="Entregado" selected='@(ViewBag.StatusFilter == "Entregado")'>Entregado</option>
+            </select>
+        </form>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="dcp-alert dcp-alert-info">
+            No tienes pedidos asignados actualmente.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table dcp-table">
+                <thead>
+                    <tr>
+                        <th>Pedido #</th>
+                        <th>Cliente</th>
+                        <th>Dirección</th>
+                        <th>Hora estimada</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@order.OrderId</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.DeliveryAddress</td>
+                            <td>@order.EstimatedDeliveryTime.ToString("g")</td>
+                            <td>@order.TotalAmount.ToString("C")</td>
+                            <td>
+                                <span class="dcp-badge dcp-badge-@GetStatusBadgeClass(order.Status)">
+                                    @order.Status
+                                </span>
+                                @if (order.HasPartialPayment)
+                                {
+                                    <span class="dcp-badge dcp-badge-warning ml-1">Pago Parcial</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="dcp-actions">
+                                    <a href="tel:@order.CustomerPhone" class="dcp-btn dcp-btn-phone" title="Contactar">
+                                        Contactar
+                                    </a>
+
+                                    @if (order.Status == "Entregado" && !order.HasPartialPayment)
+                                    {
+                                        <a href="@Url.Action("RegisterPayment", "DeliveryPayment", new { orderId = order.OrderId })"
+                                           class="dcp-btn dcp-btn-pago">
+                                            Registrar Pago
+                                        </a>
+                                    }
+                                    else if (order.HasPartialPayment)
+                                    {
+                                        <a href="@Url.Action("RegisterPayment", "DeliveryPayment", new { orderId = order.OrderId })"
+                                           class="dcp-btn dcp-btn-pago-parcial">
+                                            Completar Pago
+                                        </a>
+                                    }
+
+                                    @Html.ActionLink("Detalles", "OrderDetails", "DeliveryOrderStatus",
+                                        new { orderId = order.OrderId },
+                                        new { @class = "dcp-btn dcp-btn-detalles" })
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    }
+</div>
+
+@functions {
+    string GetStatusBadgeClass(string status)
+    {
+        switch (status)
+        {
+            case "Pendiente": return "warning";
+            case "En proceso": return "info";
+            case "Entregado": return "success";
+            default: return "secondary";
+        }
+    }
+}

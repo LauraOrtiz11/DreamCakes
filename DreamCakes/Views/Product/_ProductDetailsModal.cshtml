@@ -1,0 +1,396 @@
+﻿@model DreamCakes.Dtos.Client.ProductDetailsDto
+
+<div class="product-modal-container">
+    <input type="hidden" id="productId" value="@Model.ID_Product" />
+
+    @if (Model.Response != 1)
+    {
+        <div class="alert alert-danger">
+            @Model.Message
+        </div>
+    }
+    else
+    {
+        <div class="product-modal-header">
+            <h3>@Model.Name</h3>
+            <button type="button" class="close-modal-btn" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="product-modal-body">
+            <div class="row">
+                <div class="col-md-6 product-images">
+                    @if (Model.Images != null && Model.Images.Any())
+                    {
+                        <div class="main-image">
+                            <img src="@Model.Images.First().ImgUrl" alt="@Model.Name" class="img-responsive">
+                        </div>
+                        <div class="thumbnail-container">
+                            @foreach (var image in Model.Images)
+                            {
+                                <img src="@image.ImgUrl" class="img-thumbnail" alt="Miniatura">
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="col-md-6 product-info">
+                    <div class="price-section">
+                        <span class="price">@string.Format("{0:C0}", Model.Price)</span>
+                        <span class="stock">(@Model.Stock disponibles)</span>
+                    </div>
+
+                    <p class="description">@Model.Description</p>
+
+                    <div class="rating-summary">
+                        <div class="average-rating">
+                            @{
+                                int fullStars = (int)Model.AvgRating;
+                                bool hasHalfStar = (Model.AvgRating - fullStars) >= 0.5m;
+                            }
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= fullStars)
+                                {
+                                    <i class="fas fa-star"></i>
+                                }
+                                else if (i == fullStars + 1 && hasHalfStar)
+                                {
+                                    <i class="fas fa-star-half-alt"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-star"></i>
+                                }
+                            }
+                            <span class="rating-value">@Model.AvgRating.ToString("0.0")</span>
+                        </div>
+                        <span class="rating-count">(@Model.Ratings.Count valoraciones)</span>
+                    </div>
+
+                    <div class="add-to-cart">
+                        <button class="btn btn-primary btn-add-cart">
+                            <i class="fas fa-cart-plus"></i> Añadir al carrito
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Valoración -->
+            <div class="rating-section">
+                <h4><i class="fas fa-edit"></i> Deja tu valoración</h4>
+                <div class="star-rating" id="ratingStars">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <span class="star" data-value="@i">★</span>
+                    }
+                </div>
+                <input type="hidden" id="selectedRating" value="0">
+                <textarea id="ratingComment" class="form-control" placeholder="¿Qué te pareció este producto? (opcional)" rows="3"></textarea>
+                <button id="submitRating" class="btn btn-submit-rating">
+                    <i class="fas fa-paper-plane"></i> Enviar valoración
+                </button>
+            </div>
+
+            <!-- Sección de Reseñas -->
+            <div class="reviews-section">
+                <h4><i class="fas fa-comments"></i> Reseñas (@Model.Ratings.Count)</h4>
+
+                @if (Model.Ratings.Any())
+                {
+                    foreach (var rating in Model.Ratings)
+                    {
+                        <div class="review-item">
+                            <div class="review-header">
+                                <span class="review-author">@rating.ClientName</span>
+                                <div class="review-stars">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="@(i <= rating.Rating ? "fas" : "far") fa-star"></i>
+                                    }
+                                </div>
+                                <span class="review-date">@rating.CreatedDate.ToString("dd/MM/yyyy")</span>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(rating.Comment))
+                            {
+                                <div class="review-comment">
+                                    <p>@rating.Comment</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="no-reviews">
+                        <p>No hay reseñas aún. ¡Sé el primero en opinar!</p>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    /* Estilos base del modal */
+    .product-modal-container {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        padding: 20px;
+    }
+
+    .product-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+
+        .product-modal-header h3 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+    .close-modal-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #7f8c8d;
+    }
+
+    /* Sección de imágenes */
+    .product-images .main-image {
+        margin-bottom: 15px;
+    }
+
+        .product-images .main-image img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+    .thumbnail-container {
+        display: flex;
+        gap: 10px;
+    }
+
+        .thumbnail-container img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .thumbnail-container img:hover {
+                border-color: #3498db;
+                transform: scale(1.05);
+            }
+
+    /* Sección de información del producto */
+    .product-info {
+        padding-left: 20px;
+    }
+
+    .price-section {
+        margin-bottom: 15px;
+    }
+
+        .price-section .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2ecc71;
+        }
+
+        .price-section .stock {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+    .description {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    /* Sistema de valoración */
+    .rating-section {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+
+        .rating-section h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+    .star-rating {
+        font-size: 28px;
+        color: #e4e5e9;
+        margin-bottom: 10px;
+    }
+
+        .star-rating .star {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+            .star-rating .star:hover,
+            .star-rating .star.active {
+                color: #f1c40f;
+            }
+
+    #ratingComment {
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    .btn-submit-rating {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .btn-submit-rating:hover {
+            background-color: #2980b9;
+        }
+
+    /* Sección de reseñas */
+    .reviews-section {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+
+        .reviews-section h4 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+    .review-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #f5f5f5;
+    }
+
+    .review-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .review-author {
+        font-weight: 600;
+        margin-right: 15px;
+    }
+
+    .review-stars {
+        color: #f1c40f;
+        margin-right: 15px;
+    }
+
+    .review-date {
+        color: #95a5a6;
+        font-size: 12px;
+    }
+
+    .review-comment p {
+        margin: 0;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .no-reviews {
+        color: #7f8c8d;
+        text-align: center;
+        padding: 20px;
+    }
+
+    /* Estrellas de valoración promedio */
+    .average-rating {
+        display: inline-block;
+        color: #f1c40f;
+        margin-right: 10px;
+    }
+
+    .rating-value {
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    .rating-count {
+        color: #7f8c8d;
+        font-size: 14px;
+    }
+
+    /* Botón añadir al carrito */
+    .btn-add-cart {
+        padding: 10px 20px;
+        font-weight: 600;
+        margin-top: 15px;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        // Sistema de valoración con estrellas
+        $('#ratingStars .star').hover(function() {
+            const value = $(this).data('value');
+            $(this).parent().find('.star').removeClass('active');
+            $(this).prevAll('.star').addBack().addClass('active');
+        });
+
+        $('#ratingStars .star').click(function() {
+            const value = $(this).data('value');
+            $('#selectedRating').val(value);
+        });
+
+        // Enviar valoración
+        $('#submitRating').click(function() {
+            const productId = $('#productId').val();
+            const rating = $('#selectedRating').val();
+            const comment = $('#ratingComment').val();
+
+            if (!rating || rating == 0) {
+                alert('Por favor selecciona una calificación');
+                return;
+            }
+
+            $.post('@Url.Action("SubmitRating", "Product")', {
+                productId: productId,
+                rating: rating,
+                comment: comment
+            }, function(response) {
+                if (response.success) {
+                    alert('¡Gracias por tu valoración!');
+                    // Recargar el modal para mostrar la nueva valoración
+                    $.get('@Url.Action("GetProductDetails", "Product")', { id: productId }, function(data) {
+                        $('#modalContent').html(data);
+                    });
+                } else {
+                    alert(response.message);
+                }
+            }).fail(function() {
+                alert('Error al enviar la valoración. Por favor intenta nuevamente.');
+            });
+        });
+
+        // Cambiar imagen principal al hacer clic en miniaturas
+        $('.thumbnail-container img').click(function() {
+            const newSrc = $(this).attr('src');
+            $('.main-image img').attr('src', newSrc);
+        });
+    });
+</script>

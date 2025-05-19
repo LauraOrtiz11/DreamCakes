@@ -1,0 +1,223 @@
+﻿@model DreamCakes.Dtos.Client.CatalogResponseDto
+@{
+    ViewBag.Title = "Catálogo de Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <!-- Banner de Promoción -->
+
+    @if (Model.ActivePromotions.Any())
+    {
+        <div class="promotion-banner mb-4">
+            <div id="promoCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.ActivePromotions.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <div class="promo-card gradient-purple p-4 text-center text-white">
+                                <h3>@Model.ActivePromotions[i].NameProm</h3>
+                                <p>@Model.ActivePromotions[i].DescriProm</p>
+                                <div class="promo-badge my-2">
+                                    <span class="badge bg-light text-dark">
+                                        @Model.ActivePromotions[i].DiscountPer% OFF
+                                    </span>
+                                </div>
+                                <small class="text-light">Válido hasta @Model.ActivePromotions[i].EndDate.ToString("dd/MM/yyyy")</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <a class="carousel-control-prev" href="#promoCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Anterior</span>
+                </a>
+                <a class="carousel-control-next" href="#promoCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Siguiente</span>
+                </a>
+            </div>
+        </div>
+    }
+
+
+    <!-- Barra de Búsqueda y Filtros -->
+    <div class="row mb-4 justify-content-center">
+        <div class="col-md-8">
+            @using (Html.BeginForm("Search", "Product", FormMethod.Get, new { @class = "d-flex justify-content-center" }))
+            {
+                <div class="input-group" style="max-width: 600px; width: 100%;">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Buscar productos..." />
+                    <button type="submit" class="btn btn-wine" style="border-radius: 0 25px 25px 0;">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <!-- Filtros de categoría -->
+    <div class="category-filters m-1 d-flex justify-content-center">
+        <div class="d-flex flex-wrap">
+            <a href="@Url.Action("Catalog")" class="btn btn-outline-secondary">Todos</a>
+            @foreach (var category in ViewBag.AvailableCategories)
+            {
+                <a href="@Url.Action("Catalog", new { category = category })"
+                   class="btn btn-outline-secondary m-1">@category</a>
+            }
+        </div>
+    </div>
+
+    <!-- Grid de productos -->
+    <div class="row">
+        @foreach (var productGroup in Model.ProductsByCategory)
+        {
+            foreach (var product in productGroup.Value)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="product-card card h-100">
+                        @if (product.Images.Any())
+                        {
+                            <img src="@product.Images.First().ImgUrl" class="card-img-top" alt="@product.Name">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text">@product.Description</p>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <a href="@Url.Action("ProductDetails", new { id = product.ID_Product })"
+                               class="btn btn-danger btn-block">
+                                Ver más
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    /* PROMOCIÓN */
+    .promotion-banner {
+        background: linear-gradient(135deg, var(--purple), var(--light-purple));
+        border-radius: 12px;
+        padding: 20px;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .promo-card {
+        background: transparent !important;
+        color: #fff;
+    }
+
+    .promo-badge .badge {
+        font-size: 1rem;
+        padding: 10px 16px;
+        border-radius: 30px;
+        background-color: #ffffff33;
+        color: #fff;
+    }
+
+    /* CATEGORÍAS */
+    .category-filters {
+        text-align: center;
+    }
+
+        .category-filters .btn {
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 500;
+            border: 2px solid #6a0572;
+            color: #6a0572;
+            transition: all 0.3s ease;
+        }
+
+            .category-filters .btn:hover {
+                background-color: #6a0572;
+                color: #fff;
+            }
+
+    /* BÚSQUEDA */
+    .form-inline {
+        justify-content: center;
+    }
+
+        .form-inline .input-group {
+            max-width: 600px;
+        }
+
+    .input-group .form-control {
+        border-radius: 25px 0 0 25px;
+    }
+
+    .input-group .btn {
+        border-radius: 0 25px 25px 0;
+        background-color: #6a0572;
+        border-color: #6a0572;
+    }
+
+        .input-group .btn i {
+            margin-right: 5px;
+        }
+
+    /* PRODUCTOS */
+    .product-card {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease;
+        text-align: center;
+    }
+    .cart-footer {
+        display:flex;
+        justify-content:center;
+    }
+    .container {
+        width:100%;   
+    }
+        .product-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .product-card img {
+            height: 170px;
+            object-fit: cover;
+        }
+
+        .product-card .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #4a154b;
+        }
+
+        .product-card .card-text {
+            font-size: 0.95rem;
+            color: #555;
+            height: 60px;
+            overflow: hidden;
+        }
+
+        .product-card .card-footer {
+            text-align: center;
+            padding-bottom: 15px;
+        }
+
+        .product-card .btn-block {
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-weight: bold;
+            width: 70%;
+            background-color: var(--purple);
+            border: none;
+        }
+    .input-group .form-control {
+        border-radius: 25px 0 0 25px;
+    }
+
+            .product-card .btn-block:hover {
+                background-color: #50104d;
+            }
+</style>

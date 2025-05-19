@@ -1,0 +1,120 @@
+﻿@model DreamCakes.Dtos.Admin.PromotionDto
+
+@{
+    ViewBag.Title = "Eliminar Promoción";
+}
+
+<h2 class="title">¿Eliminar esta Promoción?</h2>
+
+<div class="details-container">
+    <dl class="details-list">
+        <dt>Nombre:</dt>
+        <dd>@Model.NameProm</dd>
+
+        <dt>Descuento:</dt>
+        <dd>@Model.DiscountPer %</dd>
+
+        <dt>Estado:</dt>
+        <dd>@(Model.StateProm ? "Activa" : "Inactiva")</dd>
+    </dl>
+
+    <div class="button-group">
+        @using (Html.BeginForm("Delete", "Promotions", new { id = Model.ID_Prom }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <input type="submit" value="Confirmar Eliminación" class="btn-danger" />
+            @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn-secondary" })
+        }
+    </div>
+</div>
+
+<style>
+    :root {
+        --wine: #9B2020;
+        --light-wine: #B23232;
+        --gradient-bg: linear-gradient(to bottom, #F8F9FA, #9D63B8, #483470);
+        --gray: #F8F9FA;
+        --dark-gray: #D9D9D9;
+        --purple: #483470;
+        --light-purple: #5a2d82;
+        --text: #333333;
+        --rounded-border: 20rem;
+    }
+
+    .title {
+        text-align: center;
+        color: var(--purple);
+        font-size: 32px;
+        margin-bottom: 25px;
+    }
+
+    .details-container {
+        max-width: 480px;
+        margin: 0 auto 30px auto;
+        background-color: white;
+        padding: 25px 30px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .details-list {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        row-gap: 15px;
+        column-gap: 20px;
+        color: var(--text);
+        font-weight: 600;
+        font-size: 17px;
+    }
+
+        .details-list dt {
+            color: var(--purple);
+            text-align: right;
+        }
+
+        .details-list dd {
+            margin: 0;
+            font-weight: 500;
+        }
+
+    .button-group {
+        margin-top: 30px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .btn-danger {
+        background-color: var(--wine);
+        color: white;
+        border: none;
+        padding: 12px 26px;
+        font-weight: 700;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-danger:hover {
+            background-color: var(--light-wine);
+        }
+
+    .btn-secondary {
+        background-color: var(--gray);
+        color: var(--purple);
+        border-radius: 12px;
+        padding: 12px 26px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+        }
+</style>

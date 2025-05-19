@@ -1,0 +1,270 @@
+﻿@model DreamCakes.Dtos.Admin.AdminProductDto
+@{
+    ViewBag.Title = "Crear Nuevo Producto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dp-container mt-4">
+    <h2 class="dp-title">@ViewBag.Title</h2>
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="dp-alert-error">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+    @using (Html.BeginForm("Create", "AdminProduct", FormMethod.Post, new { enctype = "multipart/form-data", id = "createForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="dp-form-row">
+            <div class="dp-form-col">
+                <label for="ProdName">Nombre</label>
+                @Html.TextBoxFor(m => m.ProdName, new { @class = "dp-input", placeholder = "Nombre del producto", id = "ProdName" })
+                @Html.ValidationMessageFor(m => m.ProdName, "", new { @class = "dp-val-error" })
+
+                <label for="ProdDescription" class="mt-3">Descripción</label>
+                @Html.TextAreaFor(m => m.ProdDescription, new { @class = "dp-textarea", rows = 4, placeholder = "Descripción detallada del producto", id = "ProdDescription" })
+                @Html.ValidationMessageFor(m => m.ProdDescription, "", new { @class = "dp-val-error" })
+            </div>
+
+            <div class="dp-form-col">
+                <label for="ID_Category">Categoría</label>
+                @Html.DropDownListFor(m => m.ID_Category, (SelectList)ViewBag.Categories, "Seleccione una categoría", new { @class = "dp-select", id = "ID_Category" })
+                @Html.ValidationMessageFor(m => m.ID_Category, "", new { @class = "dp-val-error" })
+
+                <label for="ProdPrice" class="mt-3">Precio</label>
+                @Html.TextBoxFor(m => m.ProdPrice, new { @class = "dp-input", id = "ProdPrice", placeholder = "0.00", type = "number", step = "0.01", min = "0" })
+                @Html.ValidationMessageFor(m => m.ProdPrice, "", new { @class = "dp-val-error" })
+
+                <label for="ProdStock" class="mt-3">Stock</label>
+                @Html.TextBoxFor(m => m.ProdStock, new { @class = "dp-input", id = "ProdStock", type = "number", min = "0", placeholder = "0" })
+                @Html.ValidationMessageFor(m => m.ProdStock, "", new { @class = "dp-val-error" })
+            </div>
+        </div>
+
+        <div class="dp-form-group mt-4">
+            <label for="productImages">Imágenes del Producto (Mínimo 1, Máximo 5)</label>
+            <input type="file" name="productImages" id="productImages" class="dp-file-input" multiple accept="image/*" required />
+            <small class="dp-text-muted">
+                Formatos aceptados: .jpg, .jpeg, .png. Tamaño máximo por imagen: 2MB
+            </small>
+            <div id="imagePreview" class="dp-image-preview mt-2"></div>
+        </div>
+
+        <div class="dp-form-actions mt-4">
+            <button type="submit" class="dp-btn dp-btn-primary" id="submitBtn">
+                <i class="fas fa-save"></i> Guardar Producto
+            </button>
+            <a href="@Url.Action("Index")" class="dp-btn dp-btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(function () {
+            $('#createForm').submit(function () {
+                var files = $('#productImages')[0].files;
+                if (files.length < 1 || files.length > 5) {
+                    alert('Debe seleccionar entre 1 y 5 imágenes para el producto');
+                    return false;
+                }
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    var validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                    if (validTypes.indexOf(file.type) === -1) {
+                        alert('El archivo ' + file.name + ' no es una imagen válida (solo JPG, JPEG o PNG)');
+                        return false;
+                    }
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('La imagen ' + file.name + ' es demasiado grande (máximo 2MB)');
+                        return false;
+                    }
+                }
+                $('#submitBtn').prop('disabled', true);
+                return true;
+            });
+
+            $('#productImages').change(function () {
+                $('#imagePreview').empty();
+                var files = this.files;
+                for (var i = 0; i < files.length; i++) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#imagePreview').append(
+                            `<div class="dp-image-thumb"><img src="${e.target.result}" alt="Vista previa"/></div>`
+                        );
+                    };
+                    reader.readAsDataURL(files[i]);
+                }
+            });
+        });
+    </script>
+}
+
+<style>
+    :root {
+        --purple: #5a3e9f;
+        --purple-light: #7c61cc;
+        --gray-light: #f9f9f9;
+        --text-color: #333;
+        --border-radius: 6px;
+    }
+
+    .dp-container {
+        max-width: 900px;
+        margin: auto;
+        padding: 1.5rem 2rem;
+        background: var(--gray-light);
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-color);
+    }
+
+    .dp-title {
+        color: var(--purple);
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .dp-alert-error {
+        background-color: #f8d7da;
+        color: #842029;
+        border-radius: var(--border-radius);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .dp-form-row {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .dp-form-col {
+        flex: 1 1 45%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        color: var(--purple);
+    }
+
+    .dp-input,
+    .dp-textarea,
+    .dp-select {
+        padding: 0.5rem 0.75rem;
+        border: 1.8px solid #bbb;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        color: var(--text-color);
+        transition: border-color 0.3s ease;
+    }
+
+        .dp-input:focus,
+        .dp-textarea:focus,
+        .dp-select:focus {
+            border-color: var(--purple);
+            outline: none;
+            box-shadow: 0 0 5px var(--purple-light);
+        }
+
+    .dp-textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .dp-val-error {
+        color: #b00020;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .dp-form-group {
+        width: 100%;
+    }
+
+    .dp-file-input {
+        border: none;
+        padding: 0.25rem 0;
+    }
+
+    .dp-text-muted {
+        font-size: 0.8rem;
+        color: #666;
+    }
+
+    .dp-image-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .dp-image-thumb {
+        width: 100px;
+        height: 100px;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        border-radius: var(--border-radius);
+    }
+
+        .dp-image-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .dp-form-actions {
+        text-align: center;
+    }
+
+    .dp-btn {
+        font-weight: 700;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        padding: 0.55rem 1.4rem;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+        transition: background-color 0.3s ease;
+        user-select: none;
+        text-decoration: none;
+    }
+
+    .dp-btn-primary {
+        background-color: var(--purple);
+        color: white;
+    }
+
+        .dp-btn-primary:hover {
+            background-color: var(--purple-light);
+        }
+
+    .dp-btn-secondary {
+        background-color: transparent;
+        border: 2px solid var(--purple);
+        color: var(--purple);
+        margin-left: 1rem;
+    }
+
+        .dp-btn-secondary:hover {
+            background-color: var(--purple);
+            color: white;
+            text-decoration: none;
+        }
+</style>
