@@ -1,5 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using DreamCakes.Filters;
+using DreamCakes.Utilities;
 
 namespace DreamCakes
 {
@@ -8,6 +10,8 @@ namespace DreamCakes
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new SessionAuthorizeFilter());
+            
         }
     }
 }

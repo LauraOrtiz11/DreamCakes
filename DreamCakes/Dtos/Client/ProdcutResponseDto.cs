@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
 namespace DreamCakes.Dtos.Client
 {
-    public class ProductDto
+    public class ProdcutResponseDto
+
     {
         public int ID_Product { get; set; }
         public string Name { get; set; }
@@ -22,9 +26,5 @@ namespace DreamCakes.Dtos.Client
         public int TotalReviews { get; set; }
         public int Response { get; set; }
         public string Message { get; set; }
-
-
     }
-
-
 }

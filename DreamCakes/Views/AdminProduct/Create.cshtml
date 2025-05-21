@@ -45,13 +45,14 @@
         </div>
 
         <div class="dp-form-group mt-4">
-            <label for="productImages">Imágenes del Producto (Mínimo 1, Máximo 5)</label>
+            <label for="productImages" class="dp-label">Imágenes del Producto (Mínimo 1, Máximo 5)</label>
             <input type="file" name="productImages" id="productImages" class="dp-file-input" multiple accept="image/*" required />
             <small class="dp-text-muted">
                 Formatos aceptados: .jpg, .jpeg, .png. Tamaño máximo por imagen: 2MB
             </small>
             <div id="imagePreview" class="dp-image-preview mt-2"></div>
         </div>
+
 
         <div class="dp-form-actions mt-4">
             <button type="submit" class="dp-btn dp-btn-primary" id="submitBtn">
@@ -110,12 +111,36 @@
 
 <style>
     :root {
-        --purple: #5a3e9f;
-        --purple-light: #7c61cc;
-        --gray-light: #f9f9f9;
-        --text-color: #333;
+
         --border-radius: 6px;
     }
+    .dp-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .dp-label {
+        font-weight: 600;
+        color: var(--purple);
+        margin-bottom: 0.2rem;
+    }
+
+    .dp-file-input {
+        padding: 0.5rem 0.75rem;
+        border: 1.5px solid #bbb;
+        border-radius: var(--border-radius);
+        background-color: white;
+        font-size: 0.95rem;
+        color: var(--text-color);
+        transition: border-color 0.3s ease;
+    }
+
+        .dp-file-input:focus {
+            border-color: var(--purple);
+            outline: none;
+            box-shadow: 0 0 5px var(--purple-light);
+        }
 
     .dp-container {
         max-width: 900px;
@@ -193,14 +218,7 @@
         margin-top: 0.25rem;
     }
 
-    .dp-form-group {
-        width: 100%;
-    }
-
-    .dp-file-input {
-        border: none;
-        padding: 0.25rem 0;
-    }
+   
 
     .dp-text-muted {
         font-size: 0.8rem;

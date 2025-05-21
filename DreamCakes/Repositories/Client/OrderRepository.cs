@@ -149,8 +149,8 @@ namespace DreamCakes.Repositories.Client
                                 command.Parameters.AddWithValue("@ProductId", detail.ProductId);
                                 var currentStock = (int)command.ExecuteScalar();
 
-                                if (currentStock < detail.Quantity)
-                                    throw new Exception($"Insufficient stock for product ID {detail.ProductId}");
+                                if (currentStock < detail.Quantity) 
+                                    throw new Exception($"Stock insuficiente {detail.ProductId}");
                             }
 
                             // Calcular subtotal
@@ -252,14 +252,7 @@ namespace DreamCakes.Repositories.Client
                                 command.ExecuteNonQuery();
                             }
 
-                            // 4. Actualizar stock de productos
-                            var updateStockQuery = "UPDATE PRODUCTO SET Stock = Stock - @Quantity WHERE ID_Producto = @ProductId";
-                            using (var command = new SqlCommand(updateStockQuery, connection, transaction))
-                            {
-                                command.Parameters.AddWithValue("@Quantity", detail.Quantity);
-                                command.Parameters.AddWithValue("@ProductId", detail.ProductId);
-                                command.ExecuteNonQuery();
-                            }
+                           
                         }
 
                         transaction.Commit();
@@ -311,6 +304,15 @@ namespace DreamCakes.Repositories.Client
                     ProductImageUrl = d.PRODUCTO?.IMAGENs.FirstOrDefault()?.Imagen_URL
                 }).ToList()
             };
+        }
+        public string GetCustomerEmailByOrderId(int orderId)
+        {
+            var email = _context.PEDIDOes
+                .Where(o => o.ID_Pedido == orderId)
+                .Select(o => o.USUARIO.Email)
+                .FirstOrDefault();
+
+            return email ?? string.Empty;
         }
 
         public CartSummaryDto GetCartSummary(List<OrderDetailDto> cartItems)

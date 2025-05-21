@@ -62,7 +62,7 @@
                                     <i class="far fa-star"></i>
                                 }
                             }
-                            <span class="rating-value">@Model.AvgRating.ToString("0.0")</span>
+                            <span class="rating-value">@Model.AvgRating??.ToString("0.0")</span>
                         </div>
                         <span class="rating-count">(@Model.Ratings.Count valoraciones)</span>
                     </div>

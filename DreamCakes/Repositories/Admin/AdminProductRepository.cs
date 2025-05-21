@@ -103,7 +103,7 @@ namespace DreamCakes.Repositories.Admin
             return _context.PRODUCTOes
                 .Include(p => p.IMAGENs)
                 .Include(p => p.CATEGORIA)
-                .Where(p => p.Stock > 0)
+                .Where(p => p.Stock >= 0)
                 .Select(p => new AdminProductDto
                 {
                     ID_Product = p.ID_Producto,
@@ -293,10 +293,10 @@ namespace DreamCakes.Repositories.Admin
                     transaction.Commit();
                     return true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
-                    // Puedes registrar el error si lo deseas
+                    
                     return false;
                 }
             }

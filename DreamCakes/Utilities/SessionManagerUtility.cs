@@ -1,8 +1,24 @@
 ﻿using DreamCakes.Dtos;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
+using DreamCakes.Utilities;
+using System;
+using System.Linq;
 
 namespace DreamCakes.Utilities
 {
+    public class SessionAuthorize : AuthorizeAttribute
+    {
+        public override void OnAuthorization(AuthorizationContext filterContext)
+        {
+            if (HttpContext.Current.Session["ID_Usuario"] == null)
+            {
+                filterContext.Result = new RedirectResult("~/Home/Index");
+            }
+        }
+    }
+
     public static class SessionManagerUtility
     {
         // Establece los valores de la sesión del usuario a partir de un objeto LoginDto.
@@ -23,6 +39,16 @@ namespace DreamCakes.Utilities
             session.Remove("ID_Estado");
             session.Clear();
             session.Abandon();
+        }
+        public class SessionAuthorize : AuthorizeAttribute
+        {
+            public override void OnAuthorization(AuthorizationContext filterContext)
+            {
+                if (HttpContext.Current.Session["ID_Usuario"] == null)
+                {
+                    filterContext.Result = new RedirectResult("~/Auth/Login");
+                }
+            }
         }
 
         // Obtiene el ID del usuario actual desde la sesión.

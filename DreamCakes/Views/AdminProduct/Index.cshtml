@@ -1,233 +1,199 @@
 ﻿@model IEnumerable<DreamCakes.Dtos.Admin.AdminProductDto>
+
 @{
     ViewBag.Title = "Lista de Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-4 dp-container">
-    <h2 class="dp-title">@ViewBag.Title</h2>
-    <hr class="dp-divider" />
-    <p>
-        <a href="@Url.Action("Create")" class="dp-btn-create">
-            <img src="~/Content/icons/plus.svg" alt="Crear" class="dp-icon-btn" /> Crear Nuevo Producto
-        </a>
-    </p>
+<h4 class="text-center mt-4 mb-4 text-uppercase" style="color: var(--purple); font-weight: bold;">
+    GESTIÓN DE PRODUCTOS
+</h4>
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success dp-alert-success">
-            @TempData["SuccessMessage"]
-        </div>
-    }
+<p class="new-button-container">
+    <a href="@Url.Action("Create")" class="primary-button">
+        Crear Nuevo Producto
+    </a>
+</p>
 
-    <div class="table-responsive">
-        <table class="table dp-table">
-            <thead class="dp-table-header">
-                <tr class="dp-table-header-row">
-                    <th>Imagen</th>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr class="dp-table-row">
-                        <td>
-                            @if (item.Images != null && item.Images.Any())
-                            {
-                                <img src="@item.Images.First().ImgUrl" alt="@item.ProdName" class="dp-img" />
-                            }
-                            else
-                            {
-                                <span class="text-muted">Sin imagen</span>
-                            }
-                        </td>
-                        <td>@item.ProdName</td>
-                        <td>@item.CategoryName</td>
-                        <td>@item.ProdPrice.ToString("C")</td>
-                        <td>@item.ProdStock</td>
-                        <td class="dp-actions-column">
-                            <a href="@Url.Action("Edit", new { id = item.ID_Product })" class="dp-action-btn dp-edit">
-                                <img src="~/Content/icons/edit.svg" alt="Editar" class="dp-icon-btn" /> Editar
-                            </a>
-                            <a href="@Url.Action("Details", new { id = item.ID_Product })" class="dp-action-btn dp-details">
-                                <img src="~/Content/icons/list.svg" alt="Detalles" class="dp-icon-btn" /> Detalles
-                            </a>
-                            <button onclick="deleteProduct(@item.ID_Product)" class="dp-action-btn dp-delete">
-                                <img src="~/Content/icons/delete.svg" alt="Eliminar" class="dp-icon-btn" /> Eliminar
-                            </button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="success-alert" class="alert alert-success custom-alert">
+        @TempData["SuccessMessage"]
     </div>
+}
+
+<div class="table-container">
+    <table class="categories-table">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th class="actions-header">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.Images != null && item.Images.Any())
+                        {
+                            <img src="@item.Images.First().ImgUrl" alt="@item.ProdName" class="product-img" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">Sin imagen</span>
+                        }
+                    </td>
+                    <td>@item.ProdName</td>
+                    <td>@item.CategoryName</td>
+                    <td>@item.ProdPrice.ToString("C")</td>
+                    <td>@item.ProdStock</td>
+                    <td class="actions-column">
+                        <a href="@Url.Action("Edit", new { id = item.ID_Product })" class="action-button">
+                            <img src="~/Content/icons/edit.svg" alt="Editar" class="icon" /> Editar
+                        </a>
+                        <a href="@Url.Action("Details", new { id = item.ID_Product })" class="action-button">
+                            <img src="~/Content/icons/list.svg" alt="Detalles" class="icon" /> Detalles
+                        </a>
+                        <button onclick="deleteProduct(@item.ID_Product)" class="action-button delete">
+                            <img src="~/Content/icons/delete.svg" alt="Eliminar" class="icon" /> Eliminar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 <style>
-    :root {
-        --wine: #9B2020;
-        --light-wine: #B23232;
-        --purple: #483470;
-        --light-purple: #5a2d82;
-        --gray: #F8F9FA;
-        --text: #333333;
-        --rounded-border: 0.5rem;
+    .new-button-container {
+        text-align: right;
+        margin-bottom: 20px;
+        margin-right: 5%;
     }
 
-    .dp-container {
-        max-width: 1000px;
-        margin: 0 auto;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: var(--text);
-    }
-
-    .dp-title {
-        color: var(--purple);
-        font-weight: 700;
-    }
-
-    .dp-divider {
-        border-color: var(--light-purple);
-        margin-bottom: 1rem;
-    }
-
-    /* Botón Crear sin fondo ni borde, solo texto e ícono */
-    .dp-btn-create {
-        background: none;
-        border: none;
-        color: var(--purple);
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 0;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 1rem;
-    }
-
-        .dp-btn-create:hover {
-            color: var(--light-purple);
-            text-decoration: underline;
-        }
-
-        /* Icono del botón Crear sin fondo ni borde */
-        .dp-btn-create .dp-icon-btn {
-            width: 18px;
-            height: 18px;
-            background: none !important;
-            border: none !important;
-            pointer-events: none;
-            filter: none; /* Quita cualquier filtro */
-        }
-
-    .dp-alert-success {
-        border-radius: var(--rounded-border);
-    }
-
-    .dp-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0 0.5rem;
-    }
-
-    .dp-table-header {
+    .primary-button {
+        padding: 10px 20px;
         background-color: var(--purple);
         color: white;
-        font-weight: 600;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
     }
 
-    .dp-table-header-row {
-        border-top-left-radius: var(--rounded-border);
-        border-top-right-radius: var(--rounded-border);
+        .primary-button:hover {
+            background-color: var(--light-purple);
+            text-decoration: none;
+            color: white;
+        }
+
+    .table-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .categories-table {
+        width: 90%;
+        max-width: 1100px;
+        border-collapse: collapse;
+        background-color: white;
+        border-radius: 12px;
         overflow: hidden;
+        box-shadow: 0 4px 30px rgba(72, 52, 112, 0.3);
     }
 
-        .dp-table-header-row th:first-child {
-            border-top-left-radius: var(--rounded-border);
+        .categories-table thead {
+            background-color: var(--purple);
+            color: white;
         }
 
-        .dp-table-header-row th:last-child {
-            border-top-right-radius: var(--rounded-border);
+        .categories-table th,
+        .categories-table td {
+            padding: 14px 16px;
+            text-align: left;
         }
 
-    .dp-table thead th {
-        padding: 12px 15px;
-        text-align: left;
-        background-color: var(--purple);
-        border-radius: 0;
-    }
-
-    .dp-table-row {
-        background-color: var(--gray);
-    }
-
-        /* sin hover en filas */
-        .dp-table-row:hover {
+        .categories-table tbody tr:nth-child(even) {
             background-color: var(--gray);
-            color: var(--text);
         }
 
-    .dp-img {
-        width: 60px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: var(--rounded-border);
+    .actions-header {
+        text-align: center;
     }
 
-    .dp-actions-column {
+    .actions-column {
         display: flex;
         flex-direction: column;
-        gap: 0.4rem;
+        gap: 10px;
+        align-items: center;
     }
 
-    /* Botones de acciones sin fondo, solo texto e icono con hover de color morado */
-    .dp-action-btn {
-        background: none;
-        border: none;
-        color: var(--purple);
-        padding: 6px 12px;
-        border-radius: var(--rounded-border);
-        cursor: pointer;
-        transition: color 0.3s ease;
-        text-decoration: none;
-        font-weight: 600;
+    .action-button {
         display: flex;
         align-items: center;
-        gap: 6px;
-        justify-content: center;
+        gap: 8px;
+        color: var(--purple);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s;
+        border: none;
     }
 
-        .dp-action-btn:hover {
+        .action-button:hover {
             color: var(--light-purple);
-            text-decoration: underline;
-            background: none;
         }
 
-    .dp-icon-btn {
+        .action-button.delete {
+            color: var(--wine);
+        }
+
+            .action-button.delete:hover {
+                color: var(--light-wine);
+            }
+
+    .icon {
         width: 18px;
         height: 18px;
-        pointer-events: none;
     }
 
-    /* Solo para el botón eliminar cambiar color a vino, pero sin fondo */
-    .dp-delete {
-        color: var(--wine);
+    .custom-alert {
+        max-width: 600px;
+        margin: 20px auto;
+        border-radius: 0.5rem;
+        text-align: center;
+        font-weight: 500;
+        transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
-        .dp-delete:hover {
-            color: var(--light-wine);
-            text-decoration: underline;
-            background: none;
+        .custom-alert.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
         }
+
+    .product-img {
+        width: 90px;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+    }
 </style>
 
 @section Scripts {
     <script>
+
+        setTimeout(function () {
+            const alert = document.getElementById("success-alert");
+            if (alert) {
+                alert.classList.add("fade-out");
+                setTimeout(() => alert.remove(), 600);
+            }
+        }, 3000);
         function deleteProduct(id) {
             if (confirm('¿Está seguro que desea eliminar este producto?')) {
                 $.post('@Url.Action("Delete")', { id: id }, function (data) {

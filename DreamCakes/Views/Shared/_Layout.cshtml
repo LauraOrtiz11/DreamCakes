@@ -19,90 +19,91 @@
                 @{
                     var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
                     var userRole = isAuthenticated ? Session["ID_Rol"] as int? : null;
+
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+                    Response.Cache.SetNoStore();
+
+
                 }
 
                 @if (isAuthenticated)
                 {
-            <ul class="navbar-menu">
-                <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("Index", "Home")">
-                        <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
-                        Inicio
-                    </a>
-                </li>
-
-                @if (userRole == 1)
-                {
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Usuarios
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Categorias
-                        </a>
-                    </li>
-                    <li class="nav-item">
+                    <ul class="navbar-menu">
 
 
-                        <a class="nav-link" href="@Url.Action("Index", "Promotions")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Promociones
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
-                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                            Gestión Productos
-                        </a>
-                    </li>
+                        @if (userRole == 1)
+                        {
+                            <li class="nav-item">
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
-                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                            Asignación de Pedidos
-                        </a>
-                    </li>
+                                <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
+                                    <img src="@Url.Content("~/Content/icons/Profile.svg")" width="28" height="20" alt="Promotion" />
+                                    Usuarios
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
+                                    <img src="@Url.Content("~/Content/icons/CategoryM.svg")" width="28" height="20" alt="Promotion" />
+                                    Categorias
+                                </a>
+                            </li>
+                            <li class="nav-item">
 
-                }
-                else if (userRole == 2)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Catalog", "Product")">
-                            <img src="@Url.Content("~/Content/icons/CategoryM.svg")" width="28" height="20" alt="Buy" />
-                            Catalogo
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "Order")">
-                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                            Comprar
-                        </a>
-                    </li>
 
-                }
-                else if (userRole == 3)
-                {
-                    <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "Promotions")">
+                                    <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
+                                    Promociones
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
+                                    <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
+                                    Productos
+                                </a>
+                            </li>
 
-                        <a class="nav-link" href="@Url.Action("Index", "DeliveryHistory")">
-                            <img src="@Url.Content("~/Content/icons/List.svg")" width="28" height="20" alt="List" />
-                            Historial de Pedidos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
-                            <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
-                            Pedidos Asignados
-                        </a>
-                    </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
+                                    <img src="@Url.Content("~/Content/icons/List.svg")" width="28" height="20" alt="Catalogo" />
+                                    Pedidos
+                                </a>
+                            </li>
 
-                }
-            </ul>
+                        }
+                        else if (userRole == 2)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Catalog", "Product")">
+                                    <img src="@Url.Content("~/Content/icons/CategoryM.svg")" width="28" height="20" alt="Buy" />
+                                    Catalogo
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "Order")">
+                                    <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                                    Comprar
+                                </a>
+                            </li>
+
+                        }
+                        else if (userRole == 3)
+                        {
+                            <li class="nav-item">
+
+                                <a class="nav-link" href="@Url.Action("Index", "DeliveryHistory")">
+                                    <img src="@Url.Content("~/Content/icons/List.svg")" width="28" height="20" alt="List" />
+                                    Historial de Pedidos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("AssignedOrders", "DeliveryOrder")">
+                                    <img src="@Url.Content("~/Content/icons/Buy.svg")" width="28" height="20" alt="Buy" />
+                                    Pedidos Asignados
+                                </a>
+                            </li>
+
+                        }
+                    </ul>
 
                     <div class="navbar-actions">
                         <a href="@Url.Action("Index", "Profile")">
@@ -202,5 +203,27 @@
             "extendedTimeOut": "1000"
         };
     </script>
+    @section Scripts {
+        <script>
+            window.onload = function () {
+                if (window.history && window.history.pushState) {
+                    window.history.pushState(null, "", window.location.href);
+                    window.onpopstate = function () {
+                        window.location.href = '/Home/Index';
+                    };
+                }
+            };
+        </script>
+
+    }
+    <script>
+        window.onload = function () {
+            if (window.history && window.history.replaceState) {
+                // Reemplaza la URL actual sin agregar entrada al historial
+                window.history.replaceState(null, "", "/");
+            }
+        };
+    </script>
+
 </body>
 </html>

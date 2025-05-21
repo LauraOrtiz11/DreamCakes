@@ -13,7 +13,7 @@ namespace DreamCakes.Dtos.Client
         public string Descripcion { get; set; }
         public decimal Precio { get; set; }
         public int Stock { get; set; }
-        public decimal AvgRating { get; set; }
+        public decimal? AvgRating { get; set; }
         public int ID_Categoria { get; set; }
         public string Nom_Categ { get; set; }
         public string Descrip_Categ { get; set; }
