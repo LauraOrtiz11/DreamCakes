@@ -168,6 +168,7 @@
     <Compile Include="Dtos\Admin\AdminCategoryDto.cs" />
     <Compile Include="Dtos\Client\ImageDto.cs" />
     <Compile Include="Dtos\Client\OrderDto.cs" />
+    <Compile Include="Dtos\Client\ProdcutResponseDto.cs" />
     <Compile Include="Dtos\Client\ProductDetailsDto.cs" />
     <Compile Include="Dtos\Client\ProductDto.cs" />
     <Compile Include="Dtos\Client\ProductRatingDisplayDto.cs" />

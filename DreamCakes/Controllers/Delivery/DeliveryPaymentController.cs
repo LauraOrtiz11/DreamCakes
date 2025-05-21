@@ -10,6 +10,7 @@ using DreamCakes.Dtos.Delivery;
 
 namespace DreamCakes.Controllers.Delivery
 {
+    [RoleAuthorizeUtility(3)]
     public class DeliveryPaymentController : Controller
     {
         private readonly DeliveryPaymentService _service;

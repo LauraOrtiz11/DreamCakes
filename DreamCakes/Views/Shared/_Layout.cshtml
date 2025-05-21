@@ -24,26 +24,21 @@
                 @if (isAuthenticated)
                 {
             <ul class="navbar-menu">
-                <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("Index", "Home")">
-                        <img src="@Url.Content("~/Content/icons/home.svg")" width="28" height="20" alt="Home" />
-                        Inicio
-                    </a>
-                </li>
+                
 
                 @if (userRole == 1)
                 {
                     <li class="nav-item">
 
                         <a class="nav-link" href="@Url.Action("Index", "AdminUser")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Usuarios
+                            <img src="@Url.Content("~/Content/icons/Profile.svg")" width="28" height="20" alt="Promotion" />
+                            Usuarios
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Index", "AdminCategory")">
-                            <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Categorias
+                            <img src="@Url.Content("~/Content/icons/CategoryM.svg")" width="28" height="20" alt="Promotion" />
+                            Categorias
                         </a>
                     </li>
                     <li class="nav-item">
@@ -51,20 +46,20 @@
 
                         <a class="nav-link" href="@Url.Action("Index", "Promotions")">
                             <img src="@Url.Content("~/Content/icons/Promotion.svg")" width="28" height="20" alt="Promotion" />
-                            Gestión Promociones
+                            Promociones
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Index", "AdminProduct")">
                             <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                            Gestión Productos
+                            Productos
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("AssignOrders", "AdminAssignedOrder")">
-                            <img src="@Url.Content("~/Content/icons/Catalog.svg")" width="28" height="20" alt="Catalogo" />
-                            Asignación de Pedidos
+                            <img src="@Url.Content("~/Content/icons/List.svg")" width="28" height="20" alt="Catalogo" />
+                            Pedidos
                         </a>
                     </li>
 

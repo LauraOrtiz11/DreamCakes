@@ -29,6 +29,8 @@ namespace DreamCakes.Controllers.Client
 
                     // 3. Obtener productos (todos o por categoría)
                     var productsData = await service.GetProductsByCategory(category);
+                    
+
 
                     // Crear respuesta
                     var catalogResponse = new CatalogResponseDto

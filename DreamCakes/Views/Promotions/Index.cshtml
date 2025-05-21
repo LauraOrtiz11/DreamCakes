@@ -5,14 +5,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="titulo">Promociones</h2>
+<h4 class="text-center mt-4 mb-4 text-uppercase" style="color: var(--purple); font-weight: bold;">
+    PROMOCIONES
+</h4>
 
-<p class="nueva-promocion">
-    @Html.ActionLink("Nueva Promoción", "Create", null, new { @class = "btn-primario" })
+<p class="new-promotion">
+    @Html.ActionLink("Nueva Promoción", "Create", null, new { @class = "primary-button" })
 </p>
 
-<div class="contenedor-tabla">
-    <table class="tabla-promociones">
+<div class="table-container">
+    <table class="promotions-table">
         <thead>
             <tr>
                 <th>Nombre</th>
@@ -34,17 +36,17 @@
                     <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
                     <td>@(item.StateProm ? "Activa" : "Inactiva")</td>
                     <td>@Html.DisplayFor(modelItem => item.DescriProm)</td>
-                    <td class="acciones-columna">
-                        <a href="@Url.Action("Edit", new { id = item.ID_Prom })" class="btn-accion">
-                            <img src="~/Content/icons/edit.svg" alt="Editar" class="icono" />
+                    <td class="actions-column">
+                        <a href="@Url.Action("Edit", new { id = item.ID_Prom })" class="action-button">
+                            <img src="~/Content/icons/edit.svg" alt="Editar" class="icon" />
                             Editar
                         </a>
-                        <a href="@Url.Action("Details", new { id = item.ID_Prom })" class="btn-accion">
-                            <img src="~/Content/icons/list.svg" alt="Detalles" class="icono" />
+                        <a href="@Url.Action("Details", new { id = item.ID_Prom })" class="action-button">
+                            <img src="~/Content/icons/list.svg" alt="Detalles" class="icon" />
                             Detalles
                         </a>
-                        <a href="@Url.Action("Delete", new { id = item.ID_Prom })" class="btn-accion eliminar">
-                            <img src="~/Content/icons/delete.svg" alt="Eliminar" class="icono" />
+                        <a href="@Url.Action("Delete", new { id = item.ID_Prom })" class="action-button delete">
+                            <img src="~/Content/icons/delete.svg" alt="Eliminar" class="icon" />
                             Eliminar
                         </a>
                     </td>
@@ -56,20 +58,21 @@
 
 <style>
 
-    .titulo {
+    .title {
         text-align: center;
         color: var(--purple);
         font-size: 32px;
         margin-bottom: 25px;
     }
 
-    .nueva-promocion {
+    .new-promotion {
         text-align: right;
         margin-bottom: 20px;
+        cursor: pointer;
         margin-right: 5%;
     }
 
-    .btn-primario {
+    .primary-button {
         padding: 10px 20px;
         background-color: var(--purple);
         color: white;
@@ -77,51 +80,53 @@
         text-decoration: none;
         font-weight: bold;
         transition: background-color 0.3s ease;
-        margin-right:35px;
-        
+        margin-right: 35px;
     }
 
-        .btn-primario:hover {
+        .primary-button:hover {
             background-color: var(--light-purple);
+            text-decoration: none;
+            color: white;
         }
 
-    .contenedor-tabla {
+    .table-container {
         display: flex;
         justify-content: center;
+        margin-bottom: 20px;
     }
 
-    .tabla-promociones {
+    .promotions-table {
         width: 90%;
         max-width: 1100px;
         border-collapse: collapse;
         background-color: white;
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 30px rgba(72, 52, 112, 0.3);
     }
 
-        .tabla-promociones thead {
+        .promotions-table thead {
             background-color: var(--purple);
             color: white;
         }
 
-        .tabla-promociones th,
-        .tabla-promociones td {
+        .promotions-table th,
+        .promotions-table td {
             padding: 14px 16px;
             text-align: left;
         }
 
-        .tabla-promociones tbody tr:nth-child(even) {
+        .promotions-table tbody tr:nth-child(even) {
             background-color: var(--gray);
         }
 
-    .acciones-columna {
+    .actions-column {
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
 
-    .btn-accion {
+    .action-button {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -131,19 +136,19 @@
         transition: color 0.3s;
     }
 
-        .btn-accion:hover {
+        .action-button:hover {
             color: var(--light-purple);
         }
 
-        .btn-accion.eliminar {
+        .action-button.delete {
             color: var(--wine);
         }
 
-            .btn-accion.eliminar:hover {
+            .action-button.delete:hover {
                 color: var(--light-wine);
             }
 
-    .icono {
+    .icon {
         width: 18px;
         height: 18px;
     }

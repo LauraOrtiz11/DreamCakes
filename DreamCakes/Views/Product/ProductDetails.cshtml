@@ -52,7 +52,7 @@
                 <div class="d-flex align-items-center mb-3">
                     <div class="rating me-3">
                         @{
-                            decimal avgRating = Model.AvgRating;
+                            decimal avgRating = Model.AvgRating?? 0m;
                             int fullStars = (int)Math.Floor(avgRating);
                             bool hasHalfStar = (avgRating - fullStars) >= 0.3m;
                         }

@@ -14,5 +14,6 @@ namespace DreamCakes.Dtos.Client
         public bool IsActive { get; set; }
         public int Response { get; set; }
         public string Message { get; set; }
+
     }
 }

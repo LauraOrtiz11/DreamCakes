@@ -47,7 +47,7 @@
 
         <div class="botones">
             <input type="submit" value="Guardar" class="btn-primario" />
-            @Html.ActionLink("Volver", "Index", null, new { @class = "btn-secundario" })
+            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "dp-btn dp-btn-back" })
         </div>
     </div>
 }
@@ -136,4 +136,30 @@
     .btn-secundario:hover {
         background-color: var(--light-wine);
     }
+    .dp-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.4rem;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: var(--rounded-border);
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+        user-select: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .dp-btn-back {
+        background-color: transparent;
+        color: var(--purple);
+        border: 2px solid var(--purple);
+    }
+
+        .dp-btn-back:hover {
+            background-color: var(--purple);
+            color: white;
+            text-decoration: none;
+        }
 </style>
