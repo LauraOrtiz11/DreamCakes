@@ -13,11 +13,13 @@ namespace DreamCakes.Services.Client
     public class OrderService 
     {
         private readonly OrderRepository _orderRepository;
-        
+        private readonly EmailService _emailService;
+
         public OrderService()
         {
             _orderRepository = new OrderRepository();
-           
+            _emailService = new EmailService();
+
         }
 
         public OrderResponseDto ValidatePromotionForProduct(string promotionCode, int productId)
@@ -201,6 +203,7 @@ namespace DreamCakes.Services.Client
         {
             try
             {
+
                 // Validaciones básicas
                 if (order.Details == null || !order.Details.Any())
                 {
@@ -262,6 +265,8 @@ namespace DreamCakes.Services.Client
 
                 // Crear la orden
                 var orderId = _orderRepository.CreateOrder(order);
+                // 2. Obtener correo del cliente
+                
 
                 // Retornar solo datos básicos (sin relaciones)
                 return new OrderResponseDto
@@ -273,6 +278,20 @@ namespace DreamCakes.Services.Client
                     DeliveryDate = order.DeliveryDate,
                     Total = order.Details.Sum(d => d.Subtotal)
                 };
+
+                if (orderId > 0)
+                {
+                    // Obtener el correo del cliente
+                    string customerEmail = _orderRepository.GetCustomerEmailByOrderId(orderId);
+
+                    if (!string.IsNullOrEmpty(customerEmail))
+                    {
+                        // Estado fijo para el correo al crear la orden
+                        string statusName = "Pendiente en proceso de asignación de domiciliario";
+
+                        _emailService.SendStatusUpdateNotification(customerEmail, orderId, statusName);
+                    }
+                }
             }
             catch (Exception ex)
             {

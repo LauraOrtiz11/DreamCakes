@@ -33,6 +33,13 @@ namespace DreamCakes.Repositories.Admin
                 })
                 .ToList();
         }
+        public string GetCustomerEmailByOrderId(int orderId)
+        {
+            return _context.PEDIDOes
+                .Where(p => p.ID_Pedido == orderId)
+                .Select(p => p.USUARIO.Email)
+                .FirstOrDefault();
+        }
 
         public List<AdminDeliveryUserDto> GetAvailableDeliveryUsers()
         {

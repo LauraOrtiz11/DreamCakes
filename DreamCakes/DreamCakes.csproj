@@ -291,6 +291,7 @@
     <Compile Include="Utilities\EncryptUtility.cs" />
     <Compile Include="Utilities\FileHelperUtility.cs" />
     <Compile Include="Utilities\RoleAuthorizeUtility.cs" />
+    <Compile Include="Utilities\SessionAuthorizeFilter.cs" />
     <Compile Include="Utilities\SessionManagerUtility.cs" />
   </ItemGroup>
   <ItemGroup>

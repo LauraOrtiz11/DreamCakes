@@ -305,6 +305,15 @@ namespace DreamCakes.Repositories.Client
                 }).ToList()
             };
         }
+        public string GetCustomerEmailByOrderId(int orderId)
+        {
+            var email = _context.PEDIDOes
+                .Where(o => o.ID_Pedido == orderId)
+                .Select(o => o.USUARIO.Email)
+                .FirstOrDefault();
+
+            return email ?? string.Empty;
+        }
 
         public CartSummaryDto GetCartSummary(List<OrderDetailDto> cartItems)
         {

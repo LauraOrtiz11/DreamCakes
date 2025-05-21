@@ -91,16 +91,16 @@ namespace DreamCakes.Controllers
         {
             try
             {
-                // Eliminar cookies de autenticación y datos de sesión
+                // Eliminar cookies de autenticación y sesión
                 CookieUtility.RemoveAuthCookie(Response);
                 SessionManagerUtility.ClearUserSession(Session);
 
-                // Prevenir el almacenamiento en caché y la navegación hacia atrás
-                Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
+                // Evitar el almacenamiento en caché
+                Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
+                Response.Cache.SetValidUntilExpires(false);
+                Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 Response.Cache.SetNoStore();
-                Response.AddHeader("Pragma", "no-cache");
-                Response.AddHeader("Cache-Control", "no-store");
 
                 // Redirigir al inicio
                 return RedirectToAction("Index", "Home");
@@ -111,6 +111,7 @@ namespace DreamCakes.Controllers
                 return RedirectToAction("General", "Error");
             }
         }
+
 
 
         private ActionResult RedirectToRole(int roleId)
