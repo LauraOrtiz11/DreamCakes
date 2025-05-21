@@ -16,7 +16,7 @@
                     {
                         <div class="carousel-item @(i == 0 ? "active" : "")">
                             <div class="promo-card gradient-purple p-4 text-center text-white">
-                                <h3>@Model.ActivePromotions[i].NameProm</h3>
+                                <h3>Codigo de Descuento:@Model.ActivePromotions[i].NameProm</h3>
                                 <p>@Model.ActivePromotions[i].DescriProm</p>
                                 <div class="promo-badge my-2">
                                     <span class="badge bg-light text-dark">
@@ -41,6 +41,7 @@
     }
 
 
+
     <!-- Barra de Búsqueda y Filtros -->
     <div class="row mb-4 justify-content-center">
         <div class="col-md-8">
@@ -57,6 +58,7 @@
     </div>
 
 
+
     <!-- Filtros de categoría -->
     <div class="category-filters m-1 d-flex justify-content-center">
         <div class="d-flex flex-wrap">
@@ -68,6 +70,36 @@
             }
         </div>
     </div>
+    @if (Model.Products == null || !Model.Products.Any())
+    {
+        <div class="alert alert-warning text-center mt-3">
+            No se encontraron productos en esta categoría.
+        </div>
+    }
+
+    @if (TempData["SearchError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mt-3" id="success-alert">
+            <i class="fas fa-exclamation-circle me-2"></i> @TempData["SearchError"]
+
+        </div>
+    }
+
+    @if (TempData["SearchInfo"] != null)
+    {
+        <div id="success-alert" class="alert alert-success custom-alert">
+            <i class="fas fa-info-circle me-2"></i> @TempData["SearchInfo"]
+
+        </div>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show mt-3" id="success-alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> @ViewBag.Error
+
+        </div>
+    }
 
     <!-- Grid de productos -->
     <div class="row">
@@ -87,7 +119,7 @@
                         </div>
                         <div class="card-footer bg-white border-0">
                             <a href="@Url.Action("ProductDetails", new { id = product.ID_Product })"
-                               class="btn btn-danger btn-block">
+                               class="btn btn-danger btn-V">
                                 Ver más
                             </a>
                         </div>
@@ -163,6 +195,13 @@
             margin-right: 5px;
         }
 
+    .action-button.delete {
+        color: var(--wine);
+    }
+
+        .action-button.delete:hover {
+            color: var(--light-wine);
+        }
     /* PRODUCTOS */
     .product-card {
         border-radius: 20px;
@@ -171,53 +210,108 @@
         transition: transform 0.3s ease;
         text-align: center;
     }
+
     .cart-footer {
-        display:flex;
-        justify-content:center;
+        display: flex;
+        justify-content: center;
     }
+
     .container {
-        width:100%;   
+        width: 100%;
     }
-        .product-card:hover {
-            transform: translateY(-6px);
-        }
 
-        .product-card img {
-            height: 170px;
-            object-fit: cover;
-        }
+    .product-card:hover {
+        transform: translateY(-6px);
+    }
 
-        .product-card .card-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #4a154b;
-        }
+    .product-card img {
+        height: 170px;
+        object-fit: cover;
+    }
 
-        .product-card .card-text {
-            font-size: 0.95rem;
-            color: #555;
-            height: 60px;
-            overflow: hidden;
-        }
+    .product-card .card-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #4a154b;
+    }
 
-        .product-card .card-footer {
-            text-align: center;
-            padding-bottom: 15px;
-        }
+    .product-card .card-text {
+        font-size: 0.95rem;
+        color: #555;
+        height: 60px;
+        overflow: hidden;
+    }
 
-        .product-card .btn-block {
-            border-radius: 30px;
-            padding: 10px 20px;
-            font-weight: bold;
-            width: 70%;
-            background-color: var(--purple);
-            border: none;
-        }
+    .product-card .card-footer {
+        text-align: center;
+        padding-bottom: 15px;
+    }
+
+    .product-card .btn-V {
+        justify-content: center;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-weight: bold;
+        width: 70%;
+        background-color: var(--purple);
+        border: none;
+    }
+
     .input-group .form-control {
         border-radius: 25px 0 0 25px;
     }
 
-            .product-card .btn-block:hover {
-                background-color: #50104d;
-            }
+    .product-card .btn-block:hover {
+        background-color: #50104d;
+    }
+
+    .custom-alert {
+        max-width: 600px;
+        margin: 20px auto;
+        border-radius: 0.5rem;
+        text-align: center;
+        font-weight: 500;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+        .custom-alert.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+    .custom-alert {
+        max-width: 600px;
+        margin: 20px auto;
+        border-radius: 0.5rem;
+        text-align: center;
+        font-weight: 500;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+        .custom-alert.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
 </style>
+
+@section Scripts {
+    <script>
+
+        $('form').submit(function (e) {
+            var term = $('input[name="searchTerm"]').val().trim();
+            if (term.length < 2) {
+                alert('Por favor ingrese al menos 2 caracteres');
+                e.preventDefault();
+            }
+        });
+
+        $(document).ready(function () {
+            setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 3000); // 3 segundos
+        });
+
+    </script>
+}

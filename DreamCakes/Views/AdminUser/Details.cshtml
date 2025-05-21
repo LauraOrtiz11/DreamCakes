@@ -5,35 +5,164 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Detalles del Usuario</h2>
+<div class="dp-edit-container">
+    <h2 class="dp-edit-title">Detalles del Usuario</h2>
 
-<div>
-    <dl class="dl-horizontal">
-        <dt>Nombres</dt>
-        <dd>@Model.UserFirstName</dd>
+    <div class="dp-form dp-display-details">
+        <div class="dp-detail-row"><strong>Nombres:</strong> <span>@Model.UserFirstName</span></div>
+        <div class="dp-detail-row"><strong>Apellidos:</strong> <span>@Model.UserLastName</span></div>
+        <div class="dp-detail-row"><strong>Teléfono:</strong> <span>@Model.UserPhone</span></div>
+        <div class="dp-detail-row"><strong>Dirección:</strong> <span>@Model.UserAddress</span></div>
+        <div class="dp-detail-row"><strong>Email:</strong> <span>@Model.UserEmail</span></div>
+        <div class="dp-detail-row"><strong>Estado:</strong> <span>@Model.UserStatusName</span></div>
+        <div class="dp-detail-row"><strong>Rol:</strong> <span>@Model.UserRoleName</span></div>
 
-        <dt>Apellidos</dt>
-        <dd>@Model.UserLastName</dd>
-
-        <dt>Teléfono</dt>
-        <dd>@Model.UserPhone</dd>
-
-        <dt>Dirección</dt>
-        <dd>@Model.UserAddress</dd>
-
-        <dt>Email</dt>
-        <dd>@Model.UserEmail</dd>
-
-        <dt>Estado</dt>
-        <dd>@Model.UserStatusName</dd>
-
-        <dt>Rol</dt>
-        <dd>@Model.UserRoleName</dd>
-
-    </dl>
+        <div class="dp-form-buttons">
+            @Html.ActionLink("Editar", "Edit", new { id = Model.UserID }, new { @class = "dp-btn dp-btn-save" })
+            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "dp-btn dp-btn-back" })
+        </div>
+    </div>
 </div>
+<style>
 
-<p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.UserID }, new { @class = "btn btn-primary" }) |
-    @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-secondary" })
-</p>
+
+    .dp-edit-container {
+        max-width: 700px;
+        margin: 3rem auto;
+        padding: 2rem 2.5rem;
+        background-color: var(--gray-light);
+        border-radius: var(--rounded-border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-color);
+    }
+
+    .dp-edit-title {
+        text-align: center;
+        color: var(--purple);
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        user-select: none;
+    }
+
+    .dp-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .dp-form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dp-label {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--purple);
+        user-select: none;
+    }
+
+    .dp-input {
+        padding: 0.6rem 0.8rem;
+        font-size: 1rem;
+        border: 1.5px solid #ccc;
+        border-radius: var(--rounded-border);
+        transition: border-color 0.3s ease;
+    }
+
+        .dp-input:focus {
+            border-color: var(--purple);
+            outline: none;
+            box-shadow: 0 0 5px var(--light-purple);
+        }
+
+    .dp-validation {
+        color: var(--error-color);
+        font-size: 0.875rem;
+        margin-top: 0.3rem;
+    }
+
+    .dp-checkbox-group {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .dp-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+
+    .dp-label-checkbox {
+        margin: 0;
+        font-weight: 600;
+        color: var(--purple);
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .dp-form-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .dp-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.4rem;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: var(--rounded-border);
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+        user-select: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .dp-btn-save {
+        background-color: var(--purple);
+        color: white;
+    }
+
+        .dp-btn-save:hover {
+            background-color: var(--light-purple);
+        }
+
+    .dp-btn-back {
+        background-color: transparent;
+        color: var(--purple);
+        border: 2px solid var(--purple);
+    }
+
+        .dp-btn-back:hover {
+            background-color: var(--purple);
+            color: white;
+            text-decoration: none;
+        }
+
+    .dp-icon {
+        font-size: 18px;
+    }
+
+    .dp-display-details .dp-detail-row {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #ddd;
+        padding: 0.5rem 0;
+        font-size: 1rem;
+        color: var(--text-color);
+    }
+
+        .dp-display-details .dp-detail-row strong {
+            color: var(--purple);
+            min-width: 120px;
+        }
+
+</style>

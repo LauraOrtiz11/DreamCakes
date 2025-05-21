@@ -5,30 +5,127 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Eliminar Usuario</h2>
+<div class="dp-delete-container">
+    <h2 class="dp-delete-title">Eliminar Usuario</h2>
+    <h4 class="dp-delete-warning">¿Estás seguro que deseas eliminar este usuario?</h4>
 
-<h4>¿Estás seguro que deseas eliminar este usuario?</h4>
-<div>
-    <dl class="dl-horizontal">
-        <dt>Nombres</dt>
-        <dd>@Model.UserFirstName</dd>
+    <div class="dp-delete-card">
+        <dl class="dp-delete-list">
+            <dt>Nombres</dt>
+            <dd>@Model.UserFirstName</dd>
 
-        <dt>Apellidos</dt>
-        <dd>@Model.UserLastName</dd>
+            <dt>Apellidos</dt>
+            <dd>@Model.UserLastName</dd>
 
-        <dt>Email</dt>
-        <dd>@Model.UserEmail</dd>
+            <dt>Email</dt>
+            <dd>@Model.UserEmail</dd>
 
-        <dt>Teléfono</dt>
-        <dd>@Model.UserPhone</dd>
-    </dl>
+            <dt>Teléfono</dt>
+            <dd>@Model.UserPhone</dd>
+        </dl>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.UserID)
+
+        <div class="dp-delete-actions">
+            <input type="submit" value="Eliminar" class="dp-btn dp-btn-delete" />
+            @Html.ActionLink("Cancelar", "Index", null, new { @class = "dp-btn dp-btn-back" })
+        </div>
+    }
 </div>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.UserID)
+<style>
 
-    <button type="submit" class="btn btn-danger">Eliminar</button>
-    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
-}
+
+    .dp-delete-container {
+        max-width: 600px;
+        margin: 3rem auto;
+        padding: 2rem 2.5rem;
+        background-color: var(--gray-light);
+        border-radius: var(--rounded-border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-color);
+        user-select: none;
+        text-align: center;
+    }
+
+    .dp-delete-title {
+        color: var(--purple);
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .dp-delete-warning {
+        font-weight: 600;
+        margin-bottom: 2rem;
+        color: var(--wine);
+    }
+
+    .dp-delete-card {
+        background: white;
+        padding: 1.5rem 2rem;
+        border-radius: var(--rounded-border);
+        box-shadow: inset 0 0 5px #ddd;
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+
+    .dp-delete-list dt {
+        font-weight: 700;
+        color: var(--purple);
+        margin-top: 1rem;
+    }
+
+    .dp-delete-list dd {
+        margin-left: 1rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .dp-delete-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .dp-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.4rem;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: var(--rounded-border);
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+        user-select: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .dp-btn-delete {
+        background-color: var(--wine);
+        color: white;
+    }
+
+    .dp-btn-delete:hover {
+        background-color: var(--light-wine);
+    }
+
+    .dp-btn-back {
+        background-color: transparent;
+        color: var(--purple);
+        border: 2px solid var(--purple);
+    }
+
+    .dp-btn-back:hover {
+        background-color: var(--purple);
+        color: white;
+        text-decoration: none;
+    }
+</style>

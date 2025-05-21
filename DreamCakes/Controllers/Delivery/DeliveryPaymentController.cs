@@ -10,6 +10,7 @@ using DreamCakes.Dtos.Delivery;
 
 namespace DreamCakes.Controllers.Delivery
 {
+    [RoleAuthorizeUtility(3)]
     public class DeliveryPaymentController : Controller
     {
         private readonly DeliveryPaymentService _service;
@@ -24,7 +25,7 @@ namespace DreamCakes.Controllers.Delivery
         public ActionResult RegisterPayment(int orderId)
         {
             var currentUserId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
-            if (currentUserId == null) return RedirectToAction("Login", "Account");
+            if (currentUserId == null) return RedirectToAction("Index", "Home");
 
             // Verificar si el pedido ya está pagado completamente
             if (_service.IsOrderFullyPaid(orderId))

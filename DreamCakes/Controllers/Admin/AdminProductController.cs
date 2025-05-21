@@ -176,17 +176,17 @@ namespace DreamCakes.Controllers.Admin
                 var result = _productService.UpdateProduct(productDto, newImages);
                 if (result)
                 {
-                    TempData["SuccessMessage"] = "Product updated successfully";
+                    TempData["SuccessMessage"] = "Producto actualizado correctamente";
                     return RedirectToAction("Index");
                 }
 
-                ViewBag.ErrorMessage = "Error updating product";
+                ViewBag.ErrorMessage = "Error al actualizar el producto";
                 ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                 return View(productDto);
             }
             catch (Exception)
             {
-                ViewBag.ErrorMessage = "Unexpected error updating product";
+                ViewBag.ErrorMessage = "Error intente más tarde";
                 ViewBag.Categories = new SelectList(_categoryService.GetActiveCategories(), "ID_Category", "CatName ");
                 return View(productDto);
             }

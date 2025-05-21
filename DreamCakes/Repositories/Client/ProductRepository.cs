@@ -65,7 +65,7 @@ namespace DreamCakes.Repositories.Client
                     Description = p.Producto.Descripcion,
                     Price = p.Producto.Precio,
                     Stock = p.Producto.Stock,
-                    AvgRating = p.Producto.PromPuntuacion ?? 0m, // Ahora accesible en memoria
+                    AvgRating = p.Producto.PromPuntuacion ?? 0m, 
                     ID_Category = p.Producto.ID_Categoria,
                     Category = new CategoryDto
                     {
@@ -111,7 +111,8 @@ namespace DreamCakes.Repositories.Client
             var response = new SearchResponseDto
             {
                 Products = new List<ProductDto>(),
-                CurrentPromotion = null
+                CurrentPromotion = null,
+                Response = -1 // Valor por defecto indica error
             };
 
             try
@@ -119,74 +120,112 @@ namespace DreamCakes.Repositories.Client
                 if (string.IsNullOrWhiteSpace(searchTerm))
                 {
                     response.Response = 0;
-                    response.Message = "Search term cannot be empty";
+                    response.Message = "El término de búsqueda no puede estar vacío";
                     return response;
                 }
 
-                // 1. Usar SP para búsqueda
+                // 1. Crear parámetro correctamente
+                var searchParam = new SqlParameter("@SearchTerm", SqlDbType.NVarChar, 100)
+                {
+                    Value = searchTerm
+                };
+
+                // 2. Ejecutar SP con parámetro tipado
                 var spResults = await _context.Database.SqlQuery<ProductSearchResultDto>(
                     "EXEC sp_SearchProducts @SearchTerm",
-                    new System.Data.SqlClient.SqlParameter("@SearchTerm", searchTerm)
+                    searchParam
                 ).ToListAsync();
 
                 if (!spResults.Any())
                 {
                     response.Response = 0;
-                    response.Message = "No results found";
+                    response.Message = "No se encontraron resultados";
                     return response;
                 }
 
-                // 2. Obtener imágenes para los productos encontrados
-                var productIds = spResults.Select(r => r.ID_Producto).ToList();
-                var images = await _context.IMAGENs
-                    .Where(i => productIds.Contains(i.ID_Producto))
-                    .ToListAsync();
+                // 3. Obtener IDs de productos para imágenes
+                var productIds = spResults.Select(r => r.ID_Producto).Distinct().ToList();
 
-                // 3. Mapear resultados
-                response.Products = spResults.Select(r => new ProductDto
+                // 4. Cargar imágenes en una sola consulta
+                var imagesDict = await _context.IMAGENs
+                    .Where(i => productIds.Contains(i.ID_Producto))
+                    .GroupBy(i => i.ID_Producto)
+                    .ToDictionaryAsync(g => g.Key, g => g.ToList());
+
+                // 5. Mapear resultados
+                response.Products = spResults.Select(r =>
                 {
-                    ID_Product = r.ID_Producto,
-                    Name = r.Nombre,
-                    Description = r.Descripcion,
-                    Price = r.Precio,
-                    Stock = r.Stock,
-                    AvgRating = r.AvgRating,
-                    ID_Category = r.ID_Categoria,
-                    Category = new CategoryDto
+                    var productDto = new ProductDto
                     {
+                        ID_Product = r.ID_Producto,
+                        Name = r.Nombre,
+                        Description = r.Descripcion,
+                        Price = r.Precio,
+                        Stock = r.Stock,
+                        AvgRating = r.AvgRating ?? 0m,
                         ID_Category = r.ID_Categoria,
-                        CatName = r.Nom_Categ,
-                        CatDescription = r.Descrip_Categ,
-                        CatIsActive = r.Estado,
+                        Category = new CategoryDto
+                        {
+                            ID_Category = r.ID_Categoria,
+                            CatName = r.Nom_Categ,
+                            CatDescription = r.Descrip_Categ,
+                            CatIsActive = r.Estado,
+                            Response = 1
+                        },
                         Response = 1
-                    },
-                    Images = images.Where(i => i.ID_Producto == r.ID_Producto)
-                        .Select(i => new ImageDto
+                    };
+
+                    // Asignar imágenes si existen
+                    if (imagesDict.TryGetValue(r.ID_Producto, out var images))
+                    {
+                        productDto.Images = images.Select(i => new ImageDto
                         {
                             ID_Image = i.ID_Imagen,
                             ID_Product = i.ID_Producto,
                             ImgName = i.Nombre_Img,
                             ImgUrl = i.Imagen_URL,
                             Response = 1
-                        }).ToList(),
-                    Response = 1
+                        }).ToList();
+                    }
+                    else
+                    {
+                        productDto.Images = new List<ImageDto>();
+                    }
+
+                    return productDto;
                 }).ToList();
 
-                // 4. Obtener promoción activa actual
-                response.CurrentPromotion = await _context.Database.SqlQuery<PromotionDto>(
-                    "EXEC sp_GetActivePromotions"
-                ).FirstOrDefaultAsync();
+                // 6. Obtener promoción activa (opcional)
+                try
+                {
+                    response.CurrentPromotion = await _context.Database.SqlQuery<PromotionDto>(
+                        "EXEC sp_GetActivePromotions"
+                    ).FirstOrDefaultAsync();
+                }
+                catch
+                {
+                    // Si falla, continuar sin promoción
+                    response.CurrentPromotion = null;
+                }
 
                 response.Response = 1;
+                response.Message = "Búsqueda exitosa";
+            }
+            catch (SqlException sqlEx)
+            {
+                response.Message = $"Error de base de datos: {sqlEx.Message}";
+                // Log adicional para Number y LineNumber
+                System.Diagnostics.Debug.WriteLine($"SQL Error #{sqlEx.Number}: {sqlEx.Message} (Line: {sqlEx.LineNumber})");
             }
             catch (Exception ex)
             {
-                response.Response = -1;
-                response.Message = $"Search error: {ex.Message}";
+                response.Message = $"Error inesperado: {ex.Message}";
             }
 
             return response;
         }
+
+        
 
         public async Task<List<PromotionDto>> GetActivePromotions()
         {

@@ -5,43 +5,201 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Editar Usuario</h2>
+<div class="dp-edit-container">
+    <h2 class="dp-edit-title">Editar Usuario</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.UserID)
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.UserID)
 
-    <div class="form-group">
-        @Html.Label("Nombre del Usuario")
-        @Html.TextBoxFor(model => model.UserFirstName, new { @class = "form-control" })
-    </div>
+        <div class="dp-form">
+            <div class="dp-form-group">
+                @Html.LabelFor(model => model.UserFirstName, new { @class = "dp-label" })
+                @Html.TextBoxFor(model => model.UserFirstName, new { @class = "dp-input" })
+                @Html.ValidationMessageFor(model => model.UserFirstName, "", new { @class = "dp-validation" })
+            </div>
 
-    <div class="form-group">
-        @Html.Label("Estado del Usuario")
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.UserStatusID, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", max = "1" } })
-            @Html.ValidationMessageFor(model => model.UserStatusID, "", new { @class = "text-danger" })
-            <p class="text-muted small">
-                0 = Inactivo<br />
-                1 = Activo
-            </p>
+            <div class="dp-form-group">
+                @Html.LabelFor(model => model.UserStatusID, new { @class = "dp-label" })
+                @Html.EditorFor(model => model.UserStatusID, new
+                {
+                    htmlAttributes = new
+                    {
+                        @class = "dp-input",
+                        type = "number",
+                        min = "0",
+                        max = "1"
+                    }
+                })
+                @Html.ValidationMessageFor(model => model.UserStatusID, "", new { @class = "dp-validation" })
+                <p class="dp-hint">
+                    0 = Inactivo<br />
+                    1 = Activo
+                </p>
+            </div>
+
+            <div class="dp-form-group">
+                @Html.LabelFor(model => model.UserRoleID, new { @class = "dp-label" })
+                @Html.EditorFor(model => model.UserRoleID, new
+                {
+                    htmlAttributes = new
+                    {
+                        @class = "dp-input",
+                        type = "number",
+                        min = "1",
+                        max = "3"
+                    }
+                })
+                @Html.ValidationMessageFor(model => model.UserRoleID, "", new { @class = "dp-validation" })
+                <p class="dp-hint">
+                    1 = Administrador<br />
+                    2 = Cliente<br />
+                    3 = Domiciliario
+                </p>
+            </div>
+
+            <div class="dp-form-buttons">
+                <button type="submit" class="dp-btn dp-btn-save">
+                    <i class="fas fa-save dp-icon"></i> Guardar
+                </button>
+                @Html.ActionLink("Cancelar", "Index", null, new { @class = "dp-btn dp-btn-back" })
+            </div>
         </div>
-    </div>
+    }
+</div>
+<style>
+    :root {
+        --purple: #5a3e9f;
+        --light-purple: #7c61cc;
+        --gray-light: #f9f9f9;
+        --text-color: #333;
+        --error-color: #d9534f;
+        --rounded-border: 6px;
+    }
 
-    <div class="form-group">
-        @Html.Label("Rol del Usuario")
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.UserRoleID, new { htmlAttributes = new { @class = "form-control", type = "number", min = "1", max = "3" } })
-            @Html.ValidationMessageFor(model => model.UserRoleID, "", new { @class = "text-danger" })
-            <p class="text-muted small">
-                1 = Administrador<br />
-                2 = Cliente<br />
-                3 = Domiciliario
-            </p>
-        </div>
-    </div>
+    .dp-edit-container {
+        max-width: 600px;
+        margin: 3rem auto;
+        padding: 2rem 2.5rem;
+        background-color: var(--gray-light);
+        border-radius: var(--rounded-border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-color);
+    }
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
-}
+    .dp-edit-title {
+        text-align: center;
+        color: var(--purple);
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        user-select: none;
+    }
+
+    .dp-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .dp-form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dp-label {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--purple);
+        user-select: none;
+    }
+
+    .dp-input {
+        padding: 0.6rem 0.8rem;
+        font-size: 1rem;
+        border: 1.5px solid #ccc;
+        border-radius: var(--rounded-border);
+        transition: border-color 0.3s ease;
+    }
+
+        .dp-input:focus {
+            border-color: var(--purple);
+            outline: none;
+            box-shadow: 0 0 5px var(--light-purple);
+        }
+
+    .dp-validation {
+        color: var(--error-color);
+        font-size: 0.875rem;
+        margin-top: 0.3rem;
+    }
+
+    .dp-checkbox-group {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .dp-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+
+    .dp-label-checkbox {
+        margin: 0;
+        font-weight: 600;
+        color: var(--purple);
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .dp-form-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .dp-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.4rem;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: var(--rounded-border);
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+        user-select: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .dp-btn-save {
+        background-color: var(--purple);
+        color: white;
+    }
+
+        .dp-btn-save:hover {
+            background-color: var(--light-purple);
+        }
+
+    .dp-btn-back {
+        background-color: transparent;
+        color: var(--purple);
+        border: 2px solid var(--purple);
+    }
+
+    .dp-btn-back:hover {
+        background-color: var(--purple);
+        color: white;
+        text-decoration: none;
+    }
+
+    .dp-icon {
+        font-size: 18px;
+    }
+</style>

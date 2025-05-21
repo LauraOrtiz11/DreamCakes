@@ -10,10 +10,12 @@ namespace DreamCakes.Services.Admin
     public class AdminAssignedOrderService
     {
         private readonly AdminAssignedOrderRepository _repository;
+        private readonly EmailService _emailService;
 
         public AdminAssignedOrderService()
         {
             _repository = new AdminAssignedOrderRepository();
+            _emailService = new EmailService();
         }
 
         public AdminOrderAssignmentViewDto GetOrderAssignmentData()
@@ -37,12 +39,25 @@ namespace DreamCakes.Services.Admin
                 return model;
             }
         }
-
         public AdminAssignmentResponse AssignOrder(AdminAssignOrderDto assignment)
         {
             try
             {
                 bool success = _repository.AssignOrderToDelivery(assignment.OrderId, assignment.DeliveryUserId);
+
+                if (success)
+                {
+                    // Obtener correo del cliente
+                    string customerEmail = _repository.GetCustomerEmailByOrderId(assignment.OrderId);
+                    if (!string.IsNullOrEmpty(customerEmail))
+                    {
+                        _emailService.SendStatusUpdateNotification(
+                            customerEmail,
+                            assignment.OrderId,
+                            "En camino" // Estado fijo al asignar desde el admin
+                        );
+                    }
+                }
 
                 return new AdminAssignmentResponse
                 {
@@ -60,9 +75,10 @@ namespace DreamCakes.Services.Admin
                 };
             }
         }
+
     }
 
-   
+
 
     public class AdminAssignmentResponse
     {

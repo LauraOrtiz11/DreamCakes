@@ -168,6 +168,7 @@
     <Compile Include="Dtos\Admin\AdminCategoryDto.cs" />
     <Compile Include="Dtos\Client\ImageDto.cs" />
     <Compile Include="Dtos\Client\OrderDto.cs" />
+    <Compile Include="Dtos\Client\ProdcutResponseDto.cs" />
     <Compile Include="Dtos\Client\ProductDetailsDto.cs" />
     <Compile Include="Dtos\Client\ProductDto.cs" />
     <Compile Include="Dtos\Client\ProductRatingDisplayDto.cs" />
@@ -290,6 +291,7 @@
     <Compile Include="Utilities\EncryptUtility.cs" />
     <Compile Include="Utilities\FileHelperUtility.cs" />
     <Compile Include="Utilities\RoleAuthorizeUtility.cs" />
+    <Compile Include="Utilities\SessionAuthorizeFilter.cs" />
     <Compile Include="Utilities\SessionManagerUtility.cs" />
   </ItemGroup>
   <ItemGroup>

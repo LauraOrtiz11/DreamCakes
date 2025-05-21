@@ -1,55 +1,131 @@
 ﻿@model DreamCakes.Dtos.Admin.AdminCategoryDto
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Crear Categoría";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Crear nueva categoría</h2>
+<div class="form-container">
+    <div class="form-card">
+        <h4 class="form-title">
+            CREAR NUEVA CATEGORÍA
+        </h4>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="form-horizontal">
-        <h4>Categoria</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CatName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CatName, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group-custom">
+                @Html.LabelFor(model => model.CatName)
+                @Html.TextBoxFor(model => model.CatName, new { @class = "form-control-custom" })
                 @Html.ValidationMessageFor(model => model.CatName, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CatDescription, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CatDescription, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group-custom">
+                @Html.LabelFor(model => model.CatDescription)
+                @Html.TextAreaFor(model => model.CatDescription, new { @class = "form-control-custom", rows = 3 })
                 @Html.ValidationMessageFor(model => model.CatDescription, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CatIsActive, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.CatIsActive)
-                    @Html.ValidationMessageFor(model => model.CatIsActive, "", new { @class = "text-danger" })
-                </div>
+            <div class="form-group-custom">
+                <label class="checkbox-label">
+                    @Html.CheckBoxFor(model => model.CatIsActive)
+                    Activa
+                </label>
+                @Html.ValidationMessageFor(model => model.CatIsActive, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+            <div class="form-actions">
+                <input type="submit" value="Crear" class="primary-button" />
+                <a href="@Url.Action("Index")" class="secondary-button">Cancelar</a>
             </div>
-        </div>
+        }
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
+
+<style>
+    .form-container {
+        display: flex;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .form-card {
+        background-color: white;
+        padding: 40px;
+        border-radius: 1rem;
+        box-shadow: 0 4px 30px rgba(72, 52, 112, 0.2);
+        width: 100%;
+        max-width: 850px;
+    }
+
+    .form-title {
+        text-align: center;
+        font-size: 24px;
+        color: var(--purple);
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 30px;
+    }
+
+    .form-group-custom {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .form-control-custom {
+        padding: 10px 14px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+    .checkbox-label {
+        font-weight: 500;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .primary-button {
+        padding: 10px 20px;
+        background-color: var(--purple);
+        color: white;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+        .primary-button:hover {
+            background-color: var(--light-purple);
+        }
+
+    .secondary-button {
+        padding: 10px 20px;
+        background-color: var(--gray);
+        color: black;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+
+        .secondary-button:hover {
+            background-color: var(--dark-gray);
+            color:var(--black);
+            text-decoration: none;
+        }
+</style>

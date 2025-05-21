@@ -10,7 +10,7 @@
     --purple: #483470;
     --light-purple: #5a2d82;
     --text: #333333;
-    --rounded-border: 20rem;
+    --rounded-border: 2rem;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
@@ -20,6 +20,9 @@ body, html {
     color: var(--text);
     margin: 0;
     padding: 0;
+    display:grid;
+    min-height:100vh;
+    grid-template-rows:auto 1fr auto;
 }
 
 main {
@@ -102,11 +105,29 @@ input:-webkit-autofill:active {
     background-color: var(--wine);
     color: white;
     border: none;
-    padding: 0.1rem 1rem;
+    padding: 0.3rem 1rem;
     border-radius: 8px;
-    font-weight: 100;
-    transition: background-color 0.3s ease;
-    transition: all 0.3s;
+    font-weight: 500;
+    font-size: 1rem;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+    .btn-wine:hover {
+        background-color: #8b2d40; /* Tonalidad más oscura si deseas */
+    }
+
+/* Responsividad específica para pantallas pequeñas */
+@media (max-width: 576px) {
+    .btn-wine {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        font-size: 0.95rem;
+    }
 }
 
 .btn-gray {
@@ -168,23 +189,24 @@ input:-webkit-autofill:active {
 /* ---------------------------- */
 /* Navigation */
 /* ---------------------------- */
+
 .navbar-custom {
     background-color: var(--gray);
-    padding: 1rem 2rem;
+    padding: 1.5rem 1.5rem;
+    margin-bottom:10px;
+    
 }
 
 .navbar-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
-    margin-left: 2rem;
-    margin-right: 6rem;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    max-width: 1200px;
 }
 
 .navbar-brand {
-    margin-left: 100px;
     font-weight: 300;
     font-size: 1.5rem;
     color: var(--text);
@@ -194,35 +216,72 @@ input:-webkit-autofill:active {
 
 .navbar-menu {
     display: flex;
-    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
     list-style: none;
     margin: 0;
     padding: 0;
+    gap: 0.75rem;
 }
 
 .nav-item {
-    margin: 0 1rem;
+    display: flex;
+    align-items: center;
 }
 
 .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.4rem 0.8rem;
     color: var(--text);
     font-weight: 500;
     text-decoration: none;
-    transition: color 0.3s ease;
     border-radius: 18px;
-    transition: background-color 0.4s ease;
+    transition: background-color 0.4s ease, color 0.3s ease;
 }
 
     .nav-link:hover {
         background-color: var(--dark-gray);
-        color: var(--text)
+        color: var(--text);
     }
 
 .navbar-actions {
-    gap: 2px;
-    display: inline-block;
-    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+    .navbar-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .navbar-menu {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .nav-item {
+        width: 100%;
+    }
+
+    .nav-link {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .navbar-actions {
+        width: 100%;
+        justify-content: flex-start;
+        margin-left: 0;
+    }
 }
 
 
@@ -1217,5 +1276,11 @@ pc-btn:hover{
     #as-order-assignment .assign-btn {
         width: 100%;
         justify-content: center;
+    }
+}
+/* Admin User */
+@media (min-width: 576px) {
+    .du-actions-column {
+        flex-direction: row;
     }
 }

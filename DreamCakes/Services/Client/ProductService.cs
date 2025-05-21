@@ -95,7 +95,7 @@ namespace DreamCakes.Services.Client
                     return new SearchResponseDto
                     {
                         Response = 0,
-                        Message = "Please enter a search term",
+                        Message = "Por favor, introduzca un término de búsqueda",
                         Products = new List<ProductDto>(),
                         CurrentPromotion = null
                     };
@@ -113,7 +113,7 @@ namespace DreamCakes.Services.Client
                 return new SearchResponseDto
                 {
                     Response = -1,
-                    Message = $"Search service error: {ex.Message}",
+                    Message = $"Error en el servicio: {ex.Message}",
                     Products = new List<ProductDto>()
                 };
             }

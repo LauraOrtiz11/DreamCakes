@@ -27,7 +27,7 @@ namespace DreamCakes.Repositories.Delivery
                     .Include(p => p.USUARIO) // Cliente
                     .Include(p => p.ESTADO)  // Estado
                     .Include(p => p.DETALLE_PEDIDO.Select(dp => dp.PRODUCTO)) // Productos
-                    .Where(p => p.ID_UsEntrega == deliveryUserId && p.ID_Estado == 5); // Estado 5 = Entregado
+                    .Where(p => p.ID_UsEntrega == deliveryUserId && p.ID_Estado == 5 || p.ID_Estado == 7); // Estado 5 = Entregado
 
                 // Aplicar filtros de fecha si existen
                 if (startDate.HasValue)
