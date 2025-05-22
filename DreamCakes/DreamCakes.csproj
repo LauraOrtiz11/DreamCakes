@@ -286,12 +286,12 @@
     <Compile Include="Utilities\AuthErrorsUtility.cs" />
     <Compile Include="Services\Admin\PromocionService.cs" />
     <Compile Include="Utilities\CookieUtility.cs" />
-    <Compile Include="Utilities\DeliveryReportGenerator.cs" />
-    <Compile Include="Utilities\EmailManager.cs" />
+    <Compile Include="Utilities\DeliveryReportUtility.cs" />
+    <Compile Include="Utilities\EmailManagerUtility.cs" />
     <Compile Include="Utilities\EncryptUtility.cs" />
     <Compile Include="Utilities\FileHelperUtility.cs" />
     <Compile Include="Utilities\RoleAuthorizeUtility.cs" />
-    <Compile Include="Utilities\SessionAuthorizeFilter.cs" />
+    <Compile Include="Utilities\SessionAuthorizeUtility.cs" />
     <Compile Include="Utilities\SessionManagerUtility.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -38,12 +38,7 @@
         </div>
 
         <div class="card-body">
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger od-alert">
-                    <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
-                </div>
-            }
+           
             @if (TempData["WarningMessage"] != null)
             {
                 <div class="alert alert-warning od-alert">

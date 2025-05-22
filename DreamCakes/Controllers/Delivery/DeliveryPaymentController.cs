@@ -27,12 +27,6 @@ namespace DreamCakes.Controllers.Delivery
             var currentUserId = SessionManagerUtility.GetCurrentUserId(HttpContext.Session);
             if (currentUserId == null) return RedirectToAction("Index", "Home");
 
-            // Verificar si el pedido ya está pagado completamente
-            if (_service.IsOrderFullyPaid(orderId))
-            {
-                TempData["ErrorMessage"] = "Este pedido ya ha sido pagado completamente";
-                return RedirectToAction("AssignedOrders");
-            }
 
             var paymentDetails = _service.GetOrderPaymentDetails(orderId, currentUserId.Value);
             if (paymentDetails == null)
@@ -77,11 +71,15 @@ namespace DreamCakes.Controllers.Delivery
                 var amountPaid = _service.GetAmountPaid(model.OrderId);
                 var remaining = orderDetails.TotalAmount - amountPaid;
 
-                // Validar que el pedido aún no esté pagado completamente
                 if (remaining <= 0)
                 {
-                    TempData["ErrorMessage"] = "Este pedido ya ha sido pagado completamente";
-                    return RedirectToAction("AssignedOrders", "DeliveryOrder");
+                    TempData["WarningMessage"] = "Este pedido ya había sido pagado completamente.";
+
+                    TempData["PaymentId"] = null; // No hay nuevo comprobante
+                    TempData["OrderId"] = model.OrderId;
+                    TempData["IsFullPayment"] = true;
+
+                    return RedirectToAction("PaymentConfirmation");
                 }
 
                 // Procesar el pago

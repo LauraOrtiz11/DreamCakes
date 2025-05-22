@@ -11,6 +11,7 @@ namespace DreamCakes.Dtos.Delivery
         public string Message { get; set; }
         public decimal PendingAmount { get; set; }
         public int PaymentId { get; set; }
+        public bool IsFullPayment { get; set; }
 
         public int OrderId { get; set; }
         public decimal TotalAmount { get; set; }

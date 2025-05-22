@@ -5,11 +5,11 @@ namespace DreamCakes.Services
 {
     public class EmailService
     {
-        private readonly EmailManager emailManager;
+        private readonly EmailManagerUtility emailManager;
 
         public EmailService()
         {
-            emailManager = new EmailManager();
+            emailManager = new EmailManagerUtility();
         }
 
         public void SendStatusUpdateNotification(string email, int orderId, string statusName)

@@ -23,7 +23,7 @@ namespace DreamCakes.Repositories.Delivery
             return _context.PEDIDOes
                 .Where(p => p.ID_Pedido == orderId &&
                            p.ID_UsEntrega == deliveryUserId &&
-                           p.ID_Estado == 5) // Estado 5 = Entregado
+                           p.ID_Estado == 5 || p.ID_Estado ==7) // Estado 5 = Entregado
                 .Select(p => new DeliveryPaymentDetailsDto
                 {
                     OrderId = p.ID_Pedido,
@@ -64,32 +64,38 @@ namespace DreamCakes.Repositories.Delivery
                     _context.PAGOes.Add(payment);
                     _context.SaveChanges();
 
-                    
                     var totalPaid = _context.PAGOes
                         .Where(p => p.ID_Pedido == paymentDto.OrderId)
                         .Sum(p => p.Monto);
 
                     bool isFullyPaid = totalPaid >= order.Total;
 
-                    // Update status if order is now fully paid
-                    if (isFullyPaid)
-                    {
-                        order.ID_Estado = 7; 
-                        payment.ID_Estado = 7; 
-                        _context.SaveChanges();
-                    }
-
-                    transaction.Commit();
-
-                    return new DeliveryPaymentResultDto
+                    var result = new DeliveryPaymentResultDto
                     {
                         Success = true,
                         Message = paymentDto.IsFullPayment ?
                                  "Pago registrado exitosamente" :
                                  "Pago parcial registrado",
-                        PendingAmount = paymentDto.IsFullPayment ? 0 : order.Total - paymentDto.AmountReceived,
-                        PaymentId = payment.ID_Pago
+                        PendingAmount = paymentDto.IsFullPayment ? 0 : order.Total - totalPaid,
+                        PaymentId = payment.ID_Pago,
+                        OrderId = order.ID_Pedido,
+                        TotalAmount = order.Total,
+                        AmountReceived = paymentDto.AmountReceived,
+                        PaymentDate = payment.Fecha_Pago,
+                        IsFullPayment = isFullyPaid
                     };
+
+                    
+                    if (isFullyPaid)
+                    {
+                        order.ID_Estado = 7;
+                        payment.ID_Estado = 7;
+                        _context.SaveChanges();
+                    }
+
+                    transaction.Commit();
+
+                    return result;
                 }
                 catch (Exception)
                 {
@@ -98,6 +104,7 @@ namespace DreamCakes.Repositories.Delivery
                 }
             }
         }
+
         public decimal GetAmountPaid(int orderId)
         {
             return _context.PAGOes
@@ -144,7 +151,7 @@ namespace DreamCakes.Repositories.Delivery
 
                 bool isFullPayment = payment.Monto == payment.PEDIDO.Total;
 
-                return DeliveryReportGenerator.GeneratePaymentReceipt(
+                return DeliveryReportUtility.GeneratePaymentReceipt(
                     paymentDetails,
                     payment.Monto,
                     isFullPayment);

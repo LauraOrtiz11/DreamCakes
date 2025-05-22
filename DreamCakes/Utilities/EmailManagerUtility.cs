@@ -4,7 +4,7 @@ using System.Net.Mail;
 
 namespace DreamCakes.Utilities
 {
-    public class EmailManager
+    public class EmailManagerUtility
     {
         private readonly string senderEmail = "dcakesnot@gmail.com";
         private readonly string senderPassword = "qoymshdreeneawuy";

@@ -73,7 +73,7 @@ namespace DreamCakes.Controllers
 
 
                     // Enviar email
-                    EmailManager emailManager = new EmailManager();
+                    EmailManagerUtility emailManager = new EmailManagerUtility();
                     string errorMessage;
 
                     bool enviado = emailManager.SendEmail(email, asunto, mensaje, out errorMessage);

@@ -6,7 +6,7 @@ using DreamCakes.Dtos.Delivery;
 
 namespace DreamCakes.Utilities
 {
-    public static class DeliveryReportGenerator
+    public static class DeliveryReportUtility
     {
         public static byte[] GeneratePaymentReceipt(DeliveryPaymentDetailsDto paymentDetails, decimal amountReceived, bool isFullPayment)
         {

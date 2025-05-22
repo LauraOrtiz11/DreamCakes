@@ -15,13 +15,13 @@
 
         <div class="dp-form">
             <div class="dp-form-group">
-                @Html.LabelFor(model => model.UserFirstName, new { @class = "dp-label" })
+                @Html.LabelFor(model => model.UserFirstName,  "Nombre", new { @class = "dp-label" })
                 @Html.TextBoxFor(model => model.UserFirstName, new { @class = "dp-input" })
                 @Html.ValidationMessageFor(model => model.UserFirstName, "", new { @class = "dp-validation" })
             </div>
 
             <div class="dp-form-group">
-                @Html.LabelFor(model => model.UserStatusID, new { @class = "dp-label" })
+                @Html.LabelFor(model => model.UserStatusID,  "ID Usuario", new { @class = "dp-label" })
                 @Html.EditorFor(model => model.UserStatusID, new
                 {
                     htmlAttributes = new
@@ -40,7 +40,7 @@
             </div>
 
             <div class="dp-form-group">
-                @Html.LabelFor(model => model.UserRoleID, new { @class = "dp-label" })
+                @Html.LabelFor(model => model.UserRoleID, "ID Rol", new { @class = "dp-label" })
                 @Html.EditorFor(model => model.UserRoleID, new
                 {
                     htmlAttributes = new

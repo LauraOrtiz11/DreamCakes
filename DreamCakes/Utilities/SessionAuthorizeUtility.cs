@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace DreamCakes.Filters
 {
-    public class SessionAuthorizeFilter : ActionFilterAttribute
+    public class SessionAuthorizeUtility : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
