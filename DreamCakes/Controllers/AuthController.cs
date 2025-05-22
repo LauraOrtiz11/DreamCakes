@@ -121,9 +121,9 @@ namespace DreamCakes.Controllers
                 switch (roleId)
                 {
                     case 1:
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "AdminCategory");
                     case 2: 
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Catalog", "Product");
                     case 3:
                         return RedirectToAction("Index", "Home");
                     default:

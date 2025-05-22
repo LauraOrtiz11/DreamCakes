@@ -105,17 +105,13 @@
                         }
                     </ul>
 
-                    <div class="navbar-actions">
+                    <div class="navbar-user-actions">
                         <a href="@Url.Action("Index", "Profile")">
                             <img src="@Url.Content("~/Content/icons/Profile.svg")" width="28" height="20" alt="Mi Perfil" />
                         </a>
+                        <a href="@Url.Action("Logout", "Auth")" class="btn-wine">Cerrar Sesión</a>
                     </div>
 
-                    <div class="navbar-actions">
-                        <a href="@Url.Action("Logout", "Auth")" class="btn-wine">
-                            Cerrar Sesión
-                        </a>
-                    </div>
                 }
                 else
                 {

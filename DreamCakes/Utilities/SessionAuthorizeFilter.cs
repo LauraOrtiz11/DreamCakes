@@ -24,6 +24,8 @@ namespace DreamCakes.Filters
         new { Controller = "Auth", Action = "Login" },
         new { Controller = "Auth", Action = "Register" },
         new { Controller = "Auth", Action = "Logout" },
+        new { Controller = "Account", Action = "ForgotPassword" },
+        new { Controller = "Account", Action = "ResetPassword" },
         new { Controller = "Cleanup", Action = "ClearTempMessages" }
     };
 

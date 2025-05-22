@@ -43,29 +43,33 @@ namespace DreamCakes.Controllers
                     // Construir enlace de restablecimiento
                     string resetUrl = Url.Action("ResetPassword", "Account", new { email = email }, protocol: Request.Url.Scheme);
 
-                    // Construir ruta absoluta del logo
-                    string logoUrl = Url.Content("~/Content/Images/DreamCakes.jpeg");
-                    logoUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}{logoUrl}";
-
-                    string asunto = "Restablecer contraseña - DreamCakes";
+                    string asunto = "🔐 Restablecer contraseña - DreamCakes";
 
                     string mensaje = $@"
-    <div style='font-family: Arial, sans-serif; background-color: #f9f5ff; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;'>
-        <div style='text-align: center; margin-bottom: 20px;'>
-            <img src='{logoUrl}' alt='DreamCakes Logo' style='width: 150px; height: auto;' />
-        </div>
-        <h2 style='color: #483470;'>Hola {usuario.Nombres},</h2>
-        <p style='font-size: 16px; color: #333;'>Recibimos una solicitud para restablecer tu contraseña.</p>
-        <div style='text-align: center; margin: 30px 0;'>
-            <a href='{resetUrl}' 
-               style='display: inline-block; background-color: #9B2020; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: bold;'>
-                Restablecer contraseña
-            </a>
-        </div>
-        <p style='font-size: 14px; color: #777;'>Si tú no solicitaste este cambio, puedes ignorar este correo.</p>
-        <p style='font-size: 14px; color: #777;'>Gracias por confiar en <strong>DreamCakes</strong>.</p>
-    </div>";
+<div style='font-family: Arial, sans-serif; background-color: #f9f5ff; padding: 30px; border-radius: 12px; max-width: 600px; margin: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05);'>
+    <div style='text-align: center; margin-bottom: 25px;'>
+        <img src='cid:dreamcakeslogo' alt='DreamCakes Logo' style='width: 150px; height: auto;' />
+    </div>
 
+    <h2 style='color: #483470; text-align: center;'>Hola {usuario.Nombres},</h2>
+
+    <p style='font-size: 16px; color: #333; text-align: center;'>
+        Hemos recibido una solicitud para restablecer tu contraseña. Si no fuiste tú, puedes ignorar este mensaje.
+    </p>
+
+    <div style='text-align: center; margin: 35px 0;'>
+        <a href='{resetUrl}' 
+           style='display: inline-block; background-color: #9B2020; color: white; padding: 14px 28px; text-decoration: none; border-radius: 30px; font-size: 16px; font-weight: bold;'>
+            Restablecer contraseña
+        </a>
+    </div>
+
+    
+
+    <p style='font-size: 14px; color: #555; text-align: center; margin-top: 25px;'>
+        Gracias por confiar en <strong>DreamCakes</strong> 💜
+    </p>
+</div>";
 
 
                     // Enviar email
@@ -91,7 +95,6 @@ namespace DreamCakes.Controllers
 
             return View();
         }
-
 
 
         // GET: Mostrar formulario para restablecer contraseña
