@@ -279,19 +279,7 @@ namespace DreamCakes.Services.Client
                     Total = order.Details.Sum(d => d.Subtotal)
                 };
 
-                if (orderId > 0)
-                {
-                    // Obtener el correo del cliente
-                    string customerEmail = _orderRepository.GetCustomerEmailByOrderId(orderId);
-
-                    if (!string.IsNullOrEmpty(customerEmail))
-                    {
-                        // Estado fijo para el correo al crear la orden
-                        string statusName = "Pendiente en proceso de asignación de domiciliario";
-
-                        _emailService.SendStatusUpdateNotification(customerEmail, orderId, statusName);
-                    }
-                }
+            
             }
             catch (Exception ex)
             {

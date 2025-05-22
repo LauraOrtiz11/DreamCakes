@@ -189,12 +189,10 @@ input:-webkit-autofill:active {
 /* ---------------------------- */
 /* Navigation */
 /* ---------------------------- */
-
 .navbar-custom {
     background-color: var(--gray);
     padding: 1.5rem 1.5rem;
-    margin-bottom:10px;
-    
+    margin-bottom: 10px;
 }
 
 .navbar-container {
@@ -204,6 +202,7 @@ input:-webkit-autofill:active {
     flex-wrap: wrap;
     margin: 0 auto;
     max-width: 1200px;
+    gap: 1rem;
 }
 
 .navbar-brand {
@@ -212,7 +211,12 @@ input:-webkit-autofill:active {
     color: var(--text);
     text-decoration: none;
     margin-right: 2rem;
+    border: none;
 }
+
+    .navbar-brand:hover {
+        color: var(--purple);
+    }
 
 .navbar-menu {
     display: flex;
@@ -220,9 +224,10 @@ input:-webkit-autofill:active {
     align-items: center;
     justify-content: center;
     list-style: none;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     gap: 0.75rem;
+    flex-grow: 1;
 }
 
 .nav-item {
@@ -251,20 +256,26 @@ input:-webkit-autofill:active {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-left: 1rem;
+}
+
+.navbar-user-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: auto;
 }
 
 /* Responsive Navbar */
 @media (max-width: 768px) {
     .navbar-container {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         gap: 1rem;
     }
 
     .navbar-menu {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         width: 100%;
     }
 
@@ -274,15 +285,16 @@ input:-webkit-autofill:active {
 
     .nav-link {
         width: 100%;
-        justify-content: flex-start;
+        justify-content: center;
     }
 
-    .navbar-actions {
+    .navbar-user-actions {
+        justify-content: center;
         width: 100%;
-        justify-content: flex-start;
         margin-left: 0;
     }
 }
+
 
 
 /* ---------------------------- */
