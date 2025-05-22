@@ -57,7 +57,6 @@
 </div>
 
 <style>
-
     .title {
         text-align: center;
         color: var(--purple);
@@ -81,6 +80,7 @@
         font-weight: bold;
         transition: background-color 0.3s ease;
         margin-right: 35px;
+        display: inline-block;
     }
 
         .primary-button:hover {
@@ -93,16 +93,19 @@
         display: flex;
         justify-content: center;
         margin-bottom: 20px;
+        overflow-x: auto;
     }
 
     .promotions-table {
-        width: 90%;
+        width: 100%;
         max-width: 1100px;
+        min-width: 800px;
         border-collapse: collapse;
         background-color: white;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 30px rgba(72, 52, 112, 0.3);
+        table-layout: fixed;
     }
 
         .promotions-table thead {
@@ -114,7 +117,42 @@
         .promotions-table td {
             padding: 14px 16px;
             text-align: left;
+            word-wrap: break-word;
+            word-break: break-word;
+            vertical-align: middle;
         }
+
+            .promotions-table th:nth-child(1),
+            .promotions-table td:nth-child(1) {
+                width: 14%;
+            }
+
+            .promotions-table th:nth-child(2),
+            .promotions-table td:nth-child(2) {
+                width: 12;
+            }
+
+            .promotions-table th:nth-child(3),
+            .promotions-table td:nth-child(3),
+            .promotions-table th:nth-child(4),
+            .promotions-table td:nth-child(4) {
+                width: 13%;
+            }
+
+            .promotions-table th:nth-child(5),
+            .promotions-table td:nth-child(5) {
+                width: 9%;
+            }
+
+            .promotions-table th:nth-child(6),
+            .promotions-table td:nth-child(6) {
+                width: 20%;
+            }
+
+            .promotions-table th:nth-child(7),
+            .promotions-table td:nth-child(7) {
+                width: 20%;
+            }
 
         .promotions-table tbody tr:nth-child(even) {
             background-color: var(--gray);
@@ -122,22 +160,30 @@
 
     .actions-column {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
+        flex-wrap: wrap;
     }
 
     .action-button {
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         color: var(--purple);
         text-decoration: none;
         font-weight: 600;
-        transition: color 0.3s;
+        font-size: 16px;
+        background-color: transparent;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: color 0.3s ease;
+        white-space: nowrap;
     }
 
         .action-button:hover {
             color: var(--light-purple);
+            text-decoration: none;
         }
 
         .action-button.delete {
@@ -151,5 +197,7 @@
     .icon {
         width: 18px;
         height: 18px;
+        flex-shrink: 0;
     }
 </style>
+
